@@ -2,3 +2,25 @@
 title: The Parametric Bootstrap
 engine: julia
 ---
+
+# Plotting bootstrap results
+
+## General plotting
+
+## `MixedModelsMakie.ridgeplot`
+
+# Point-masses at at the edge of the parameter space
+
+# Confidence intervals
+
+## Shortest coverage / highest density interval
+
+## Equal-tail probability / quantile interval
+
+# Speeding up the bootstrap
+
+## Distributed computing
+
+## Lower tolerances
+
+# The non-parametric bootstrap

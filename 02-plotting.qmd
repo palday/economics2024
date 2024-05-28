@@ -2,3 +2,17 @@
 title: Plotting
 engine: julia
 ---
+
+In the following, we'll be using the [Makie](https://docs.makie.org/v0.21/) ecosystem for plottig. There are multiple major plotting ecosystems in Julia and it's largely a matter of personal preference which to use. However, some plotting tools and packages only exist in one ecosystem, such as [MixedModelsMakie.jl](https://palday.github.io/MixedModelsMakie.jl/v0.4/) for several convenient plotting functions related to MixedModels.jl.
+
+# A model
+
+# Coefficient plots
+
+## Fixed Effects
+
+## BLUPs
+
+# General regression diagnostics
+
+# Shrinkage
