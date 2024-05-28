@@ -4,35 +4,70 @@
     "href": "01-intro.html",
     "title": "Introduction",
     "section": "",
-    "text": "MixedModels.jl is part of the JuliaStats ecosystem and so shares a number of interface and design elements with GLM.jl. MixedModels.jl can also be viewed as the next step in the research programme behind the R package lme4 (and further back, nlme)."
+    "text": "MixedModels.jl is part of the JuliaStats ecosystem and so shares a number of interface and design elements with GLM.jl. MixedModels.jl can also be viewed as the next step in the research programme behind the R package lme4 (and further back, nlme). The focus of development is on linear mixed effects models with unconstrained covariance matrices, with a secondary focus on generalized linear mixed effects models. We’ll come back to this focus later, when we discuss limitations of the software. For now, let us start off with a simple mixed model."
   },
   {
-    "objectID": "01-intro.html#setup",
-    "href": "01-intro.html#setup",
+    "objectID": "01-intro.html#optimization-results",
+    "href": "01-intro.html#optimization-results",
     "title": "Introduction",
-    "section": "",
-    "text": "MixedModels.jl is part of the JuliaStats ecosystem and so shares a number of interface and design elements with GLM.jl. MixedModels.jl can also be viewed as the next step in the research programme behind the R package lme4 (and further back, nlme)."
+    "section": "Optimization results",
+    "text": "Optimization results\nFor more technically oriented users and debugging problematic models, the fitted model also includes information about its fit:\n\nfm1.optsum\n\n\n\n\n\n\n\n\nInitialization\n\n\n\nInitial parameter vector\n[1.0, 1.0, 1.0]\n\n\nInitial objective value\n241905.85361894369\n\n\nOptimizer settings\n\n\n\nOptimizer (from NLopt)\nLN_BOBYQA\n\n\nLower bounds\n[0.0, 0.0, 0.0]\n\n\nftol_rel\n1.0e-12\n\n\nftol_abs\n1.0e-8\n\n\nxtol_rel\n0.0\n\n\nxtol_abs\n[1.0e-10, 1.0e-10, 1.0e-10]\n\n\ninitial_step\n[0.75, 0.75, 0.75]\n\n\nmaxfeval\n-1\n\n\nmaxtime\n-1.0\n\n\nResult\n\n\n\nFunction evaluations\n97\n\n\nFinal parameter vector\n[0.2775, 0.4341, 0.0669]\n\n\nFinal objective value\n237553.9858\n\n\nReturn code\nFTOL_REACHED"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Mixed Effects Models in Julia",
-    "section": "",
-    "text": "This website contains the course materials for an introduction to mixed effects models in Julia using MixedModels.jl."
+    "objectID": "01-intro.html#best-linear-unbiased-predictions",
+    "href": "01-intro.html#best-linear-unbiased-predictions",
+    "title": "Introduction",
+    "section": "Best linear unbiased predictions",
+    "text": "Best linear unbiased predictions\nWe can also examine the best linear unbiased predictions (BLUPS, i.e. conditional modes) of the fitted model:\n\nranef(fm1) # gives a compact mathematical representation\n\n3-element Vector{Matrix{Float64}}:\n [0.16774123178334052 -0.04482694183068773 … 0.13824421252672484 0.26507732678861823]\n [0.38719882629204333 -0.45435181953200804 … 0.5663054833894617 -0.2322561040271726]\n [0.01925158595457121 -0.0314237380877306 … -0.0394324632568055 0.010868838311276535]\n\n\n\nre = raneftables(fm1) # gives a NamedTuple of tables for each grouping variable\n\n(s = @NamedTuple{s::String, (Intercept)::Float64}[(s = \"S0001\", var\"(Intercept)\" = 0.16774123178334052), (s = \"S0002\", var\"(Intercept)\" = -0.04482694183068773), (s = \"S0003\", var\"(Intercept)\" = 0.31575885609970306), (s = \"S0004\", var\"(Intercept)\" = 0.24940695145339822), (s = \"S0005\", var\"(Intercept)\" = 0.05086330189212764), (s = \"S0006\", var\"(Intercept)\" = 0.10070570655847189), (s = \"S0007\", var\"(Intercept)\" = 0.49346335551085657), (s = \"S0008\", var\"(Intercept)\" = 0.21230052405523037), (s = \"S0009\", var\"(Intercept)\" = 0.43329760696045716), (s = \"S0010\", var\"(Intercept)\" = 0.3474382457376265)  …  (s = \"S2963\", var\"(Intercept)\" = -0.07493268898885441), (s = \"S2964\", var\"(Intercept)\" = -0.07639875902063552), (s = \"S2965\", var\"(Intercept)\" = -0.01269753658773821), (s = \"S2966\", var\"(Intercept)\" = -0.05968365555624512), (s = \"S2967\", var\"(Intercept)\" = -0.47762073203601624), (s = \"S2968\", var\"(Intercept)\" = -0.03808065216440611), (s = \"S2969\", var\"(Intercept)\" = 0.013164293735230988), (s = \"S2970\", var\"(Intercept)\" = 0.15284750426572696), (s = \"S2971\", var\"(Intercept)\" = 0.13824421252672484), (s = \"S2972\", var\"(Intercept)\" = 0.26507732678861823)], d = @NamedTuple{d::String, (Intercept)::Float64}[(d = \"I0001\", var\"(Intercept)\" = 0.38719882629204333), (d = \"I0006\", var\"(Intercept)\" = -0.45435181953200804), (d = \"I0007\", var\"(Intercept)\" = 0.6941269521055441), (d = \"I0008\", var\"(Intercept)\" = -0.6556986845555067), (d = \"I0012\", var\"(Intercept)\" = 0.2232265515513102), (d = \"I0013\", var\"(Intercept)\" = 0.35851586978902583), (d = \"I0014\", var\"(Intercept)\" = 0.3672805427901967), (d = \"I0015\", var\"(Intercept)\" = -0.37841197668279464), (d = \"I0017\", var\"(Intercept)\" = 0.4490422906985483), (d = \"I0018\", var\"(Intercept)\" = -0.21303124506473872)  …  (d = \"I2143\", var\"(Intercept)\" = 0.46453745653954004), (d = \"I2145\", var\"(Intercept)\" = -0.5103188066752637), (d = \"I2146\", var\"(Intercept)\" = 0.24093975571844684), (d = \"I2147\", var\"(Intercept)\" = -0.60947032761476), (d = \"I2149\", var\"(Intercept)\" = -0.2569371800839588), (d = \"I2152\", var\"(Intercept)\" = -0.1486343267392193), (d = \"I2153\", var\"(Intercept)\" = -0.4582448890911759), (d = \"I2156\", var\"(Intercept)\" = -0.598164389730049), (d = \"I2157\", var\"(Intercept)\" = 0.5663054833894617), (d = \"I2160\", var\"(Intercept)\" = -0.2322561040271726)], dept = @NamedTuple{dept::String, (Intercept)::Float64}[(dept = \"D01\", var\"(Intercept)\" = 0.01925158595457121), (dept = \"D02\", var\"(Intercept)\" = -0.0314237380877306), (dept = \"D03\", var\"(Intercept)\" = 0.026989756564498747), (dept = \"D04\", var\"(Intercept)\" = 0.08634883593136969), (dept = \"D05\", var\"(Intercept)\" = 0.0425384283501927), (dept = \"D06\", var\"(Intercept)\" = -0.0612386105577639), (dept = \"D07\", var\"(Intercept)\" = 0.037994105160680386), (dept = \"D08\", var\"(Intercept)\" = 0.10706977660601054), (dept = \"D09\", var\"(Intercept)\" = -0.03130386231393186), (dept = \"D10\", var\"(Intercept)\" = -0.13074749481062195), (dept = \"D11\", var\"(Intercept)\" = -0.05345274044982538), (dept = \"D12\", var\"(Intercept)\" = 0.016537582598079168), (dept = \"D14\", var\"(Intercept)\" = -0.0394324632568055), (dept = \"D15\", var\"(Intercept)\" = 0.010868838311276535)])\n\n\n\nre[:dept]\n\nTable with 2 columns and 14 rows:\n      dept  (Intercept)\n    ┌──────────────────\n 1  │ D01   0.0192516\n 2  │ D02   -0.0314237\n 3  │ D03   0.0269898\n 4  │ D04   0.0863488\n 5  │ D05   0.0425384\n 6  │ D06   -0.0612386\n 7  │ D07   0.0379941\n 8  │ D08   0.10707\n 9  │ D09   -0.0313039\n 10 │ D10   -0.130747\n 11 │ D11   -0.0534527\n 12 │ D12   0.0165376\n 13 │ D14   -0.0394325\n 14 │ D15   0.0108688\n\n\nSimilarly, condVar and condVartables provide similar results for the conditional variances, which can be used to construct prediction intervals. Note that this quantity is slightly more challenging to compute, so the next code chunk can be quite slow for large and/or complex models.\n\ncv = condVartables(fm1)\n\n(s = (s = [\"S0001\", \"S0002\", \"S0003\", \"S0004\", \"S0005\", \"S0006\", \"S0007\", \"S0008\", \"S0009\", \"S0010\"  …  \"S2963\", \"S2964\", \"S2965\", \"S2966\", \"S2967\", \"S2968\", \"S2969\", \"S2970\", \"S2971\", \"S2972\"], σ = [(0.2858669689270982,), (0.30401631752599356,), (0.22821157590283608,), (0.25780032906103995,), (0.2860219499541289,), (0.25793951955717076,), (0.26490082020646233,), (0.2783368253958202,), (0.2522473463464451,), (0.22880831550861952,)  …  (0.20261426533573362,), (0.15345460348688958,), (0.1890606491627694,), (0.2364492114093623,), (0.16864266061743807,), (0.13248230048424514,), (0.21568690433796606,), (0.15989932548370614,), (0.19703921571219082,), (0.17611120732728797,)], ρ = [(), (), (), (), (), (), (), (), (), ()  …  (), (), (), (), (), (), (), (), (), ()]), d = (d = [\"I0001\", \"I0006\", \"I0007\", \"I0008\", \"I0012\", \"I0013\", \"I0014\", \"I0015\", \"I0017\", \"I0018\"  …  \"I2143\", \"I2145\", \"I2146\", \"I2147\", \"I2149\", \"I2152\", \"I2153\", \"I2156\", \"I2157\", \"I2160\"], σ = [(0.2944722990101209,), (0.1998490792256777,), (0.1976067001224343,), (0.15270441118675238,), (0.2050062557300713,), (0.18323918475417014,), (0.20826372508991525,), (0.1379768365880709,), (0.09916344786890752,), (0.25898396366164883,)  …  (0.27099005487450534,), (0.278560313176016,), (0.2642024787031552,), (0.11352578408559302,), (0.2148321233886452,), (0.28061080140124645,), (0.21640468799848833,), (0.26558809165790237,), (0.18875484054677152,), (0.12464395110737535,)], ρ = [(), (), (), (), (), (), (), (), (), ()  …  (), (), (), (), (), (), (), (), (), ()]), dept = (dept = [\"D01\", \"D02\", \"D03\", \"D04\", \"D05\", \"D06\", \"D07\", \"D08\", \"D09\", \"D10\", \"D11\", \"D12\", \"D14\", \"D15\"], σ = [(0.05342275258013416,), (0.05695221129282561,), (0.05309362315152055,), (0.04189159945771541,), (0.05536549244050585,), (0.04470905986933437,), (0.053575423476545404,), (0.05037317159100928,), (0.05202142805811866,), (0.047679287077604354,), (0.0522411612413694,), (0.04219045746979842,), (0.052986775032521645,), (0.048625616226665495,)], ρ = [(), (), (), (), (), (), (), (), (), (), (), (), (), ()]))\n\n\n\n# this output still isn't pretty, but we're working on it!\ncv[:dept]\n\n(dept = [\"D01\", \"D02\", \"D03\", \"D04\", \"D05\", \"D06\", \"D07\", \"D08\", \"D09\", \"D10\", \"D11\", \"D12\", \"D14\", \"D15\"], σ = [(0.05342275258013416,), (0.05695221129282561,), (0.05309362315152055,), (0.04189159945771541,), (0.05536549244050585,), (0.04470905986933437,), (0.053575423476545404,), (0.05037317159100928,), (0.05202142805811866,), (0.047679287077604354,), (0.0522411612413694,), (0.04219045746979842,), (0.052986775032521645,), (0.048625616226665495,)], ρ = [(), (), (), (), (), (), (), (), (), (), (), (), (), ()])\n\n\nAt this point, it becomes convenient to place everything into a dataframe so that we can easily manipulate the relevant quantities.\n\nusing DataFrames\ndept = DataFrame(cv[:dept])\n\n14×3 DataFrame\n\n\n\nRow\ndept\nσ\nρ\n\n\n\nString\nTuple…\nTuple{}\n\n\n\n\n1\nD01\n(0.0534228,)\n()\n\n\n2\nD02\n(0.0569522,)\n()\n\n\n3\nD03\n(0.0530936,)\n()\n\n\n4\nD04\n(0.0418916,)\n()\n\n\n5\nD05\n(0.0553655,)\n()\n\n\n6\nD06\n(0.0447091,)\n()\n\n\n7\nD07\n(0.0535754,)\n()\n\n\n8\nD08\n(0.0503732,)\n()\n\n\n9\nD09\n(0.0520214,)\n()\n\n\n10\nD10\n(0.0476793,)\n()\n\n\n11\nD11\n(0.0522412,)\n()\n\n\n12\nD12\n(0.0421905,)\n()\n\n\n13\nD14\n(0.0529868,)\n()\n\n\n14\nD15\n(0.0486256,)\n()\n\n\n\n\n\n\nLet’s construct prediction intervals:\n\nselect!(dept, :dept, :σ =&gt; ByRow(first) =&gt; :condvar)\nleftjoin!(dept, DataFrame(re[:dept]); on=:dept)\n\n14×3 DataFrame\n\n\n\nRow\ndept\ncondvar\n(Intercept)\n\n\n\nString\nFloat64\nFloat64?\n\n\n\n\n1\nD01\n0.0534228\n0.0192516\n\n\n2\nD02\n0.0569522\n-0.0314237\n\n\n3\nD03\n0.0530936\n0.0269898\n\n\n4\nD04\n0.0418916\n0.0863488\n\n\n5\nD05\n0.0553655\n0.0425384\n\n\n6\nD06\n0.0447091\n-0.0612386\n\n\n7\nD07\n0.0535754\n0.0379941\n\n\n8\nD08\n0.0503732\n0.10707\n\n\n9\nD09\n0.0520214\n-0.0313039\n\n\n10\nD10\n0.0476793\n-0.130747\n\n\n11\nD11\n0.0522412\n-0.0534527\n\n\n12\nD12\n0.0421905\n0.0165376\n\n\n13\nD14\n0.0529868\n-0.0394325\n\n\n14\nD15\n0.0486256\n0.0108688\n\n\n\n\n\n\n\nselect!(dept, \"dept\", \"(Intercept)\" =&gt; \"blup\", \"condvar\")\ntransform!(dept,\n           [:blup, :condvar] =&gt; ByRow((x,y) -&gt; x - 1.96 * y) =&gt; :lower,\n           [:blup, :condvar] =&gt; ByRow((x,y) -&gt; x + 1.96 * y) =&gt; :upper)\n\n14×5 DataFrame\n\n\n\nRow\ndept\nblup\ncondvar\nlower\nupper\n\n\n\nString\nFloat64?\nFloat64\nFloat64\nFloat64\n\n\n\n\n1\nD01\n0.0192516\n0.0534228\n-0.085457\n0.12396\n\n\n2\nD02\n-0.0314237\n0.0569522\n-0.14305\n0.0802026\n\n\n3\nD03\n0.0269898\n0.0530936\n-0.0770737\n0.131053\n\n\n4\nD04\n0.0863488\n0.0418916\n0.0042413\n0.168456\n\n\n5\nD05\n0.0425384\n0.0553655\n-0.0659779\n0.151055\n\n\n6\nD06\n-0.0612386\n0.0447091\n-0.148868\n0.0263911\n\n\n7\nD07\n0.0379941\n0.0535754\n-0.0670137\n0.143002\n\n\n8\nD08\n0.10707\n0.0503732\n0.00833836\n0.205801\n\n\n9\nD09\n-0.0313039\n0.0520214\n-0.133266\n0.0706581\n\n\n10\nD10\n-0.130747\n0.0476793\n-0.224199\n-0.0372961\n\n\n11\nD11\n-0.0534527\n0.0522412\n-0.155845\n0.0489399\n\n\n12\nD12\n0.0165376\n0.0421905\n-0.0661557\n0.0992309\n\n\n13\nD14\n-0.0394325\n0.0529868\n-0.143287\n0.0644216\n\n\n14\nD15\n0.0108688\n0.0486256\n-0.0844374\n0.106175"
   },
   {
-    "objectID": "index.html#prerequisites",
-    "href": "index.html#prerequisites",
-    "title": "Mixed Effects Models in Julia",
-    "section": "Prerequisites",
-    "text": "Prerequisites\nThe material here assumes a basic proficiency with the Julia language, including a working Julia installation with Julia 1.9+."
+    "objectID": "01-intro.html#measures-of-model-fit",
+    "href": "01-intro.html#measures-of-model-fit",
+    "title": "Introduction",
+    "section": "Measures of model fit",
+    "text": "Measures of model fit\nMixedModels.jl provides methods for the standard functions aic, aicc, bic, deviance, fitted, logliklihood, nobs, residuals.\nThe deviance is computed as -2 loglikelihood and is thus missing an additive constant for the saturated model. However, defining that constant is challenging for mixed models (what is the saturated model? do you saturate via the fixed or the random effects?) and that constant cancels out in the relevant computations.\nMixedModels.jl intentionally does not provide methods for r2 and adjr2. These quantities are notoriously difficult to define in a completely satisfactory way for mixed models and we, the developers, felt uncomfortable giving our implicit endorsement by defining them as part of the core package. That said, there is an implementation of a naive definition of the coefficient of determination in MixedModelsExtras.jl because it is a commonly requested measure and I felt that it was better to have a well-tested implementation than have users handroll their own buggy implementation of an already problematic measure."
   },
   {
-    "objectID": "index.html#installation-of-course-materials",
-    "href": "index.html#installation-of-course-materials",
-    "title": "Mixed Effects Models in Julia",
-    "section": "Installation of Course Materials",
-    "text": "Installation of Course Materials\nThis repository uses Quarto with the Julia code execution supplied by QuartoNotebookRunner.jl, which requires Quarto 1.5+.\nAs of early May 2024, Quarto 1.5 is only available as a preview release, which you’ll need to download from GitHub. Under each release’s “Assets”, you can find platform-specific installers.\n~/economics2024$ julia\n\njulia&gt; using Pkg\n\njulia&gt; Pkg.activate(\".\")\n  Activating project at `~/economics2024`\n\njulia&gt; Pkg.instantiate()\n&lt; lots of output &gt;\n\njulia&gt; using Econ2024\n\njulia&gt; Econ2024.movielens_download()\n[ Info: Downloading data\n[ Info: Extracting and saving ratings\n[ Info: Extracting movies that are in the ratings table\n[ Info: Extracting and saving README\n2-element Vector{String}:\n \"~/.julia/scratchspa\" ⋯ 28 bytes ⋯ \"3d4d5d689f47/data/ratings.arrow\"\n \"~/.julia/scratchspa\" ⋯ 27 bytes ⋯ \"-3d4d5d689f47/data/movies.arrow\"\n\njulia&gt; exit()\n\n~/economics2024$ quarto preview\n\n&lt; lots of output &gt;\n\nThis page was rendered from git revision a5f7fb1\n."
+    "objectID": "01-intro.html#very-few-options-for-covariance-structure",
+    "href": "01-intro.html#very-few-options-for-covariance-structure",
+    "title": "Introduction",
+    "section": "Very few options for covariance structure",
+    "text": "Very few options for covariance structure\nNonetheless, there is no free lunch and the tradeoff that we make is that it is much more difficult to formulate constraints on the covariance structure (whether on the random effects or on the response/residuals) in our formulation. MixedModels.jl currently supports precisely two covariance structures explicitly:\n\nunconstrained\nzero correlation (diagonal covariance structure)\n\nIt is also possible to express some models with compound symmetry by clever manipulation of the formula syntax (i.e. (1+c|g) for categorical c with compound symmetry is the same as (1|g) + (1|g&c)).\nMixedModels.jl does support constraining the residual variance to known scalar value, which is useful in meta-analysis.\nMetida.jl may provide an alternative if this functionality is required (not an endorsement)."
+  },
+  {
+    "objectID": "01-intro.html#no-support-for-generalized-linear-mixed-models-with-a-dispersion-parameter",
+    "href": "01-intro.html#no-support-for-generalized-linear-mixed-models-with-a-dispersion-parameter",
+    "title": "Introduction",
+    "section": "No support for generalized linear mixed models with a dispersion parameter",
+    "text": "No support for generalized linear mixed models with a dispersion parameter\nWhile MixedModels.jl does nominally support any GLM family and link function support by GLM.jl, the results for model families with a dispersion parameter (normal with non-identity link, gamma, inverse Gaussian) are known to be incorrect. The package issues a warning if you attempt to fit such models."
+  },
+  {
+    "objectID": "01-intro.html#no-support-for-polytomous-responses",
+    "href": "01-intro.html#no-support-for-polytomous-responses",
+    "title": "Introduction",
+    "section": "No support for polytomous responses",
+    "text": "No support for polytomous responses\nMultinomial and ordered responses are not supported. I am unaware of a Julia package offering support for this."
+  },
+  {
+    "objectID": "01-intro.html#no-support-for-regularization-of-the-fixed-effects",
+    "href": "01-intro.html#no-support-for-regularization-of-the-fixed-effects",
+    "title": "Introduction",
+    "section": "No support for regularization of the fixed effects",
+    "text": "No support for regularization of the fixed effects\nHighDimMixedModels.jl may provide an alternative if this functionality is required (not an endorsement)."
+  },
+  {
+    "objectID": "01-intro.html#no-support-for-generalized-additive-mixed-models",
+    "href": "01-intro.html#no-support-for-generalized-additive-mixed-models",
+    "title": "Introduction",
+    "section": "No support for generalized additive mixed models",
+    "text": "No support for generalized additive mixed models\nGeneralized additive models can be expressed a mixed model, so supporting this would require “only” adding a translation layer."
+  },
+  {
+    "objectID": "01-intro.html#no-support-for-nonlinear-mixed-effects-models",
+    "href": "01-intro.html#no-support-for-nonlinear-mixed-effects-models",
+    "title": "Introduction",
+    "section": "No support for nonlinear mixed effects models",
+    "text": "No support for nonlinear mixed effects models\nPumas.jl (commercial) provides this."
   },
   {
     "objectID": "99-wilkinson-notation.html",
@@ -54,5 +89,33 @@
     "title": "Wilkinson-Rogers (1973) notation for models of (co)variance",
     "section": "",
     "text": "Models fit with MixedModels.jl are generally linear mixed-effects models with unconstrained random effects covariance matrices and homoskedastic, normally distributed residuals. Under these assumptions, the model specification\nresponse ~ 1 + (age + sex) * education * n_children  + (1 | subject)\ncorresponds to the statistical model\n\\[\\begin{align*}\n\\left(Y |\\mathcal{B}=b\\right) &\\sim N\\left(X\\beta + Zb, \\sigma^2 I \\right) \\\\\n\\mathcal{B} &\\sim N\\left(0, G\\right)\n\\end{align*}\\]\nfor which we wish to obtain the maximum-likelihood estimates for \\(G\\) and thus the fixed-effects \\(\\beta\\).\n\nThe model contains no restrictions on \\(G\\), except that it is positive semidefinite.\nThe response Y is the value of a given response.\nThe fixed-effects design matrix X consists of columns for\n\nthe intercept, age, sex, education, and number of children (contrast coded as appropriate)\nthe interaction of all lower order terms, excluding interactions between age and sex\n\nThe random-effects design matrix Z includes a column for\n\nthe intercept for each subject"
+  },
+  {
+    "objectID": "02-plotting.html",
+    "href": "02-plotting.html",
+    "title": "Plotting",
+    "section": "",
+    "text": "In the following, we’ll be using the Makie ecosystem for plottig. There are multiple major plotting ecosystems in Julia and it’s largely a matter of personal preference which to use. However, some plotting tools and packages only exist in one ecosystem, such as MixedModelsMakie.jl for several convenient plotting functions related to MixedModels.jl."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Mixed Effects Models in Julia",
+    "section": "",
+    "text": "This website contains the course materials for an introduction to mixed effects models in Julia using MixedModels.jl."
+  },
+  {
+    "objectID": "index.html#prerequisites",
+    "href": "index.html#prerequisites",
+    "title": "Mixed Effects Models in Julia",
+    "section": "Prerequisites",
+    "text": "Prerequisites\nThe material here assumes a basic proficiency with the Julia language, including a working Julia installation with Julia 1.9+."
+  },
+  {
+    "objectID": "index.html#installation-of-course-materials",
+    "href": "index.html#installation-of-course-materials",
+    "title": "Mixed Effects Models in Julia",
+    "section": "Installation of Course Materials",
+    "text": "Installation of Course Materials\nThis repository uses Quarto with the Julia code execution supplied by QuartoNotebookRunner.jl, which requires Quarto 1.5+.\nAs of early May 2024, Quarto 1.5 is only available as a preview release, which you’ll need to download from GitHub. Under each release’s “Assets”, you can find platform-specific installers.\n~/economics2024$ julia\n\njulia&gt; using Pkg\n\njulia&gt; Pkg.activate(\".\")\n  Activating project at `~/economics2024`\n\njulia&gt; Pkg.instantiate()\n&lt; lots of output &gt;\n\njulia&gt; using Econ2024\n\njulia&gt; Econ2024.movielens_download()\n[ Info: Downloading data\n[ Info: Extracting and saving ratings\n[ Info: Extracting movies that are in the ratings table\n[ Info: Extracting and saving README\n2-element Vector{String}:\n \"~/.julia/scratchspa\" ⋯ 28 bytes ⋯ \"3d4d5d689f47/data/ratings.arrow\"\n \"~/.julia/scratchspa\" ⋯ 27 bytes ⋯ \"-3d4d5d689f47/data/movies.arrow\"\n\njulia&gt; exit()\n\n~/economics2024$ quarto preview\n\n&lt; lots of output &gt;\n\nThis page was rendered from git revision 9bad9f7\n."
   }
 ]
