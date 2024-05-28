@@ -256,6 +256,62 @@ likelihoodratiotest(fm3, fm4)
 fm4.rePCA
 ```
 
+# How big can we go?
+
+:::{.callout-note}
+The following models consume a large amount of memory because of the sheer size of the underlying dataset. Do **not** attempt to fit these models on a machine with less than 32GiB of memory.
+:::
+
+## Memory allocation vs. fitting
+
+```{julia}
+#| eval: false
+using Econ2024
+ratings = Econ2024.dataset("ratings")
+@time fm_ratings = LinearMixedModel(@formula(rating ~ 1 + (1|userId) + (1|movieId)), ratings)
+```
+
+```{julia}
+#| eval: false
+@time fit!(fm_ratings)
+```
+
+## To try on your own after the course
+
+```{julia}
+#| eval: false
+using Econ2024
+ratings = DataFrame(Econ2024.dataset("ratings_genre"))
+describe(ratings)
+```
+
+```{julia}
+#| eval: false
+using StatsBase
+mcount = countmap(ratings.movieId)
+ucount = countmap(ratings.userId)
+mexclude = Set(k for (k, v) in pairs(mcount) if v < 50)
+uexclude = Set(k for (k, v) in pairs(ucount) if v < 50)
+ratings = subset(ratings,
+                 :movieId => ByRow(!in(mexclude)),
+                 :userId => ByRow(!in(uexclude)))
+```
+
+```{julia}
+#| eval: false
+# This takes about an hour on my home computer when using the full dataset
+form1 = @formula(rating ~ 0 + Action + Adventure + Animation +
+                             Children + Comedy + Crime +
+                             Documentary + Drama +
+                             Fantasy + Film_Noir +
+                             Horror + IMAX +
+                             Musical + Mystery + Romance +
+                             Sci_Fi + Thriller + War + Western +
+                             (1 | movieId) +
+                             (1 | userId))
+fit(MixedModel, form1, ratings)
+```
+
 # Limitations of MixedModels.jl
 
 We expect that MixedModels.jl will generally be best in class for the types of models that it can fit. We use cutting edge algorithms based on partial least squares and sparse matrix methods that take advantage of the particular sparsity and structure that arises in the case of the linear mixed effects model with an unconstrained covariance structure. Glossing over a fair number of technical details, MixedModels.jl uses a different, novel formulation of the underlying numerical problem which tends to be much more efficient computationally and allows us to fit models with multiple crossed, partially crossed or nested grouping variables without any special treatment.

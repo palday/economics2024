@@ -19,6 +19,9 @@ When copying and pasting into the Julia REPL, you don't need to remove the `juli
 The Julia REPL will detect the prompt and strip it for you.
 :::
 
+
+Feel free to skip the `movielens_download` step -- the relevant examples are provided only to show scaling with very large datasets.
+
 ```sh
 ~/economics2024$ julia
 
