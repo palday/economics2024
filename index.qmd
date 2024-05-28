@@ -8,14 +8,14 @@ This website contains the course materials for an introduction to mixed effects 
 
 The material here assumes a basic proficiency with the Julia language, including a working Julia installation with Julia 1.9+.
 
-## Installation of Course Materials
+## Installation of course materials
 
 ### Julia packages used in the examples
 
-The source code for everything can be downloaded from [GitHub](https://github.com/palday/economics2024). After downloading the materials, you should install the necessary Julia packages.  
+The source code for everything can be downloaded from [GitHub](https://github.com/palday/economics2024). After downloading the materials, you should install the necessary Julia packages.
 
 ::: {.callout-tip}
-When copying and pasting into the Julia REPL, you don't need to remove the `julia>` prompt from the examples. 
+When copying and pasting into the Julia REPL, you don't need to remove the `julia>` prompt from the examples.
 The Julia REPL will detect the prompt and strip it for you.
 :::
 
@@ -45,7 +45,7 @@ julia> exit()
 ```
 
 ::: {.callout-important}
-Please check that you have the most recent version of the materials directly before the course. 
+Please check that you have the most recent version of the materials directly before the course.
 :::
 
 ### Rendering the course website
