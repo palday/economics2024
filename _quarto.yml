@@ -1,16 +1,30 @@
 project:
   type: website
+engine: julia
+julia:
+  exeflags: ["--project"]
 execute:
   cache: false    # inline results conflict with cache use
   freeze: auto
+execute-dir: project
+
 github:
   owner: palday
   repo: economics2024
 
 website:
   title: "Mixed Effects Models in Julia"
-  navbar:
-    left:
+  # reader-mode: true
+  repo-url: https://github.com/palday/economics2024
+  repo-actions: [edit, issue]
+  # cookie-consent:
+  #   type: express
+  #   style: headline
+  #   palette: dark
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
       - href: index.qmd
         text: Home
       - href: 01-intro.qmd
@@ -25,15 +39,13 @@ website:
         text: Formula Syntax
 format:
   html:
-    theme: cosmo
+    theme:
+      light: flatly
+      dark: darkly
     css: styles.css
+    # page-layout: article
     toc: true
-    author: 
+    author:
       - name: Phillip Alday
         email: me@phillipalday.com
         orcid: 0000-0002-9984-5745
-        
-execute-dir: project
-engine: julia
-julia:
-  exeflags: ["--project"]
