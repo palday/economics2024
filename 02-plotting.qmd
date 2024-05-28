@@ -3,11 +3,71 @@ title: Plotting
 engine: julia
 ---
 
+```{julia}
+#| collapse: true
+progress = false
+```
+
 In the following, we'll be using the [Makie](https://docs.makie.org/v0.21/) ecosystem for plottig. There are multiple major plotting ecosystems in Julia and it's largely a matter of personal preference which to use. However, some plotting tools and packages only exist in one ecosystem, such as [MixedModelsMakie.jl](https://palday.github.io/MixedModelsMakie.jl/v0.4/) for several convenient plotting functions related to MixedModels.jl.
 
-# A model
+```{julia}
+using AlgebraOfGraphics # like ggplot2, but an algebra instead of a grammar
+using CairoMakie # in Makie, you load a particular backend
+using MixedModelsMakie
+
+```
+
+# A few models
+
+We'll use the same models from the introduction. They are repeated here for convenience.
+
+```{julia}
+#| warning: false
+using MixedModels
+insteval = MixedModels.dataset("insteval")
+fm1 = fit(MixedModel,
+          @formula(y ~ 1 + studage + lectage + service + (1|s) + (1|d) + (1|dept)),
+          insteval; progress)
+
+fm2 = fit(MixedModel,
+          @formula(y ~ 1 + studage + lectage + service +
+                      (1 | s) +
+                      (1 + service | d) +
+                      (1 + service | dept)),
+          insteval; progress)
+
+fm3 = fit(MixedModel,
+          @formula(y ~ 1 + studage + lectage + service +
+                      (1 | s) +
+                      (1 + service | d) +
+                      zerocorr(0 + studage | d) +
+                      (1 + service | dept)),
+          insteval; progress)
+```
 
 # Coefficient plots
+
+```{julia}
+coefplot(fm1)
+```
+
+```{julia}
+coefplot(fm1; show_intercept=false, color=:green)
+```
+
+
+```{julia}
+let f = Figure()
+    ax = Axis(f[1, 1])
+    coefplot!(ax, fm1; show_intercept=false, label="fm1")
+    coefplot!(ax, fm2; show_intercept=false, label="fm2")
+    coefplot!(ax, fm3; show_intercept=false, label="fm3")
+    axislegend(ax, "model"; merge=true)
+    f
+end
+```
+
+
 
 ## Fixed Effects
 

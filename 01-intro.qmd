@@ -262,6 +262,8 @@ fm4.rePCA
 The following models consume a large amount of memory because of the sheer size of the underlying dataset. Do **not** attempt to fit these models on a machine with less than 32GiB of memory.
 :::
 
+See also the chapter ["A large-scale observational study" in our online book *Embrace Uncertainty*](https://embraceuncertaintybook.com/largescaleobserved.html).
+
 ## Memory allocation vs. fitting
 
 ```{julia}
