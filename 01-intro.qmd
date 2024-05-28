@@ -3,14 +3,161 @@ title: Introduction
 engine: julia
 ---
 
-# Introduction
-
 MixedModels.jl is part of the JuliaStats ecosystem and so shares a number of interface and design elements with GLM.jl.
 MixedModels.jl can also be viewed as the next step in the research programme behind the R package lme4 (and further back, nlme).
 The focus of development is on linear mixed effects models with unconstrained covariance matrices, with a secondary focus on generalized linear mixed effects models.
 We'll come back to this focus later, when we discuss limitations of the software. For now, let us start off with a simple mixed model.
 
+# A first model
+
+MixedModels.jl ships with a number of sample and testing datasets, with varying levels of documentation.
 ```{julia}
 using MixedModels
 MixedModels.datasets()
 ```
+
+Let's take a look at `insteval`, which is the same dataset [documented in lme4](https://rdrr.io/cran/lme4/man/InstEval.html).
+
+```{julia}
+insteval = MixedModels.dataset("insteval")
+```
+
+- `s`: individual students (2972 values)
+- `d`: individual instructors (from *Dozent*, 2160 values)
+- `studage`: student "age" measured in their current semester number
+- `lectage`: lecture "age", measuring how many semesters back the lecture rated had taken place (this was part of a retrospective study, so some ratings were from a few years back)
+- `service`: whether or not the lecture is held as a "service" in a different department
+- `dept`: department (15 unique values)
+
+```{julia}
+fm1 = fit(MixedModel,
+          @formula(y ~ 1 + studage + lectage + service + (1|s) + (1|d) + (1|dept)),
+          insteval; progress=false)
+```
+
+Note that we don't need to convert the sample dataset into a DataFrame: there is a standard for tabular data in Julia and MixedModels.jl can consume any table meeting that standard. This can be very useful for large datasets, when having an additional copy of the data in memory can be costly, and also allows for using memory mapped tabular structures.
+
+For display in the Quarto notebook, we set `progress=false`, but the progress meter defaults to enabled. For a given model, you may nonetheless not see the progress meter if the model is finished fitting before the first progress update would be delivered.
+
+# Examing model output
+
+We note that MixedModels.jl has a different display in the REPL than it does in an Markdown/HTML/LaTeX document. Packages are free to define `show` methods for displaying their output different for different output venues (i.e. for different MIME types). We can force the plaintext output with `println`:
+
+```{julia}
+println(fm1)
+```
+
+The default pretty printing method for HTML output shows less information than the default output in the REPL, but represents a compact way to display many elements in a single table. We can also extract the individual elements:
+
+```{julia}
+println(coeftable(fm1)) # the fixed effects
+```
+```{julia}
+println(VarCorr(fm1)) # the variance-covariance, i.e. random effect, estimates
+```
+
+Notably, each of these components also has a pretty printing method defined for rich displays.
+
+## Optimization results
+
+For more technically oriented users and debugging problematic models, the fitted model also includes information about its fit:
+
+```{julia}
+fm1.optsum
+```
+
+## Best linear unbiased predictions
+
+We can also examine the best linear unbiased predictions (BLUPS, i.e. conditional modes) of the fitted model:
+
+```{julia}
+ranef(fm1) # gives a compact mathematical representation
+```
+
+
+```{julia}
+re = raneftables(fm1) # gives a NamedTuple of tables for each grouping variable
+```
+
+```{julia}
+re[:dept]
+```
+
+Similarly, `condVar` and `condVartables` provide similar results for the conditional variances, which can be used to construct prediction intervals. Note that this quantity is slightly more challenging to compute, so the next code chunk can be quite slow for large and/or complex models.
+
+```{julia}
+cv = condVartables(fm1)
+```
+
+```{julia}
+# this output still isn't pretty, but we're working on it!
+cv[:dept]
+```
+
+At this point, it becomes convenient to place everything into a dataframe so that we can easily manipulate the relevant quantities.
+
+```{julia}
+using DataFrames
+dept = DataFrame(cv[:dept])
+```
+
+Let's construct prediction intervals:
+
+```{julia}
+select!(dept, :dept, :σ => ByRow(first) => :condvar)
+leftjoin!(dept, DataFrame(re[:dept]); on=:dept)
+```
+
+```{julia}
+select!(dept, "dept", "(Intercept)" => "blup", "condvar")
+transform!(dept,
+           [:blup, :condvar] => ByRow((x,y) -> x - 1.96 * y) => :lower,
+           [:blup, :condvar] => ByRow((x,y) -> x + 1.96 * y) => :upper)
+```
+
+## Measures of model fit
+
+MixedModels.jl provides methods for the standard functions `aic`, `aicc`, `bic`, `deviance`, `fitted`, `logliklihood`, `nobs`, `residuals`.
+
+MixedModels.jl intentionally does not provide methods for `r2` and `adjr2`. These quantities are [notoriously difficult to define in a completely satisfactory way for mixed models](https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#model-summaries-goodness-of-fit-decomposition-of-variance-etc.) and we, the developers, felt uncomfortable giving our implicit endorsement by defining them as part of the core package. That said, there is an implementation of a naive definition of the coefficient of determination in [MixedModelsExtras.jl](https://palday.github.io/MixedModelsExtras.jl/v2/api/#Coefficient-of-Determination) because it is a commonly requested measure and I felt that it was better to have a well-tested implementation than have users handroll their own buggy implementation of an already problematic measure.
+
+# Predicting new data
+
+The functions `fitted`, `residuals`,
+
+# Limitations of MixedModels.jl
+
+We expect that MixedModels.jl will generally be best in class for the types of models that it can fit. We use cutting edge algorithms based on partial least squares and sparse matrix methods that take advantage of the particular sparsity and structure that arises in the case of the linear mixed effects model with an unconstrained covariance structure. Glossing over a fair number of technical details, MixedModels.jl uses a different, novel formulation of the underlying numerical problem which tends to be much more efficient computationally and allows us to fit models with multiple crossed, partially crossed or nested grouping variables without any special treatment.
+
+## Very few options for covariance structure
+
+Nonetheless, there is no free lunch and the tradeoff that we make is that it is *much* more difficult to formulate constraints on the covariance structure (whether on the random effects or on the response/residuals) in our formulation. MixedModels.jl currently supports precisely two covariance structures explicitly:
+
+1. unconstrained
+2. zero correlation (diagonal covariance structure)
+
+It is also possible to express some models with compound symmetry by clever manipulation of the formula syntax (i.e. `(1+c|g)` for categorical `c` with compound symmetry is the same as `(1|g) + (1|g&c)`).
+
+MixedModels.jl does support constraining the residual variance to known scalar value, which is useful in meta-analysis.
+
+[Metida.jl](https://github.com/PharmCat/Metida.jl) may provide an alternative if this functionality is required (not an endorsement).
+
+## No support for generalized linear mixed models with a dispersion parameter
+
+While MixedModels.jl does nominally support any GLM family and link function support by GLM.jl, the results for model families with a dispersion parameter (normal with non-identity link, gamma, inverse Gaussian) are known to be incorrect. The package issues a warning if you attempt to fit such models.
+
+## No support for polytomous responses
+
+Multinomial and ordered responses are not supported. I am unaware of a Julia package offering support for this.
+
+## No support for regularization of the fixed effects
+
+[HighDimMixedModels.jl](https://github.com/solislemuslab/HighDimMixedModels.jl) may provide an alternative if this functionality is required (not an endorsement).
+
+## No support for generalized additive mixed models
+
+Generalized additive models can be expressed a mixed model, so supporting this would require "only" adding a translation layer.
+
+## No support for nonlinear mixed effects models
+
+Pumas.jl (commercial) provides this.
