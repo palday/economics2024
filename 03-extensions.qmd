@@ -1,0 +1,16 @@
+---
+title: Additional Functionality in Other Packages
+engine: julia
+---
+
+# MixedModelsExtras.jl
+
+# RegressionFormulae.jl
+
+# BoxCox.jl
+
+# Effects.jl
+
+# StandardizedPredictors.jl
+
+# RCall.jl and JellyMe4.jl
