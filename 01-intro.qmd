@@ -119,11 +119,142 @@ transform!(dept,
 
 MixedModels.jl provides methods for the standard functions `aic`, `aicc`, `bic`, `deviance`, `fitted`, `logliklihood`, `nobs`, `residuals`.
 
+The deviance is computed as `-2 loglikelihood` and is thus missing an additive constant for the saturated model. However, defining that constant is challenging for mixed models (what is the saturated model? do you saturate via the fixed or the random effects?) and that constant cancels out in the relevant computations.
+
 MixedModels.jl intentionally does not provide methods for `r2` and `adjr2`. These quantities are [notoriously difficult to define in a completely satisfactory way for mixed models](https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#model-summaries-goodness-of-fit-decomposition-of-variance-etc.) and we, the developers, felt uncomfortable giving our implicit endorsement by defining them as part of the core package. That said, there is an implementation of a naive definition of the coefficient of determination in [MixedModelsExtras.jl](https://palday.github.io/MixedModelsExtras.jl/v2/api/#Coefficient-of-Determination) because it is a commonly requested measure and I felt that it was better to have a well-tested implementation than have users handroll their own buggy implementation of an already problematic measure.
 
 # Predicting new data
 
-The functions `fitted`, `residuals`,
+The `predict` function can be used to generate predictions on new data. As an initial sanity check, we can consider the case of predicting from the original data -- this should yield the fitted values:
+
+```{julia}
+predict(fm1, insteval)  ≈ fitted(fm1)
+```
+
+The `predict` function supports three different options for handling new levels of the grouping variable:
+- `:population`: return population values for the relevant grouping variable.
+   In other words, treat the associated random effect as 0.
+   If all grouping variables have new levels, then this is equivalent to
+   just the fixed effects.
+- `:missing`: return `missing`.
+- `:error`: error on this condition.
+
+For example, we can construct a novel dataset based on the first row of the insteval data.
+
+```{julia}
+df = first(DataFrame(insteval), 2)
+df[!, :s] .= "new"
+df
+```
+
+```{julia}
+predict(fm1, df; new_re_levels=:population)
+```
+
+```{julia}
+predict(fm1, df; new_re_levels=:missing)
+```
+
+
+```{julia}
+#| error: true
+predict(fm1, df; new_re_levels=:error)
+```
+
+Similarly, the `simulate` function can be used to simulate new data and will draw a new sample from the estimated random effects distribution:
+
+```{julia}
+using Random
+simulate(MersenneTwister(42), fm1, df)
+```
+
+# Constructing more complex models
+
+We now consider a few more complicated models to examine a few further extensions to the syntax. Including additional varying slopes is as easy as adding them before the relevant grouping variable:
+
+```{julia}
+fm2 = fit(MixedModel,
+          @formula(y ~ 1 + studage + lectage + service +
+                      (1 | s) +
+                      (1 + service | d) +
+                      (1 + service | dept)),
+          insteval; progress=false)
+```
+
+```{julia}
+println(fm2)
+```
+
+Of course, we want to know whether this more complicated model has a better fit than our original model. To that end, we can use the `lrtest` function (same as in GLM.jl and originally part of the StatsAPI.jl specification):
+
+```{julia}
+using GLM: lrtest
+lrtest(fm1, fm2)
+```
+
+The `lrtest` function is very general and as such has rather generic output. The checks it performs for nested models are also fairly conservative in the mixed models case -- determining nesting of mixed models is not always trivial. MixedModels.jl also provides a `likelihoodratio` function that is a bit more specialized for mixed models and which performs a different, less conservative set of nesting checks:
+
+```{julia}
+using MixedModels: likelihoodratiotest
+likelihoodratiotest(fm1, fm2)
+```
+
+We can see that the display is different but that the computed quantities are indeed identical.
+
+We can also consider an even more complicated model, where there is a varying effect of `studage` by `d`ozent -- perhaps a particular instructor has a teaching style that is better for students at the beginning or end of their studies. However, `studage` is a categorical variable with four levels, so including it means that we would include three additional contrasts in the random effects. Together with the intercept and `service`, we would then have 6 * 5 / 2 = 15 correlation parameters to estimate, which dramatically increases model complexity. We can force the correlation parameters for a particular blocking variable to zero with `zerocorr`. Furthermore, if we include the same blocking variable multiple times, then the estimated correlations between the different occurrences are all forced to zero.
+
+```{julia}
+fm3 = fit(MixedModel,
+          @formula(y ~ 1 + studage + lectage + service +
+                      (1 | s) +
+                      (1 + service | d) +
+                      zerocorr(0 + studage | d) +
+                      (1 + service | dept)),
+          insteval; progress=false)
+```
+
+Note that correlation that are systematically zero are shown with a `.` The estimated between-department variance for the intercept term has also dropped to zero, which leads to the associated correlation being `NaN`.
+
+```{julia}
+println(fm3)
+```
+
+This additional model complexity is warranted in terms of goodness of fit:
+
+```{julia}
+likelihoodratiotest(fm2, fm3)
+```
+
+As a final note, we can also examine the effective dimensionality of the random effects with PCA. The property `rePCA` displays the cumulative variance explained for each principle component of each variance component and thus an estimate of excess dimensionality:
+
+```{julia}
+fm2.rePCA
+```
+
+```{julia}
+fm3.rePCA
+```
+
+Together with the estimated correlations, this suggests that we could reduce the complexity of the by-department random effects. (Given that there are only 15 levels of department, it is also not surprising that we are unable to estimate subtle between department effects.)
+
+```{julia}
+fm4 = fit(MixedModel,
+          @formula(y ~ 1 + studage + lectage + service +
+                      (1 | s) +
+                      (1 + service | d) +
+                      zerocorr(0 + studage | d) +
+                      (1 | dept)),
+          insteval; progress=false)
+println(fm4)
+```
+
+```{julia}
+likelihoodratiotest(fm3, fm4)
+```
+
+```{julia}
+fm4.rePCA
+```
 
 # Limitations of MixedModels.jl
 
