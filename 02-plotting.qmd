@@ -47,12 +47,14 @@ fm3 = fit(MixedModel,
 
 # Coefficient plots
 
+## Fixed Effects
+
 ```{julia}
 coefplot(fm1)
 ```
 
 ```{julia}
-coefplot(fm1; show_intercept=false, color=:green)
+coefplot(fm1; show_intercept=false, color=:red)
 ```
 
 
@@ -67,12 +69,55 @@ let f = Figure()
 end
 ```
 
-
-
-## Fixed Effects
-
 ## BLUPs
+
+```{julia}
+caterpillar(fm1, :dept)
+```
+
+```{julia}
+qqcaterpillar(fm1, :dept)
+```
+
+```{julia}
+qqcaterpillar(fm1, :d)
+```
+
+
+```{julia}
+caterpillar(fm2, :dept)
+```
+
+```{julia}
+caterpillar(fm2, :dept; orderby=2)
+```
 
 # General regression diagnostics
 
+## QQ Plots
+
+```{julia}
+qqnorm(fm1)
+```
+
+```{julia}
+qqplot(Normal(0, fm1.σ), fm1)
+```
+
+## Multiple diagnostics
+
 # Shrinkage
+
+```{julia}
+shrinkageplot(fm2, :dept)
+
+```
+
+```{julia}
+shrinkageplot(fm2, :dept, ellipse=true, ellipse_scale=10, n_ellipse=10)
+```
+
+
+```{julia}
+shrinkageplot(fm3, :d, ellipse=true)
+```
