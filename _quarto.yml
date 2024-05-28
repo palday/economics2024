@@ -1,5 +1,11 @@
 project:
   type: website
+execute:
+  cache: false    # inline results conflict with cache use
+  freeze: auto
+github:
+  owner: palday
+  repo: economics2024
 
 website:
   title: "Mixed Effects Models in Julia"
@@ -27,15 +33,7 @@ format:
         email: me@phillipalday.com
         orcid: 0000-0002-9984-5745
         
-github:
-  owner: palday
-  repo: economics2024
-
+execute-dir: project
 engine: julia
-
 julia:
   exeflags: ["--project"]
-
-execute:
-  cache: false    # inline results conflict with cache use
-  freeze: auto

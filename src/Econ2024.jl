@@ -47,6 +47,18 @@ const GENRES = ["Action", "Adventure", "Animation",
                 "Thriller",
                 "War", "Western"]
 
+function _genre(::Missing)
+    vals = Tuple(false for _ in GENRES)
+    keys = Tuple(Symbol(replace(g, "-" => "_")) for g in GENRES)
+    return NamedTuple{keys}(vals)
+end
+
+function _genre(x)
+    vals = Tuple(occursin(g, x) for g in GENRES)
+    keys = Tuple(Symbol(replace(g, "-" => "_")) for g in GENRES)
+    return NamedTuple{keys}(vals)
+end
+                
 function movielens_download()
     @info "Downloading data"
     quiver = String[]
@@ -70,9 +82,7 @@ function movielens_download()
         )
         disallowmissing!(movies; error=false)
         movies.nrtngs = Int32.(movies.nrtngs)
-        for g in GENRES
-            setproperty!(movies, replace(g, "-" => ""), contains.(movies.genres, g))
-        end
+        transform!(movies, :genres => ByRow(_genre) => AsTable)
         select!(movies, Not("genres"))  # now drop the original genres column
         push!(quiver, create_arrow("movies.csv", movies))
         @info "Extracting and saving README"
@@ -80,6 +90,14 @@ function movielens_download()
         open(joinpath(CACHE[], "README.txt"), "w") do io
             write(io, read(readme))
         end
+      
+        # select!(movies, Not([:genres, :title]))
+        select!(ratings, Not(:timestamp))
+        leftjoin!(ratings, movies; on=:movieId)
+        disallowmissing!(ratings, replace.(Econ2024.GENRES, "-" => "_"))
+        select!(ratings, Not(["nrtngs", "imdbId", "tmdbId"]))
+        disallowmissings!(ratings)
+        create_arrow("ratings_genre", ratings)
 
         return nothing
     end
