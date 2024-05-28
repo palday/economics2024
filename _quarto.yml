@@ -1,0 +1,28 @@
+project:
+  type: website
+
+website:
+  title: "Mixed Effects Models in Julia"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+github:
+  owner: palday
+  repo: economics2024
+
+engine: julia
+
+julia:
+  exeflags: ["--project"]
+
+execute:
+  cache: false    # inline results conflict with cache use
+  freeze: auto

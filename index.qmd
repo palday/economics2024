@@ -1,0 +1,15 @@
+---
+title: "Mixed Effects Models in Julia"
+---
+
+This is a Quarto website.
+
+To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+
+<!-- 1. Basics of fitting a mixed model in Julia
+2. Limitations of MixedModels.jl (what is not available)
+3. Plotting functionality for mixed models
+4. Integration with other packages Effects.jl, StandardizedPredictors.jl
+5. The parametric bootstrap, random effects selection -->
+
+*This page was rendered from git revision {{< git-rev short=true >}}.*
