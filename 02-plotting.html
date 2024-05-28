@@ -8,7 +8,7 @@
 
 <meta name="author" content="Phillip Alday">
 
-<title>Mixed Effects Models in Julia</title>
+<title>Mixed Effects Models in Julia – plotting</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -124,7 +90,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
@@ -132,7 +98,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">MixedModels.jl</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./02-plotting.html"> 
+    <a class="nav-link active" href="./02-plotting.html" aria-current="page"> 
 <span class="menu-text">Visualization</span></a>
   </li>  
   <li class="nav-item">
@@ -158,22 +124,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link active" data-scroll-target="#prerequisites">Prerequisites</a></li>
-  <li><a href="#installation-of-course-materials" id="toc-installation-of-course-materials" class="nav-link" data-scroll-target="#installation-of-course-materials">Installation of Course Materials</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Mixed Effects Models in Julia</h1>
 </div>
 
 
@@ -196,52 +154,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This website contains the course materials for an introduction to mixed effects models in Julia using <a href="https://juliastats.org/MixedModels.jl/v4/">MixedModels.jl</a>.</p>
-<section id="prerequisites" class="level2">
-<h2 class="anchored" data-anchor-id="prerequisites">Prerequisites</h2>
-<p>The material here assumes a basic proficiency with the Julia language, including a working Julia installation with Julia 1.9+.</p>
-</section>
-<section id="installation-of-course-materials" class="level2">
-<h2 class="anchored" data-anchor-id="installation-of-course-materials">Installation of Course Materials</h2>
-<p>This repository uses <a href="https://quarto.org">Quarto</a> with the Julia code execution supplied by <a href="https://github.com/PumasAI/QuartoNotebookRunner.jl/">QuartoNotebookRunner.jl</a>, which requires Quarto 1.5+.</p>
-<p>As of early May 2024, Quarto 1.5 is only available as a preview release, which you’ll need to <a href="https://github.com/quarto-dev/quarto-cli/releases">download from GitHub</a>. Under each release’s “Assets”, you can find platform-specific installers.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">~/economics2024$</span> julia</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span><span class="op">&gt;</span> using Pkg</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span><span class="op">&gt;</span> Pkg.activate<span class="er">(</span><span class="st">"."</span><span class="kw">)</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="ex">Activating</span> project at <span class="kw">`</span><span class="ex">~/economics2024</span><span class="kw">`</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span><span class="op">&gt;</span> Pkg.instantiate<span class="er">(</span><span class="kw">)</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> lots <span class="ex">of</span> output <span class="op">&gt;</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span><span class="op">&gt;</span> using Econ2024</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span><span class="op">&gt;</span> Econ2024.movielens_download<span class="er">(</span><span class="kw">)</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="bu">[</span> Info: Downloading data</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="er">[</span> <span class="er">Info:</span> <span class="ex">Extracting</span> and saving ratings</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="bu">[</span> Info: Extracting movies <span class="er">that</span> <span class="ex">are</span> in the ratings table</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="bu">[</span> Info: Extracting and <span class="er">saving</span> <span class="ex">README</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="ex">2-element</span> Vector{String}:</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a> <span class="st">"~/.julia/scratchspa"</span> ⋯ 28 bytes ⋯ <span class="st">"3d4d5d689f47/data/ratings.arrow"</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a> <span class="st">"~/.julia/scratchspa"</span> ⋯ 27 bytes ⋯ <span class="st">"-3d4d5d689f47/data/movies.arrow"</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span><span class="op">&gt;</span> exit<span class="er">(</span><span class="kw">)</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="ex">~/economics2024$</span> quarto preview</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> lots <span class="ex">of</span> output <span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<!-- 1. Basics of fitting a mixed model in Julia
-    - Limitations of MixedModels.jl (what is not available)
-3. Plotting functionality for mixed models
-4. Integration with other packages Effects.jl, StandardizedPredictors.jl
-5. The parametric bootstrap, random effects selection -->
-<p><em>This page was rendered from git revision <a href="https://github.com/palday/economics2024/tree/a5f7fb1
-">a5f7fb1
-</a>.</em></p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

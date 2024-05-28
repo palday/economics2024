@@ -1,9 +1,58 @@
 [
   {
+    "objectID": "01-intro.html",
+    "href": "01-intro.html",
+    "title": "Introduction",
+    "section": "",
+    "text": "MixedModels.jl is part of the JuliaStats ecosystem and so shares a number of interface and design elements with GLM.jl. MixedModels.jl can also be viewed as the next step in the research programme behind the R package lme4 (and further back, nlme)."
+  },
+  {
+    "objectID": "01-intro.html#setup",
+    "href": "01-intro.html#setup",
+    "title": "Introduction",
+    "section": "",
+    "text": "MixedModels.jl is part of the JuliaStats ecosystem and so shares a number of interface and design elements with GLM.jl. MixedModels.jl can also be viewed as the next step in the research programme behind the R package lme4 (and further back, nlme)."
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Mixed Effects Models in Julia",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\nThis page was rendered from git revision a20eaf0\n."
+    "text": "This website contains the course materials for an introduction to mixed effects models in Julia using MixedModels.jl."
+  },
+  {
+    "objectID": "index.html#prerequisites",
+    "href": "index.html#prerequisites",
+    "title": "Mixed Effects Models in Julia",
+    "section": "Prerequisites",
+    "text": "Prerequisites\nThe material here assumes a basic proficiency with the Julia language, including a working Julia installation with Julia 1.9+."
+  },
+  {
+    "objectID": "index.html#installation-of-course-materials",
+    "href": "index.html#installation-of-course-materials",
+    "title": "Mixed Effects Models in Julia",
+    "section": "Installation of Course Materials",
+    "text": "Installation of Course Materials\nThis repository uses Quarto with the Julia code execution supplied by QuartoNotebookRunner.jl, which requires Quarto 1.5+.\nAs of early May 2024, Quarto 1.5 is only available as a preview release, which you’ll need to download from GitHub. Under each release’s “Assets”, you can find platform-specific installers.\n~/economics2024$ julia\n\njulia&gt; using Pkg\n\njulia&gt; Pkg.activate(\".\")\n  Activating project at `~/economics2024`\n\njulia&gt; Pkg.instantiate()\n&lt; lots of output &gt;\n\njulia&gt; using Econ2024\n\njulia&gt; Econ2024.movielens_download()\n[ Info: Downloading data\n[ Info: Extracting and saving ratings\n[ Info: Extracting movies that are in the ratings table\n[ Info: Extracting and saving README\n2-element Vector{String}:\n \"~/.julia/scratchspa\" ⋯ 28 bytes ⋯ \"3d4d5d689f47/data/ratings.arrow\"\n \"~/.julia/scratchspa\" ⋯ 27 bytes ⋯ \"-3d4d5d689f47/data/movies.arrow\"\n\njulia&gt; exit()\n\n~/economics2024$ quarto preview\n\n&lt; lots of output &gt;\n\nThis page was rendered from git revision a5f7fb1\n."
+  },
+  {
+    "objectID": "99-wilkinson-notation.html",
+    "href": "99-wilkinson-notation.html",
+    "title": "Wilkinson-Rogers (1973) notation for models of (co)variance",
+    "section": "",
+    "text": "“Addition” (+) indicates additive, i.e., main effects: a + b indicates main effects of a and b.\n“Multiplication” (*) indicates crossing: main effects and interactions between two terms: a * b indicates main effects of a and b as well as their interaction.\nUsual algebraic rules apply (associativity and distributivity):\n\n(a + b) * c is equivalent to a * c + b * c\na * b * c corresponds to main effects of a, b, and c, as well as all three two-way interactions and the three-way interaction.\n\nCategorical terms are expanded into the associated indicators/contrast variables.\nTilde (~) is used to separate response from predictors.\nThe intercept is indicated by 1.\ny ~ 1 + (a + b) * c is read as:\n\nThe response variable is y.\nThe model contains an intercept.\nThe model contains main effects of a, b, and c.\nThe model contains interactions between a and c and between b and c but not a and b\n\nWe extend this notation for mixed-effects models with the grouping notation (|):\n\n(1 + a | subject) indicates “by-subject random effects for the intercept and main effect a”.\nThis is in line with the usual statistical reading of | as “conditional on”.\n\n\n\n\n\nModels fit with MixedModels.jl are generally linear mixed-effects models with unconstrained random effects covariance matrices and homoskedastic, normally distributed residuals. Under these assumptions, the model specification\nresponse ~ 1 + (age + sex) * education * n_children  + (1 | subject)\ncorresponds to the statistical model\n\\[\\begin{align*}\n\\left(Y |\\mathcal{B}=b\\right) &\\sim N\\left(X\\beta + Zb, \\sigma^2 I \\right) \\\\\n\\mathcal{B} &\\sim N\\left(0, G\\right)\n\\end{align*}\\]\nfor which we wish to obtain the maximum-likelihood estimates for \\(G\\) and thus the fixed-effects \\(\\beta\\).\n\nThe model contains no restrictions on \\(G\\), except that it is positive semidefinite.\nThe response Y is the value of a given response.\nThe fixed-effects design matrix X consists of columns for\n\nthe intercept, age, sex, education, and number of children (contrast coded as appropriate)\nthe interaction of all lower order terms, excluding interactions between age and sex\n\nThe random-effects design matrix Z includes a column for\n\nthe intercept for each subject"
+  },
+  {
+    "objectID": "99-wilkinson-notation.html#general-rules",
+    "href": "99-wilkinson-notation.html#general-rules",
+    "title": "Wilkinson-Rogers (1973) notation for models of (co)variance",
+    "section": "",
+    "text": "“Addition” (+) indicates additive, i.e., main effects: a + b indicates main effects of a and b.\n“Multiplication” (*) indicates crossing: main effects and interactions between two terms: a * b indicates main effects of a and b as well as their interaction.\nUsual algebraic rules apply (associativity and distributivity):\n\n(a + b) * c is equivalent to a * c + b * c\na * b * c corresponds to main effects of a, b, and c, as well as all three two-way interactions and the three-way interaction.\n\nCategorical terms are expanded into the associated indicators/contrast variables.\nTilde (~) is used to separate response from predictors.\nThe intercept is indicated by 1.\ny ~ 1 + (a + b) * c is read as:\n\nThe response variable is y.\nThe model contains an intercept.\nThe model contains main effects of a, b, and c.\nThe model contains interactions between a and c and between b and c but not a and b\n\nWe extend this notation for mixed-effects models with the grouping notation (|):\n\n(1 + a | subject) indicates “by-subject random effects for the intercept and main effect a”.\nThis is in line with the usual statistical reading of | as “conditional on”."
+  },
+  {
+    "objectID": "99-wilkinson-notation.html#mixed-models-in-wilkinson-rogers-and-mathematical-notation",
+    "href": "99-wilkinson-notation.html#mixed-models-in-wilkinson-rogers-and-mathematical-notation",
+    "title": "Wilkinson-Rogers (1973) notation for models of (co)variance",
+    "section": "",
+    "text": "Models fit with MixedModels.jl are generally linear mixed-effects models with unconstrained random effects covariance matrices and homoskedastic, normally distributed residuals. Under these assumptions, the model specification\nresponse ~ 1 + (age + sex) * education * n_children  + (1 | subject)\ncorresponds to the statistical model\n\\[\\begin{align*}\n\\left(Y |\\mathcal{B}=b\\right) &\\sim N\\left(X\\beta + Zb, \\sigma^2 I \\right) \\\\\n\\mathcal{B} &\\sim N\\left(0, G\\right)\n\\end{align*}\\]\nfor which we wish to obtain the maximum-likelihood estimates for \\(G\\) and thus the fixed-effects \\(\\beta\\).\n\nThe model contains no restrictions on \\(G\\), except that it is positive semidefinite.\nThe response Y is the value of a given response.\nThe fixed-effects design matrix X consists of columns for\n\nthe intercept, age, sex, education, and number of children (contrast coded as appropriate)\nthe interaction of all lower order terms, excluding interactions between age and sex\n\nThe random-effects design matrix Z includes a column for\n\nthe intercept for each subject"
   }
 ]
