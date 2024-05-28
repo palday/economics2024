@@ -1,0 +1,8 @@
+# Introduction
+
+## Setup
+
+ 
+
+MixedModels.jl is part of the JuliaStats ecosystem and so shares a number of interface and design elements with GLM.jl.
+MixedModels.jl can also be viewed as the next step in the research programme behind the R package lme4 (and further back, nlme).

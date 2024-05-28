@@ -21,3 +21,7 @@ julia> exit()
 
 < lots of output >
 ```
+
+## The MovieLens Data
+
+A number of sample datasets from the book [Embrace Uncertainty]() are downloaded on demand for examples. The MovieLens data in particular is downloaded as needed from the MovieLens repository due to [restrictions on separate distribution](https://files.grouplens.org/datasets/movielens/ml-25m-README.html). The data is used only for education purposes and must not be used for commercial purposes.

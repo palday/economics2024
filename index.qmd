@@ -2,12 +2,49 @@
 title: "Mixed Effects Models in Julia"
 ---
 
-This is a Quarto website.
+This website contains the course materials for an introduction to mixed effects models in Julia using [MixedModels.jl](https://juliastats.org/MixedModels.jl/v4/).
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+## Prerequisites
+
+The material here assumes a basic proficiency with the Julia language, including a working Julia installation with Julia 1.9+.
+
+## Installation of Course Materials
+
+This repository uses [Quarto](https://quarto.org) with the Julia code execution supplied by [QuartoNotebookRunner.jl](https://github.com/PumasAI/QuartoNotebookRunner.jl/), which requires Quarto 1.5+.
+
+As of early May 2024, Quarto 1.5 is only available as a preview release, which you'll need to [download from GitHub](https://github.com/quarto-dev/quarto-cli/releases). Under each release's "Assets", you can find platform-specific installers.
+
+```sh
+~/economics2024$ julia
+
+julia> using Pkg
+
+julia> Pkg.activate(".")
+  Activating project at `~/economics2024`
+
+julia> Pkg.instantiate()
+< lots of output >
+
+julia> using Econ2024
+
+julia> Econ2024.movielens_download()
+[ Info: Downloading data
+[ Info: Extracting and saving ratings
+[ Info: Extracting movies that are in the ratings table
+[ Info: Extracting and saving README
+2-element Vector{String}:
+ "~/.julia/scratchspa" ⋯ 28 bytes ⋯ "3d4d5d689f47/data/ratings.arrow"
+ "~/.julia/scratchspa" ⋯ 27 bytes ⋯ "-3d4d5d689f47/data/movies.arrow"
+
+julia> exit()
+
+~/economics2024$ quarto preview
+
+< lots of output >
+```
 
 <!-- 1. Basics of fitting a mixed model in Julia
-2. Limitations of MixedModels.jl (what is not available)
+    - Limitations of MixedModels.jl (what is not available)
 3. Plotting functionality for mixed models
 4. Integration with other packages Effects.jl, StandardizedPredictors.jl
 5. The parametric bootstrap, random effects selection -->
