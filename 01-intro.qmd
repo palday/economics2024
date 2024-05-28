@@ -39,7 +39,7 @@ Note that we don't need to convert the sample dataset into a DataFrame: there is
 
 For display in the Quarto notebook, we set `progress=false`, but the progress meter defaults to enabled. For a given model, you may nonetheless not see the progress meter if the model is finished fitting before the first progress update would be delivered.
 
-# Examing model output
+# Examining model output
 
 We note that MixedModels.jl has a different display in the REPL than it does in an Markdown/HTML/LaTeX document. Packages are free to define `show` methods for displaying their output different for different output venues (i.e. for different MIME types). We can force the plaintext output with `println`:
 
