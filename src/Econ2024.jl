@@ -58,7 +58,7 @@ function _genre(x)
     keys = Tuple(Symbol(replace(g, "-" => "_")) for g in GENRES)
     return NamedTuple{keys}(vals)
 end
-                
+
 function movielens_download()
     @info "Downloading data"
     quiver = String[]
@@ -90,13 +90,13 @@ function movielens_download()
         open(joinpath(CACHE[], "README.txt"), "w") do io
             write(io, read(readme))
         end
-      
+
         # select!(movies, Not([:genres, :title]))
         select!(ratings, Not(:timestamp))
         leftjoin!(ratings, movies; on=:movieId)
         disallowmissing!(ratings, replace.(Econ2024.GENRES, "-" => "_"))
         select!(ratings, Not(["nrtngs", "imdbId", "tmdbId"]))
-        disallowmissings!(ratings)
+        disallowmissing!(ratings)
         create_arrow("ratings_genre", ratings)
 
         return nothing
@@ -126,7 +126,7 @@ function osf_io_dataset(name::AbstractString)
         return true
     end
     return false
-end        
+end
 
 dataset(name::Symbol) = dataset(string(name))
 function dataset(name::AbstractString)
