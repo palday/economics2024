@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.39">
+<meta name="generator" content="quarto-1.5.33">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -192,7 +192,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link active" data-scroll-target="#prerequisites">Prerequisites</a></li>
-  <li><a href="#installation-of-course-materials" id="toc-installation-of-course-materials" class="nav-link" data-scroll-target="#installation-of-course-materials">Installation of Course Materials</a></li>
+  <li><a href="#installation-of-course-materials" id="toc-installation-of-course-materials" class="nav-link" data-scroll-target="#installation-of-course-materials">Installation of Course Materials</a>
+  <ul class="collapse">
+  <li><a href="#julia-packages-used-in-the-examples" id="toc-julia-packages-used-in-the-examples" class="nav-link" data-scroll-target="#julia-packages-used-in-the-examples">Julia packages used in the examples</a></li>
+  <li><a href="#rendering-the-course-website" id="toc-rendering-the-course-website" class="nav-link" data-scroll-target="#rendering-the-course-website">Rendering the course website</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/palday/economics2024/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/palday/economics2024/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -231,8 +235,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="installation-of-course-materials" class="level2">
 <h2 class="anchored" data-anchor-id="installation-of-course-materials">Installation of Course Materials</h2>
-<p>This repository uses <a href="https://quarto.org">Quarto</a> with the Julia code execution supplied by <a href="https://github.com/PumasAI/QuartoNotebookRunner.jl/">QuartoNotebookRunner.jl</a>, which requires Quarto 1.5+.</p>
-<p>As of early May 2024, Quarto 1.5 is only available as a preview release, which you’ll need to <a href="https://github.com/quarto-dev/quarto-cli/releases">download from GitHub</a>. Under each release’s “Assets”, you can find platform-specific installers.</p>
+<section id="julia-packages-used-in-the-examples" class="level3">
+<h3 class="anchored" data-anchor-id="julia-packages-used-in-the-examples">Julia packages used in the examples</h3>
+<p>The source code for everything can be downloaded from <a href="https://github.com/palday/economics2024">GitHub</a>. After downloading the materials, you should install the necessary Julia packages.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When copying and pasting into the Julia REPL, you don’t need to remove the <code>julia&gt;</code> prompt from the examples. The Julia REPL will detect the prompt and strip it for you.</p>
+</div>
+</div>
 <div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">~/economics2024$</span> julia</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span><span class="op">&gt;</span> using Pkg</span>
@@ -245,7 +263,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span><span class="op">&gt;</span> using Econ2024</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span><span class="op">&gt;</span> Econ2024.movielens_download<span class="er">(</span><span class="kw">)</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span><span class="op">&gt;</span> Econ2024.movielens_download<span class="er">(</span><span class="kw">)</span> <span class="co"># note: this is a very large dataset!</span></span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="bu">[</span> Info: Downloading data</span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="er">[</span> <span class="er">Info:</span> <span class="ex">Extracting</span> and saving ratings</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="bu">[</span> Info: Extracting movies <span class="er">that</span> <span class="ex">are</span> in the ratings table</span>
@@ -254,21 +272,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a> <span class="st">"~/.julia/scratchspa"</span> ⋯ 28 bytes ⋯ <span class="st">"3d4d5d689f47/data/ratings.arrow"</span></span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a> <span class="st">"~/.julia/scratchspa"</span> ⋯ 27 bytes ⋯ <span class="st">"-3d4d5d689f47/data/movies.arrow"</span></span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span><span class="op">&gt;</span> exit<span class="er">(</span><span class="kw">)</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="ex">~/economics2024$</span> quarto preview</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> lots <span class="ex">of</span> output <span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span><span class="op">&gt;</span> exit<span class="er">(</span><span class="kw">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Please check that you have the most recent version of the materials directly before the course.</p>
+</div>
+</div>
+</section>
+<section id="rendering-the-course-website" class="level3">
+<h3 class="anchored" data-anchor-id="rendering-the-course-website">Rendering the course website</h3>
+<p>This repository uses <a href="https://quarto.org">Quarto</a> with the Julia code execution supplied by <a href="https://github.com/PumasAI/QuartoNotebookRunner.jl/">QuartoNotebookRunner.jl</a>, which requires Quarto 1.5+.</p>
+<p>As of early May 2024, Quarto 1.5 is only available as a preview release, which you’ll need to <a href="https://github.com/quarto-dev/quarto-cli/releases">download from GitHub</a>. Under each release’s “Assets”, you can find platform-specific installers.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You don’t need to install or use quarto to view the course materials. Everything, including the example code, is visible on the website, with links to the underlying source code for the entire page.</p>
+</div>
+</div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">~/economics2024$</span> quarto preview</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> lots <span class="ex">of</span> output <span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <!-- 1. Basics of fitting a mixed model in Julia
     - Limitations of MixedModels.jl (what is not available)
 3. Plotting functionality for mixed models
 4. Integration with other packages Effects.jl, StandardizedPredictors.jl
 5. The parametric bootstrap, random effects selection -->
-<p><em>This page was rendered from git revision <a href="https://github.com/palday/economics2024/tree/e886d9b
-">e886d9b
+<p><em>This page was rendered from git revision <a href="https://github.com/palday/economics2024/tree/71b8d13
+">71b8d13
 </a>.</em></p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
