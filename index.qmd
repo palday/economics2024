@@ -10,9 +10,14 @@ The material here assumes a basic proficiency with the Julia language, including
 
 ## Installation of Course Materials
 
-This repository uses [Quarto](https://quarto.org) with the Julia code execution supplied by [QuartoNotebookRunner.jl](https://github.com/PumasAI/QuartoNotebookRunner.jl/), which requires Quarto 1.5+.
+### Julia packages used in the examples
 
-As of early May 2024, Quarto 1.5 is only available as a preview release, which you'll need to [download from GitHub](https://github.com/quarto-dev/quarto-cli/releases). Under each release's "Assets", you can find platform-specific installers.
+The source code for everything can be downloaded from [GitHub](https://github.com/palday/economics2024). After downloading the materials, you should install the necessary Julia packages.  
+
+::: {.callout-tip}
+When copying and pasting into the Julia REPL, you don't need to remove the `julia>` prompt from the examples. 
+The Julia REPL will detect the prompt and strip it for you.
+:::
 
 ```sh
 ~/economics2024$ julia
@@ -27,7 +32,7 @@ julia> Pkg.instantiate()
 
 julia> using Econ2024
 
-julia> Econ2024.movielens_download()
+julia> Econ2024.movielens_download() # note: this is a very large dataset!
 [ Info: Downloading data
 [ Info: Extracting and saving ratings
 [ Info: Extracting movies that are in the ratings table
@@ -37,7 +42,24 @@ julia> Econ2024.movielens_download()
  "~/.julia/scratchspa" ⋯ 27 bytes ⋯ "-3d4d5d689f47/data/movies.arrow"
 
 julia> exit()
+```
 
+::: {.callout-important}
+Please check that you have the most recent version of the materials directly before the course. 
+:::
+
+### Rendering the course website
+
+This repository uses [Quarto](https://quarto.org) with the Julia code execution supplied by [QuartoNotebookRunner.jl](https://github.com/PumasAI/QuartoNotebookRunner.jl/), which requires Quarto 1.5+.
+
+As of early May 2024, Quarto 1.5 is only available as a preview release, which you'll need to [download from GitHub](https://github.com/quarto-dev/quarto-cli/releases). Under each release's "Assets", you can find platform-specific installers.
+
+::: {.callout-tip}
+You don't need to install or use quarto to view the course materials. Everything, including the example code, is visible on the website, with links to the underlying source code for the entire page.
+:::
+
+
+```sh
 ~/economics2024$ quarto preview
 
 < lots of output >
