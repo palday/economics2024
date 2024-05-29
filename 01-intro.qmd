@@ -314,6 +314,56 @@ form1 = @formula(rating ~ 0 + Action + Adventure + Animation +
 fit(MixedModel, form1, ratings)
 ```
 
+
+# Generalized Linear Mixed Effects Models
+
+One of the test data sets from the Center for Multilevel Modelling, University of Bristol is derived from the 1989 Bangladesh Fertility Survey, [@huq:cleland:1990].
+The data are a subsample of 1934 women selected from 60 of the 64 political districts or *zila*, available as the `contra` data set in the `MixedModels` package.
+
+Variable in the dataset:
+-  `use`, whether the woman chooses to use artificial contraception, with two possible values, `N` and `Y`
+- `dist`, district in which the woman resides
+- `livch`, the number of live children she currently has, coded as `0`, `1`, `2`, and `3+`
+- `age`, in years, but pre-centered and rounded, with the original center not available
+- `urban`, coded as `N` and `Y`, indicating rural or urban.
+
+```{julia}
+contra = MixedModels.dataset(:contra)
+```
+
+In order to simplify the data a bit, we will also add a binary variable `anych` which indicates whether the woman has *any* children:
+
+```{julia}
+contra = DataFrame(contra)
+contra[!, :anych] .= contra[!, :livch] .!= "0"
+describe(contra)
+```
+
+::: {.callout-note}
+For a more principled examination of model building with this dataset, please refer to the [chapter "Generalized linear mixed models for binary responses"](https://embraceuncertaintybook.com/glmmbernoulli.html) of *Embrace Uncertainty*.
+:::
+
+We set some appropriate contrasts
+
+```{julia}
+contrasts = Dict(:livch => EffectsCoding(; base="0"),
+                 :urban => HelmertCoding(),
+                 :anych => HelmertCoding())
+```
+
+and fit a model
+
+```{julia}
+gm1 = fit(MixedModel,
+          @formula(use ~ 1 + urban + anych * age + abs2(age) + (1 | dist & urban)),
+          contra,
+          Bernoulli(),
+          LogitLink(); # optional, defaults to canonical link
+          nAGQ=1, # optional, default to 1
+          fast=false, # optional, defaults to false, see the docs for more details
+          progress=true)
+```
+
 # Limitations of MixedModels.jl
 
 We expect that MixedModels.jl will generally be best in class for the types of models that it can fit. We use cutting edge algorithms based on partial least squares and sparse matrix methods that take advantage of the particular sparsity and structure that arises in the case of the linear mixed effects model with an unconstrained covariance structure. Glossing over a fair number of technical details, MixedModels.jl uses a different, novel formulation of the underlying numerical problem which tends to be much more efficient computationally and allows us to fit models with multiple crossed, partially crossed or nested grouping variables without any special treatment.
@@ -350,3 +400,9 @@ Generalized additive models can be expressed a mixed model, so supporting this w
 ## No support for nonlinear mixed effects models
 
 Pumas.jl (commercial) provides this.
+
+
+# References
+
+::: {#refs}
+:::
