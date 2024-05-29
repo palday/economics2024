@@ -17,6 +17,12 @@ using MixedModelsMakie
 
 ```
 
+Most plotting functions come in two variants: 
+1. "full-service" that generates a new plot for scratch
+2. mutating, that modifies an existing plot or plots into a user-provided `Figure` or `Axis` (a component of a figure).
+
+Following the broader convention within Julia, the mutating variants include a `!` in their name. It is quite common for the full service variant to be a minimal wrapper around the mutating variant and for the documentation of the full service variant to refer to the mutating variant, stating that all arguments are forwarded. We'll see a few examples of this pattern in the following.
+
 # A few models
 
 We'll use the same models from the introduction. They are repeated here for convenience.
@@ -49,31 +55,41 @@ fm3 = fit(MixedModel,
 
 ## Fixed Effects
 
+The function `coefplot` creates a plot of the coefficient estimates along with associated confidence intervals.
+
 ```{julia}
 coefplot(fm1)
 ```
+
+Because the intercept is often on a different scale than categorical predictors and is not of particular interest, `coefplot` also not including it.
 
 ```{julia}
 coefplot(fm1; show_intercept=false, color=:red)
 ```
 
+We can use the mutating variant `coefplot!` to put the plots from all models into a single axis for comparison purposes.
 
 ```{julia}
 let f = Figure()
-    ax = Axis(f[1, 1])
-    coefplot!(ax, fm1; show_intercept=false, label="fm1")
-    coefplot!(ax, fm2; show_intercept=false, label="fm2")
-    coefplot!(ax, fm3; show_intercept=false, label="fm3")
-    axislegend(ax, "model"; merge=true)
+    ax = Axis(f[1, 1]; title="Comparison of estimates")
+    coefplot!(ax, fm1; show_intercept=false, conf_level=0.68, label="fm1")
+    coefplot!(ax, fm2; show_intercept=false, conf_level=0.68, label="fm2")
+    coefplot!(ax, fm3; show_intercept=false, conf_level=0.68, label="fm3")
+    axislegend(ax, "model"; merge=true, position=:rb) # _r_ight _b_ottom
     f
 end
 ```
 
 ## BLUPs
 
+The function `caterpillar` creates a similar plot of the BLUPs and their associated prediction intervals. The name caterpillar comes from the hairy appearance that occurs with large numbers of random effects. In lme4, the comparable plot was called `dotplot`.
+
 ```{julia}
+# select the grouping variable we want to plot
 caterpillar(fm1, :dept)
 ```
+
+When plotting the BLUPs associated with a grouping variable with a very large number of levels, we can use `qqcaterpillar`, which combines a caterpillar plot a QQ-plot like spacing on the y-axis in order to give a better impression of the distribution of the random effects.
 
 ```{julia}
 qqcaterpillar(fm1, :dept)
@@ -83,10 +99,13 @@ qqcaterpillar(fm1, :dept)
 qqcaterpillar(fm1, :d)
 ```
 
+When a grouping variable is associated with multiple experimental variables, then each receives its own panel in the caterpillar plot.
 
 ```{julia}
 caterpillar(fm2, :dept)
 ```
+
+By default, the levels of the grouping variable are sorted by their value for the first column. However, we can select which variables are displayed and which column is used for sorting.
 
 ```{julia}
 caterpillar(fm2, :dept; orderby=2)
