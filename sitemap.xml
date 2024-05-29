@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://palday.github.io/economics2024/index.html</loc>
-    <lastmod>2024-05-29T03:38:54.849Z</lastmod>
+    <loc>https://palday.github.io/economics2024/03-extensions.html</loc>
+    <lastmod>2024-05-29T05:21:01.025Z</lastmod>
   </url>
   <url>
-    <loc>https://palday.github.io/economics2024/02-plotting.html</loc>
-    <lastmod>2024-05-29T03:38:54.845Z</lastmod>
+    <loc>https://palday.github.io/economics2024/01-intro.html</loc>
+    <lastmod>2024-05-29T05:21:01.025Z</lastmod>
   </url>
   <url>
     <loc>https://palday.github.io/economics2024/99-wilkinson-notation.html</loc>
@@ -14,14 +14,14 @@
   </url>
   <url>
     <loc>https://palday.github.io/economics2024/04-bootstrap.html</loc>
-    <lastmod>2024-05-28T05:17:20.750Z</lastmod>
+    <lastmod>2024-05-29T05:18:29.206Z</lastmod>
   </url>
   <url>
-    <loc>https://palday.github.io/economics2024/01-intro.html</loc>
-    <lastmod>2024-05-29T03:38:54.845Z</lastmod>
-  </url>
-  <url>
-    <loc>https://palday.github.io/economics2024/03-extensions.html</loc>
+    <loc>https://palday.github.io/economics2024/index.html</loc>
     <lastmod>2024-05-29T03:38:54.849Z</lastmod>
+  </url>
+  <url>
+    <loc>https://palday.github.io/economics2024/02-plotting.html</loc>
+    <lastmod>2024-05-29T05:21:01.025Z</lastmod>
   </url>
 </urlset>

@@ -55,7 +55,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -205,6 +225,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#memory-allocation-vs.-fitting" id="toc-memory-allocation-vs.-fitting" class="nav-link" data-scroll-target="#memory-allocation-vs.-fitting">Memory allocation vs.&nbsp;fitting</a></li>
   <li><a href="#to-try-on-your-own-after-the-course" id="toc-to-try-on-your-own-after-the-course" class="nav-link" data-scroll-target="#to-try-on-your-own-after-the-course">To try on your own after the course</a></li>
   </ul></li>
+  <li><a href="#generalized-linear-mixed-effects-models" id="toc-generalized-linear-mixed-effects-models" class="nav-link" data-scroll-target="#generalized-linear-mixed-effects-models">Generalized Linear Mixed Effects Models</a></li>
   <li><a href="#limitations-of-mixedmodels.jl" id="toc-limitations-of-mixedmodels.jl" class="nav-link" data-scroll-target="#limitations-of-mixedmodels.jl">Limitations of MixedModels.jl</a>
   <ul class="collapse">
   <li><a href="#very-few-options-for-covariance-structure" id="toc-very-few-options-for-covariance-structure" class="nav-link" data-scroll-target="#very-few-options-for-covariance-structure">Very few options for covariance structure</a></li>
@@ -214,6 +235,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#no-support-for-generalized-additive-mixed-models" id="toc-no-support-for-generalized-additive-mixed-models" class="nav-link" data-scroll-target="#no-support-for-generalized-additive-mixed-models">No support for generalized additive mixed models</a></li>
   <li><a href="#no-support-for-nonlinear-mixed-effects-models" id="toc-no-support-for-nonlinear-mixed-effects-models" class="nav-link" data-scroll-target="#no-support-for-nonlinear-mixed-effects-models">No support for nonlinear mixed effects models</a></li>
   </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/palday/economics2024/edit/main/01-intro.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/palday/economics2024/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -1715,6 +1737,221 @@ Note
 </div>
 </section>
 </section>
+<section id="generalized-linear-mixed-effects-models" class="level1">
+<h1>Generalized Linear Mixed Effects Models</h1>
+<p>One of the test data sets from the Center for Multilevel Modelling, University of Bristol is derived from the 1989 Bangladesh Fertility Survey, <span class="citation" data-cites="huq:cleland:1990">(<a href="#ref-huq:cleland:1990" role="doc-biblioref">Huq &amp; Cleland, 1990</a>)</span>. The data are a subsample of 1934 women selected from 60 of the 64 political districts or <em>zila</em>, available as the <code>contra</code> data set in the <code>MixedModels</code> package.</p>
+<p>Variable in the dataset: - <code>use</code>, whether the woman chooses to use artificial contraception, with two possible values, <code>N</code> and <code>Y</code> - <code>dist</code>, district in which the woman resides - <code>livch</code>, the number of live children she currently has, coded as <code>0</code>, <code>1</code>, <code>2</code>, and <code>3+</code> - <code>age</code>, in years, but pre-centered and rounded, with the original center not available - <code>urban</code>, coded as <code>N</code> and <code>Y</code>, indicating rural or urban.</p>
+<div id="78" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>contra <span class="op">=</span> MixedModels.<span class="fu">dataset</span>(<span class="op">:</span>contra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>Arrow.Table with 1934 rows, 5 columns, and schema:
+ :dist   String
+ :urban  String
+ :livch  String
+ :age    Float64
+ :use    String</code></pre>
+</div>
+</div>
+<p>In order to simplify the data a bit, we will also add a binary variable <code>anych</code> which indicates whether the woman has <em>any</em> children:</p>
+<div id="80" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>contra <span class="op">=</span> <span class="fu">DataFrame</span>(contra)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>contra[!, <span class="op">:</span>anych] <span class="op">.=</span> contra[!, <span class="op">:</span>livch] <span class="op">.!=</span> <span class="st">"0"</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(contra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>6×7 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">variable</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">mean</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">min</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">median</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">max</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">nmissing</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">eltype</th>
+</tr>
+<tr class="odd subheader headerLastRow">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Symbol">Symbol</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Nothing, Float64}">Union…</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Any">Any</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Nothing, Float64}">Union…</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Any">Any</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="DataType">DataType</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: left;">dist</td>
+<td style="text-align: left; font-style: italic;"></td>
+<td style="text-align: left;">D01</td>
+<td style="text-align: left; font-style: italic;"></td>
+<td style="text-align: left;">D61</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">String</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: left;">urban</td>
+<td style="text-align: left; font-style: italic;"></td>
+<td style="text-align: left;">N</td>
+<td style="text-align: left; font-style: italic;"></td>
+<td style="text-align: left;">Y</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">String</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: left;">livch</td>
+<td style="text-align: left; font-style: italic;"></td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left; font-style: italic;"></td>
+<td style="text-align: left;">3+</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">String</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
+<td style="text-align: left;">age</td>
+<td style="text-align: left;">0.00204757</td>
+<td style="text-align: left;">-13.56</td>
+<td style="text-align: left;">-1.56</td>
+<td style="text-align: left;">19.44</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Float64</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
+<td style="text-align: left;">use</td>
+<td style="text-align: left; font-style: italic;"></td>
+<td style="text-align: left;">N</td>
+<td style="text-align: left; font-style: italic;"></td>
+<td style="text-align: left;">Y</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">String</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6</td>
+<td style="text-align: left;">anych</td>
+<td style="text-align: left;">0.725957</td>
+<td style="text-align: left;">false</td>
+<td style="text-align: left;">1.0</td>
+<td style="text-align: left;">true</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Bool</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For a more principled examination of model building with this dataset, please refer to the <a href="https://embraceuncertaintybook.com/glmmbernoulli.html">chapter “Generalized linear mixed models for binary responses”</a> of <em>Embrace Uncertainty</em>.</p>
+</div>
+</div>
+<p>We set some appropriate contrasts</p>
+<div id="82" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>contrasts <span class="op">=</span> <span class="fu">Dict</span>(<span class="op">:</span>livch <span class="op">=&gt;</span> <span class="fu">EffectsCoding</span>(; base<span class="op">=</span><span class="st">"0"</span>),</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>                 <span class="op">:</span>urban <span class="op">=&gt;</span> <span class="fu">HelmertCoding</span>(),</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>                 <span class="op">:</span>anych <span class="op">=&gt;</span> <span class="fu">HelmertCoding</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>Dict{Symbol, StatsModels.AbstractContrasts} with 3 entries:
+  :urban =&gt; HelmertCoding(nothing, nothing)
+  :livch =&gt; EffectsCoding("0", nothing)
+  :anych =&gt; HelmertCoding(nothing, nothing)</code></pre>
+</div>
+</div>
+<p>and fit a model</p>
+<div id="84" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>gm1 <span class="op">=</span> <span class="fu">fit</span>(MixedModel,</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>          <span class="pp">@formula</span>(use <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> urban <span class="op">+</span> anych <span class="op">*</span> age <span class="op">+</span> <span class="fu">abs2</span>(age) <span class="op">+</span> (<span class="fl">1</span> <span class="op">|</span> dist <span class="op">&amp;</span> urban)),</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>          contra,</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>          <span class="fu">Bernoulli</span>(),</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>          <span class="fu">LogitLink</span>(); <span class="co"># optional, defaults to canonical link</span></span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>          nAGQ<span class="op">=</span><span class="fl">1</span>, <span class="co"># optional, default to 1</span></span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>          fast<span class="op">=</span><span class="cn">false</span>, <span class="co"># optional, defaults to false, see the docs for more details</span></span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>          progress<span class="op">=</span><span class="cn">true</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Minimizing 7    Time: 0:00:00 (14.29 ms/it)
+  objective:  2478.7149997753254
+Minimizing 174    Time: 0:00:00 ( 4.85 ms/it)</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">Est.</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">SE</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">z</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">p</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">σ_dist &amp; urban</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-1.3409</td>
+<td style="text-align: right;">0.2211</td>
+<td style="text-align: right;">-6.06</td>
+<td style="text-align: right;">&lt;1e-08</td>
+<td style="text-align: right;">0.5683</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">urban: Y</td>
+<td style="text-align: right;">0.7868</td>
+<td style="text-align: right;">0.1706</td>
+<td style="text-align: right;">4.61</td>
+<td style="text-align: right;">&lt;1e-05</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">anych</td>
+<td style="text-align: right;">1.2130</td>
+<td style="text-align: right;">0.2090</td>
+<td style="text-align: right;">5.80</td>
+<td style="text-align: right;">&lt;1e-08</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">-0.0462</td>
+<td style="text-align: right;">0.0220</td>
+<td style="text-align: right;">-2.10</td>
+<td style="text-align: right;">0.0361</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">abs2(age)</td>
+<td style="text-align: right;">-0.0056</td>
+<td style="text-align: right;">0.0008</td>
+<td style="text-align: right;">-6.67</td>
+<td style="text-align: right;">&lt;1e-10</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">anych &amp; age</td>
+<td style="text-align: right;">0.0665</td>
+<td style="text-align: right;">0.0256</td>
+<td style="text-align: right;">2.59</td>
+<td style="text-align: right;">0.0095</td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
 <section id="limitations-of-mixedmodels.jl" class="level1">
 <h1>Limitations of MixedModels.jl</h1>
 <p>We expect that MixedModels.jl will generally be best in class for the types of models that it can fit. We use cutting edge algorithms based on partial least squares and sparse matrix methods that take advantage of the particular sparsity and structure that arises in the case of the linear mixed effects model with an unconstrained covariance structure. Glossing over a fair number of technical details, MixedModels.jl uses a different, novel formulation of the underlying numerical problem which tends to be much more efficient computationally and allows us to fit models with multiple crossed, partially crossed or nested grouping variables without any special treatment.</p>
@@ -1748,9 +1985,17 @@ Note
 <section id="no-support-for-nonlinear-mixed-effects-models" class="level2">
 <h2 class="anchored" data-anchor-id="no-support-for-nonlinear-mixed-effects-models">No support for nonlinear mixed effects models</h2>
 <p>Pumas.jl (commercial) provides this.</p>
-
-
 </section>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-huq:cleland:1990" class="csl-entry" role="listitem">
+Huq, N. M., &amp; Cleland, J. (1990). <em>Bangladesh fertility survey 1989 (main report)</em>. National Institute of Population Research; Training.
+</div>
+</div>
+
+
 </section>
 
 </main> <!-- /main -->
