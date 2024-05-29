@@ -360,8 +360,9 @@ gm1 = fit(MixedModel,
           Bernoulli(),
           LogitLink(); # optional, defaults to canonical link
           nAGQ=1, # optional, default to 1
-          fast=false, # optional, defaults to false, see the docs for more details
-          progress=true)
+          fast=false, # optional, defaults to false, see the docs for more details.
+          contrasts,
+          progress=false)
 ```
 
 # Limitations of MixedModels.jl

@@ -8,9 +8,8 @@ engine: julia
 progress = false
 ```
 
-
 ```{julia}
-using MixedModels          
+using MixedModels
 ```
 
 ```{julia}
@@ -27,15 +26,12 @@ ie2 = fit(MixedModel,
                       (1 | s) +
                       (1 + service | d) +
                       (1 + service | dept)),
-          insteval; progress)      
+          insteval; progress)
 ```
 
 
 ```{julia}
 sleepstudy = MixedModels.dataset("sleepstudy")
-```
-
-```{julia}
 ss1 = fit(MixedModel, @formula(reaction ~ 1 + days + (1|subj)), sleepstudy)
 ```
 
@@ -43,6 +39,20 @@ ss1 = fit(MixedModel, @formula(reaction ~ 1 + days + (1|subj)), sleepstudy)
 ss2 = fit(MixedModel, @formula(reaction ~ 1 + days + (1 + days|subj)), sleepstudy)
 ```
 
+```{julia}
+using DataFrames
+contra = DataFrame(MixedModels.dataset("contra"))
+contra[!, :anych] .= contra[!, :livch] .!= "0"
+contrasts = Dict(:livch => EffectsCoding(; base="0"),
+                 :urban => HelmertCoding(),
+                 :anych => HelmertCoding())
+gm1 = fit(MixedModel,
+          @formula(use ~ 1 + urban + anych * age + abs2(age) + (1 | dist & urban)),
+          contra,
+          Bernoulli();
+          contrasts,
+          progress)
+```
 
 # MixedModelsExtras.jl
 
@@ -53,12 +63,12 @@ using MixedModelsExtras
 ```
 
 ```{julia}
-r2(ie2; conditional=true)
-```
-```{julia}
-r2(ie2; conditional=false)
+r2(ss2; conditional=true)
 ```
 
+```{julia}
+r2(ss2; conditional=false)
+```
 
 ```{julia}
 icc(ie2)
@@ -68,13 +78,44 @@ icc(ie2)
 icc(ie2, :dept)
 ```
 
+```{julia}
+vif(ie1)
+```
+
+```{julia}
+DataFrame(; coef=fixefnames(ie1)[2:end], VIF=vif(ie1))
+```
+
+```{julia}
+gvif(ie1)
+```
+
+```{julia}
+DataFrame(; term=termnames(ie1)[2][2:end], GVIF=gvif(ie1))
+```
+
 # RegressionFormulae.jl
 
 https://github.com/kleinschmidt/RegressionFormulae.jl
 
-
 ```{julia}
 using RegressionFormulae
+
+fit(MixedModel,
+          @formula(y ~ 1 + service / (studage + lectage) +
+                      (1 | s) +
+                      (1 | d) +
+                      (1 | dept)),
+          insteval; progress)
+```
+
+```{julia}
+fit(MixedModel,
+          @formula(y ~ 1 + (studage + lectage + service)^2 +
+                      (1 | s) +
+                      (1 | d) +
+                      (1 | dept)),
+          insteval; progress)
 ```
 
 # BoxCox.jl
@@ -91,6 +132,12 @@ https://beacon-biosignals.github.io/Effects.jl/v1.2/
 
 ```{julia}
 using Effects
+```
+
+
+```{julia}
+using AlgebraOfGraphics # like ggplot2, but an algebra instead of a grammar
+using CairoMakie
 ```
 
 # StandardizedPredictors.jl
