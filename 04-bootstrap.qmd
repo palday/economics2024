@@ -161,7 +161,7 @@ The bootstrap hower provides a much richer estimate of uncertainty, which we can
 
 ```{julia}
 ridgeplot(pb1a)
-``
+```
 
 `ridgeplot` supports most of the same options as `coefplot` (and also has a mutating variant `ridgeplot!`):
 
