@@ -3,6 +3,37 @@ title: The Parametric Bootstrap
 engine: julia
 ---
 
+```{julia}
+#| code-fold: true
+#| output: false
+progress = false
+```
+
+```{julia}
+using MixedModels
+using Random
+```
+
+```{julia}
+insteval = MixedModels.dataset("insteval")
+ie1 = fit(MixedModel,
+          @formula(y ~ 1 + studage + lectage + service + (1|s) + (1|d) + (1|dept)),
+          insteval; progress)
+
+```
+
+# Speeding up the bootstrap
+
+```{julia}
+@time pb1 = parametricbootstrap(MersenneTwister(42), 100, ie1; progress)
+```
+
+```{julia}
+# would generally recommend something like 1e-8, which is approximately single precision
+optsum_overrides = (; ftol_rel=1e-6)
+@time pb1a = parametricbootstrap(MersenneTwister(42), 500, ie1; optsum_overrides, progress)
+```
+
 # Plotting bootstrap results
 
 ## General plotting
@@ -17,7 +48,6 @@ engine: julia
 
 ## Equal-tail probability / quantile interval
 
-# Speeding up the bootstrap
 
 ## Distributed computing
 
