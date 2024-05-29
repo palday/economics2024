@@ -3,14 +3,113 @@ title: Additional Functionality in Other Packages
 engine: julia
 ---
 
+```{julia}
+#| collapse: true
+progress = false
+```
+
+
+```{julia}
+using MixedModels          
+```
+
+```{julia}
+insteval = MixedModels.dataset("insteval")
+ie1 = fit(MixedModel,
+          @formula(y ~ 1 + studage + lectage + service + (1|s) + (1|d) + (1|dept)),
+          insteval; progress)
+
+```
+
+```{julia}
+ie2 = fit(MixedModel,
+          @formula(y ~ 1 + studage + lectage + service +
+                      (1 | s) +
+                      (1 + service | d) +
+                      (1 + service | dept)),
+          insteval; progress)      
+```
+
+
+```{julia}
+sleepstudy = MixedModels.dataset("sleepstudy")
+```
+
+```{julia}
+ss1 = fit(MixedModel, @formula(reaction ~ 1 + days + (1|subj)), sleepstudy)
+```
+
+```{julia}
+ss2 = fit(MixedModel, @formula(reaction ~ 1 + days + (1 + days|subj)), sleepstudy)
+```
+
+
 # MixedModelsExtras.jl
+
+https://palday.github.io/MixedModelsExtras.jl/v2
+
+```{julia}
+using MixedModelsExtras
+```
+
+```{julia}
+r2(ie2; conditional=true)
+```
+```{julia}
+r2(ie2; conditional=false)
+```
+
+
+```{julia}
+icc(ie2)
+```
+
+```{julia}
+icc(ie2, :dept)
+```
 
 # RegressionFormulae.jl
 
+https://github.com/kleinschmidt/RegressionFormulae.jl
+
+
+```{julia}
+using RegressionFormulae
+```
+
 # BoxCox.jl
+
+https://palday.github.io/BoxCox.jl/v0.3/
+
+```{julia}
+using BoxCox
+```
 
 # Effects.jl
 
+https://beacon-biosignals.github.io/Effects.jl/v1.2/
+
+```{julia}
+using Effects
+```
+
 # StandardizedPredictors.jl
 
+https://beacon-biosignals.github.io/StandardizedPredictors.jl/v1/
+
+```{julia}
+using StandardizedPredictors
+
+# contrasts = Dict()
+
+# ie1 = fit(MixedModel,
+#           @formula(y ~ 1 + studage + lectage + service + (1|s) + (1|d) + (1|dept)),
+#           insteval; progress, contrasts)
+
+```
+
 # RCall.jl and JellyMe4.jl
+
+https://juliainterop.github.io/RCall.jl/stable/
+
+https://github.com/palday/JellyMe4.jl/

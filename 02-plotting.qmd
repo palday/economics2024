@@ -1,18 +1,225 @@
 ---
 title: Plotting
 engine: julia
+julia:
+  exeflags: ["--project"]
 ---
+
+```{julia}
+#| collapse: true
+progress = false
+```
 
 In the following, we'll be using the [Makie](https://docs.makie.org/v0.21/) ecosystem for plottig. There are multiple major plotting ecosystems in Julia and it's largely a matter of personal preference which to use. However, some plotting tools and packages only exist in one ecosystem, such as [MixedModelsMakie.jl](https://palday.github.io/MixedModelsMakie.jl/v0.4/) for several convenient plotting functions related to MixedModels.jl.
 
-# A model
+```{julia}
+using CairoMakie # in Makie, you load a particular backend
+using MixedModelsMakie
+```
+
+Most plotting functions come in two variants:
+1. "full-service" that generates a new plot for scratch
+2. mutating, that modifies an existing plot or plots into a user-provided `Figure` or `Axis` (a component of a figure).
+
+Following the broader convention within Julia, the mutating variants include a `!` in their name. It is quite common for the full service variant to be a minimal wrapper around the mutating variant and for the documentation of the full service variant to refer to the mutating variant, stating that all arguments are forwarded. We'll see a few examples of this pattern in the following.
+
+# A few models
+
+We'll use the same models from the introduction. They are repeated here for convenience.
+
+```{julia}
+#| warning: false
+using MixedModels
+insteval = MixedModels.dataset("insteval")
+fm1 = fit(MixedModel,
+          @formula(y ~ 1 + studage + lectage + service + (1|s) + (1|d) + (1|dept)),
+          insteval; progress)
+
+fm2 = fit(MixedModel,
+          @formula(y ~ 1 + studage + lectage + service +
+                      (1 | s) +
+                      (1 + service | d) +
+                      (1 + service | dept)),
+          insteval; progress)
+
+fm3 = fit(MixedModel,
+          @formula(y ~ 1 + studage + lectage + service +
+                      (1 | s) +
+                      (1 + service | d) +
+                      zerocorr(0 + studage | d) +
+                      (1 + service | dept)),
+          insteval; progress)
+```
+
+Additionally, we'll use a model based on the `sleepstudy` dataset. The data are from a study looking at the impact of sleep deprivation on reaction time and has three variables:
+
+- `subj`: the participant
+- `reaction`: reaction time in milliseconds (mean across tasks)
+- `days`: days of sleep restriction
+
+```{julia}
+sleep = fit(MixedModel,
+            @formula(reaction ~ 1 + days + (1 + days|subj)),
+            MixedModels.dataset("sleepstudy"))
+```
 
 # Coefficient plots
 
 ## Fixed Effects
 
+The function `coefplot` creates a plot of the coefficient estimates along with associated confidence intervals.
+
+```{julia}
+coefplot(fm1)
+```
+
+Because the intercept is often on a different scale than categorical predictors and is not of particular interest, `coefplot` also not including it.
+
+```{julia}
+coefplot(fm1; show_intercept=false, color=:red)
+```
+
+We can use the mutating variant `coefplot!` to put the plots from all models into a single axis for comparison purposes.
+
+```{julia}
+let f = Figure()
+    ax = Axis(f[1, 1]; title="Comparison of estimates")
+    coefplot!(ax, fm1; show_intercept=false, conf_level=0.68, label="fm1")
+    coefplot!(ax, fm2; show_intercept=false, conf_level=0.68, label="fm2")
+    coefplot!(ax, fm3; show_intercept=false, conf_level=0.68, label="fm3")
+    axislegend(ax, "model"; merge=true, position=:rb) # _r_ight _b_ottom
+    f
+end
+```
+
 ## BLUPs
+
+The function `caterpillar` creates a similar plot of the BLUPs and their associated prediction intervals. The name caterpillar comes from the hairy appearance that occurs with large numbers of random effects. In lme4, the comparable plot was called `dotplot`.
+
+```{julia}
+# select the grouping variable we want to plot
+caterpillar(fm1, :dept)
+```
+
+When plotting the BLUPs associated with a grouping variable with a very large number of levels, we can use `qqcaterpillar`, which combines a caterpillar plot a QQ-plot like spacing on the y-axis in order to give a better impression of the distribution of the random effects.
+
+```{julia}
+qqcaterpillar(fm1, :dept)
+```
+
+```{julia}
+qqcaterpillar(fm1, :d)
+```
+
+When a grouping variable is associated with multiple experimental variables, then each receives its own panel in the caterpillar plot.
+
+```{julia}
+caterpillar(fm2, :dept)
+```
+
+By default, the levels of the grouping variable are sorted by their value for the first column. However, we can select which variables are displayed and which column is used for sorting.
+
+```{julia}
+caterpillar(fm2, :dept; cols=["(Intercept)", "service: Y"], orderby=2)
+```
+
+Because caterpillar plots can contain multiple axes, they cannot be plotted directly into an axis, but they can be plotted into a `GridLayout` (i.e. a sublayout) within a `Figure`.
+
+```{julia}
+let f = Figure(; title="Random effects")
+    caterpillar!(f[1, 1], fm2, :dept)
+    Label(f[0, 1], "dept"; tellwidth=false)
+    qqcaterpillar!(f[1, 2], fm2, :d)
+    Label(f[0, 2], "d(ozent)"; tellwidth=false)
+    f
+end
+```
 
 # General regression diagnostics
 
+## QQ Plots
+
+```{julia}
+qqnorm(fm1)
+```
+
+```{julia}
+qqplot(Normal(0, fm1.σ), fm1)
+```
+
+## Multiple diagnostics
+
+```{julia}
+function diagnostic_plot!(f, model)
+    ax = Axis(f[1, 1]; xlabel="fitted", ylabel="observed",
+              title="Observed vs fitted", aspect=AxisAspect(1))
+    scatter!(ax, fitted(model), response(model); alpha=0.5)
+    ablines!(ax, 0, 1; linestyle=:dash)
+
+    ax = Axis(f[1, 2]; xlabel="fitted", ylabel="residual",
+             title="Residuals vs fitted")
+    scatter!(ax, fitted(model), residuals(model); alpha=0.5)
+    hlines!(ax, 0; linestyle=:dash)
+
+    ax = Axis(f[2, 1]; xlabel="theoretical quantiles", ylabel="residuals",
+             title="Normal QQ", aspect=AxisAspect(1))
+    qqnorm!(ax, model)
+
+    ax = Axis(f[2, 2]; xlabel="Residual value", ylabel="density",
+             title="Residuals")
+    density!(ax, residuals(model))
+
+    Label(f[0, :], "Regression diagnostics";
+          tellwidth=false, fontsize=24)
+
+    colsize!(f.layout, 1, Auto(0.5))
+
+    return f
+end
+
+diagnostic_plot!(Figure(), sleep)
+```
+
 # Shrinkage
+
+One of the most powerful aspects of mixed effects models is *shrinkage*, i.e. the regularization entailed in the random effects. `shrinkageplot` displays a comparison of the values obtained for each level of the grouping variable based on a mixed models fit and a fit comparable to traditional ordinary least squares.
+
+```{julia}
+shrinkageplot(fm2, :dept)
+```
+
+While it may look like some values go further away from the grand mean, plotting the associated correlation ellipses (computed from the correlation estimates in the mixed models) shows that these values are on a level-curve closer to the grand mean than where they started.
+
+```{julia}
+shrinkageplot(fm2, :dept, ellipse=true, ellipse_scale=10, n_ellipse=10)
+```
+
+When there are multiple predictors associated with a given grouping variable, then `shrinkageplot` displays all pairwise combinations.
+
+```{julia}
+shrinkageplot(fm3, :d, ellipse=true)
+```
+
+In the case of overparameterized random effects, one or more dimensions will be degenerate and the corresponding panel will show a line or a point mass instead of a cloud of points.
+
+Similar to `caterpillar`, `shrinkageplot` uses multiple axes internal and so must be plotted directly into a `Figure`.
+
+```{julia}
+let f = Figure()
+    Label(f[0, 1], "d(ozent)"; tellwidth=false)
+    shrinkageplot!(f[1, 1], fm2, :d)
+    Label(f[0, 2], "dept"; tellwidth=false)
+    shrinkageplot!(f[1, 2], fm2, :dept)
+    f
+end
+```
+
+```{julia}
+let f = Figure()
+    Label(f[0, 1], "d(ozent)"; tellwidth=false)
+    shrinkageplot!(f[1, 1], fm3, :d)
+    Label(f[0, 2], "dept"; tellwidth=false)
+    shrinkageplot!(f[1, 2], fm3, :dept)
+    f
+end
+```
