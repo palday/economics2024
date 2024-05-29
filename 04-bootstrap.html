@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.33">
+<meta name="generator" content="quarto-1.5.39">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -70,6 +104,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -157,23 +220,17 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotting-bootstrap-results" id="toc-plotting-bootstrap-results" class="nav-link active" data-scroll-target="#plotting-bootstrap-results">Plotting bootstrap results</a>
+  <li><a href="#speeding-up-the-bootstrap" id="toc-speeding-up-the-bootstrap" class="nav-link active" data-scroll-target="#speeding-up-the-bootstrap">Speeding up the bootstrap</a></li>
+  <li><a href="#plotting-bootstrap-results" id="toc-plotting-bootstrap-results" class="nav-link" data-scroll-target="#plotting-bootstrap-results">Plotting bootstrap results</a>
   <ul class="collapse">
   <li><a href="#general-plotting" id="toc-general-plotting" class="nav-link" data-scroll-target="#general-plotting">General plotting</a></li>
   <li><a href="#mixedmodelsmakie.ridgeplot" id="toc-mixedmodelsmakie.ridgeplot" class="nav-link" data-scroll-target="#mixedmodelsmakie.ridgeplot"><code>MixedModelsMakie.ridgeplot</code></a></li>
   </ul></li>
-  <li><a href="#point-masses-at-at-the-edge-of-the-parameter-space" id="toc-point-masses-at-at-the-edge-of-the-parameter-space" class="nav-link" data-scroll-target="#point-masses-at-at-the-edge-of-the-parameter-space">Point-masses at at the edge of the parameter space</a></li>
   <li><a href="#confidence-intervals" id="toc-confidence-intervals" class="nav-link" data-scroll-target="#confidence-intervals">Confidence intervals</a>
   <ul class="collapse">
   <li><a href="#shortest-coverage-highest-density-interval" id="toc-shortest-coverage-highest-density-interval" class="nav-link" data-scroll-target="#shortest-coverage-highest-density-interval">Shortest coverage / highest density interval</a></li>
   <li><a href="#equal-tail-probability-quantile-interval" id="toc-equal-tail-probability-quantile-interval" class="nav-link" data-scroll-target="#equal-tail-probability-quantile-interval">Equal-tail probability / quantile interval</a></li>
   </ul></li>
-  <li><a href="#speeding-up-the-bootstrap" id="toc-speeding-up-the-bootstrap" class="nav-link" data-scroll-target="#speeding-up-the-bootstrap">Speeding up the bootstrap</a>
-  <ul class="collapse">
-  <li><a href="#distributed-computing" id="toc-distributed-computing" class="nav-link" data-scroll-target="#distributed-computing">Distributed computing</a></li>
-  <li><a href="#lower-tolerances" id="toc-lower-tolerances" class="nav-link" data-scroll-target="#lower-tolerances">Lower tolerances</a></li>
-  </ul></li>
-  <li><a href="#the-non-parametric-bootstrap" id="toc-the-non-parametric-bootstrap" class="nav-link" data-scroll-target="#the-non-parametric-bootstrap">The non-parametric bootstrap</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/palday/economics2024/edit/main/04-bootstrap.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/palday/economics2024/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -205,40 +262,1027 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<div id="2" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>progress <span class="op">=</span> <span class="cn">false</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="4" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">MixedModels</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Random</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For the examples here, we’ll be once again using a model of the <code>insteval</code> dataset.</p>
+<div id="6" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>insteval <span class="op">=</span> MixedModels.<span class="fu">dataset</span>(<span class="st">"insteval"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>ie1 <span class="op">=</span> <span class="fu">fit</span>(MixedModel,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>          <span class="pp">@formula</span>(y <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> studage <span class="op">+</span> lectage <span class="op">+</span> service <span class="op">+</span> (<span class="fl">1</span><span class="op">|</span>s) <span class="op">+</span> (<span class="fl">1</span><span class="op">|</span>d) <span class="op">+</span> (<span class="fl">1</span><span class="op">|</span>dept)),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>          insteval; progress)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">Est.</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">SE</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">z</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">p</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">σ_s</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">σ_d</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">σ_dept</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">3.2908</td>
+<td style="text-align: right;">0.0324</td>
+<td style="text-align: right;">101.45</td>
+<td style="text-align: right;">&lt;1e-99</td>
+<td style="text-align: right;">0.3264</td>
+<td style="text-align: right;">0.5106</td>
+<td style="text-align: right;">0.0787</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">studage: 4</td>
+<td style="text-align: right;">0.0519</td>
+<td style="text-align: right;">0.0232</td>
+<td style="text-align: right;">2.24</td>
+<td style="text-align: right;">0.0249</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">studage: 6</td>
+<td style="text-align: right;">0.0721</td>
+<td style="text-align: right;">0.0240</td>
+<td style="text-align: right;">3.01</td>
+<td style="text-align: right;">0.0026</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">studage: 8</td>
+<td style="text-align: right;">0.1363</td>
+<td style="text-align: right;">0.0264</td>
+<td style="text-align: right;">5.17</td>
+<td style="text-align: right;">&lt;1e-06</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lectage: 2</td>
+<td style="text-align: right;">-0.0808</td>
+<td style="text-align: right;">0.0154</td>
+<td style="text-align: right;">-5.25</td>
+<td style="text-align: right;">&lt;1e-06</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">lectage: 3</td>
+<td style="text-align: right;">-0.1102</td>
+<td style="text-align: right;">0.0167</td>
+<td style="text-align: right;">-6.59</td>
+<td style="text-align: right;">&lt;1e-10</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lectage: 4</td>
+<td style="text-align: right;">-0.1892</td>
+<td style="text-align: right;">0.0196</td>
+<td style="text-align: right;">-9.65</td>
+<td style="text-align: right;">&lt;1e-21</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">lectage: 5</td>
+<td style="text-align: right;">-0.1644</td>
+<td style="text-align: right;">0.0214</td>
+<td style="text-align: right;">-7.68</td>
+<td style="text-align: right;">&lt;1e-13</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lectage: 6</td>
+<td style="text-align: right;">-0.2460</td>
+<td style="text-align: right;">0.0205</td>
+<td style="text-align: right;">-12.01</td>
+<td style="text-align: right;">&lt;1e-32</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">service: Y</td>
+<td style="text-align: right;">-0.0727</td>
+<td style="text-align: right;">0.0135</td>
+<td style="text-align: right;">-5.40</td>
+<td style="text-align: right;">&lt;1e-07</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Residual</td>
+<td style="text-align: right;">1.1762</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>One of the advantages of MixedModels.jl compared to its predecessors is its speed, which means that techniques that require fitting many different models are more viable. One such technique is the <a href="https://juliastats.org/MixedModels.jl/v4/bootstrap/">parametric bootstrap</a>, which is implemented in the function <code>parametricbootstrap</code>:</p>
+<div id="8" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> pb1 <span class="op">=</span> <span class="fu">parametricbootstrap</span>(<span class="fu">MersenneTwister</span>(<span class="fl">42</span>), <span class="fl">100</span>, ie1; progress)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>148.312601 seconds (4.35 M allocations: 309.726 MiB, 0.06% gc time, 0.90% compilation time)</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>MixedModelBootstrap with 100 samples
+      parameter  min         q25         median      mean        q75         ⋯
+    ┌─────────────────────────────────────────────────────────────────────────
+ 1  │ β01        3.21783     3.26358     3.28986     3.29053     3.31213     ⋯
+ 2  │ β02        -0.0139569  0.038696    0.0548509   0.0543033   0.0691479   ⋯
+ 3  │ β03        0.0195404   0.0601318   0.0744778   0.0737247   0.0880094   ⋯
+ 4  │ β04        0.0660657   0.123001    0.141956    0.143059    0.161691    ⋯
+ 5  │ β05        -0.125172   -0.0900465  -0.0821355  -0.0829556  -0.0736902  ⋯
+ 6  │ β06        -0.158731   -0.126321   -0.114572   -0.114729   -0.10407    ⋯
+ 7  │ β07        -0.248297   -0.203881   -0.189177   -0.192144   -0.177192   ⋯
+ 8  │ β08        -0.229774   -0.180099   -0.168365   -0.169053   -0.156476   ⋯
+ 9  │ β09        -0.300539   -0.26488    -0.249537   -0.247632   -0.229222   ⋯
+ 10 │ β10        -0.105656   -0.0818337  -0.0744016  -0.075008   -0.0670841  ⋯
+ 11 │ σ          1.16957     1.17411     1.17636     1.17617     1.17837     ⋯
+ 12 │ σ1         0.303494    0.322677    0.326415    0.326131    0.329607    ⋯
+ 13 │ σ2         0.474794    0.500079    0.508222    0.508323    0.516091    ⋯
+ 14 │ σ3         0.0         0.0541107   0.0704625   0.0702876   0.0876531   ⋯
+ 15 │ θ1         0.257713    0.274375    0.277284    0.277288    0.2808      ⋯
+ 16 │ θ2         0.404015    0.425369    0.432303    0.432192    0.438206    ⋯
+ 17 │ θ3         0.0         0.045864    0.0597909   0.0597646   0.0743971   ⋯</code></pre>
+</div>
+</div>
+<p>The bootstrap object has several properties defined, perhaps the most relevant are:</p>
+<div id="10" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># row table of fixed effect coefficient estimates, errors and p values</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pb1.coefpvalues</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>1000-element Vector{@NamedTuple{iter::Int64, coefname::Symbol, β::Float64, se::Float64, z::Float64, p::Float64}}:
+ (iter = 1, coefname = Symbol("(Intercept)"), β = 3.2844928279434065, se = 0.032524210677454375, z = 100.98608880984162, p = 0.0)
+ (iter = 1, coefname = Symbol("studage: 4"), β = 0.06545758686582491, se = 0.023497284000323155, z = 2.78575119000667, p = 0.005340384547276788)
+ (iter = 1, coefname = Symbol("studage: 6"), β = 0.07436675005559862, se = 0.024299662954631682, z = 3.060402532925824, p = 0.0022103969202858778)
+ (iter = 1, coefname = Symbol("studage: 8"), β = 0.1344127262525718, se = 0.026741312887550595, z = 5.026407148287308, p = 4.997542824491115e-7)
+ (iter = 1, coefname = Symbol("lectage: 2"), β = -0.08689967179369408, se = 0.015507345987220238, z = -5.6037746152893595, p = 2.09733396977708e-8)
+ (iter = 1, coefname = Symbol("lectage: 3"), β = -0.11271177326879837, se = 0.016859623249765785, z = -6.685307945440843, p = 2.304395511113411e-11)
+ (iter = 1, coefname = Symbol("lectage: 4"), β = -0.19020613648594675, se = 0.01976629678254787, z = -9.622750208520811, p = 6.409411635232184e-22)
+ (iter = 1, coefname = Symbol("lectage: 5"), β = -0.16073781065271658, se = 0.021585081491058315, z = -7.446708538918545, p = 9.569771650128114e-14)
+ (iter = 1, coefname = Symbol("lectage: 6"), β = -0.2433509853336542, se = 0.020669173607966728, z = -11.77361949487216, p = 5.338388678449715e-32)
+ (iter = 1, coefname = Symbol("service: Y"), β = -0.0560241884982609, se = 0.013588893568175118, z = -4.122792500889719, p = 3.743068523497779e-5)
+ ⋮
+ (iter = 100, coefname = Symbol("studage: 4"), β = 0.025227349131417828, se = 0.023200807563855428, z = 1.0873478891622528, p = 0.27688309181244464)
+ (iter = 100, coefname = Symbol("studage: 6"), β = 0.07088408313765594, se = 0.02400554782671742, z = 2.952820891625901, p = 0.003148846053869982)
+ (iter = 100, coefname = Symbol("studage: 8"), β = 0.10704597045770158, se = 0.02643330877571195, z = 4.049662165489474, p = 5.129162474702447e-5)
+ (iter = 100, coefname = Symbol("lectage: 2"), β = -0.0731927575822571, se = 0.015423996688310335, z = -4.745382086196182, p = 2.0811311858175712e-6)
+ (iter = 100, coefname = Symbol("lectage: 3"), β = -0.08389108088590261, se = 0.016760437632691503, z = -5.005303723231648, p = 5.577401856280357e-7)
+ (iter = 100, coefname = Symbol("lectage: 4"), β = -0.18179640493121893, se = 0.019656009990827204, z = -9.248896648712387, p = 2.2682189479956574e-20)
+ (iter = 100, coefname = Symbol("lectage: 5"), β = -0.14755537474768485, se = 0.02145735710981732, z = -6.876679825595775, p = 6.1263588182793464e-12)
+ (iter = 100, coefname = Symbol("lectage: 6"), β = -0.22400745235549124, se = 0.020548647689622977, z = -10.901323324970651, p = 1.1359305452386851e-27)
+ (iter = 100, coefname = Symbol("service: Y"), β = -0.07461312463098355, se = 0.01352818587611706, z = -5.515382869088685, p = 3.4802146900712763e-8)</code></pre>
+</div>
+</div>
+<div id="12" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># row table of all parameter estimates</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>pb1.allpars</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>(iter = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1  …  100, 100, 100, 100, 100, 100, 100, 100, 100, 100], type = ["β", "β", "β", "β", "β", "β", "β", "β", "β", "β"  …  "β", "β", "β", "β", "β", "β", "σ", "σ", "σ", "σ"], group = Union{Missing, String}[missing, missing, missing, missing, missing, missing, missing, missing, missing, missing  …  missing, missing, missing, missing, missing, missing, "s", "d", "dept", "residual"], names = Union{Missing, String}["(Intercept)", "studage: 4", "studage: 6", "studage: 8", "lectage: 2", "lectage: 3", "lectage: 4", "lectage: 5", "lectage: 6", "service: Y"  …  "lectage: 2", "lectage: 3", "lectage: 4", "lectage: 5", "lectage: 6", "service: Y", "(Intercept)", "(Intercept)", "(Intercept)", missing], value = [3.2844928279434065, 0.06545758686582491, 0.07436675005559862, 0.1344127262525718, -0.08689967179369408, -0.11271177326879837, -0.19020613648594675, -0.16073781065271658, -0.2433509853336542, -0.0560241884982609  …  -0.0731927575822571, -0.08389108088590261, -0.18179640493121893, -0.14755537474768485, -0.22400745235549124, -0.07461312463098355, 0.32664795073240843, 0.5286560253303741, 0.09096234925764528, 1.1778772795686734])</code></pre>
+</div>
+</div>
+<div id="14" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># row table of fixed effect estimates</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>pb1.β</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>1000-element Vector{@NamedTuple{iter::Int64, coefname::Symbol, β::Float64}}:
+ (iter = 1, coefname = Symbol("(Intercept)"), β = 3.2844928279434065)
+ (iter = 1, coefname = Symbol("studage: 4"), β = 0.06545758686582491)
+ (iter = 1, coefname = Symbol("studage: 6"), β = 0.07436675005559862)
+ (iter = 1, coefname = Symbol("studage: 8"), β = 0.1344127262525718)
+ (iter = 1, coefname = Symbol("lectage: 2"), β = -0.08689967179369408)
+ (iter = 1, coefname = Symbol("lectage: 3"), β = -0.11271177326879837)
+ (iter = 1, coefname = Symbol("lectage: 4"), β = -0.19020613648594675)
+ (iter = 1, coefname = Symbol("lectage: 5"), β = -0.16073781065271658)
+ (iter = 1, coefname = Symbol("lectage: 6"), β = -0.2433509853336542)
+ (iter = 1, coefname = Symbol("service: Y"), β = -0.0560241884982609)
+ ⋮
+ (iter = 100, coefname = Symbol("studage: 4"), β = 0.025227349131417828)
+ (iter = 100, coefname = Symbol("studage: 6"), β = 0.07088408313765594)
+ (iter = 100, coefname = Symbol("studage: 8"), β = 0.10704597045770158)
+ (iter = 100, coefname = Symbol("lectage: 2"), β = -0.0731927575822571)
+ (iter = 100, coefname = Symbol("lectage: 3"), β = -0.08389108088590261)
+ (iter = 100, coefname = Symbol("lectage: 4"), β = -0.18179640493121893)
+ (iter = 100, coefname = Symbol("lectage: 5"), β = -0.14755537474768485)
+ (iter = 100, coefname = Symbol("lectage: 6"), β = -0.22400745235549124)
+ (iter = 100, coefname = Symbol("service: Y"), β = -0.07461312463098355)</code></pre>
+</div>
+</div>
+<div id="16" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># summary table in wide format</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>pb1.tbl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>Table with 18 columns and 100 rows:
+      obj        β01      β02          β03        β04        β05         ⋯
+    ┌─────────────────────────────────────────────────────────────────────
+ 1  │ 2.38696e5  3.28449  0.0654576    0.0743668  0.134413   -0.0868997  ⋯
+ 2  │ 2.37312e5  3.32203  0.0517903    0.0670178  0.140742   -0.0950906  ⋯
+ 3  │ 2.37357e5  3.23378  0.116201     0.12476    0.207755   -0.0790354  ⋯
+ 4  │ 2.36992e5  3.37017  0.0338393    0.0450009  0.0898785  -0.0679428  ⋯
+ 5  │ 2.37374e5  3.29213  0.0747803    0.0736114  0.123649   -0.0853712  ⋯
+ 6  │ 2.38354e5  3.23252  0.0557169    0.0965588  0.168224   -0.110282   ⋯
+ 7  │ 2.38595e5  3.32446  0.059913     0.0739455  0.144132   -0.100117   ⋯
+ 8  │ 237394.0   3.33964  0.000101602  0.0394911  0.111735   -0.0740082  ⋯
+ 9  │ 2.37038e5  3.23416  0.0288773    0.0792363  0.143171   -0.0754491  ⋯
+ 10 │ 2.37538e5  3.32298  0.0418344    0.0479324  0.117366   -0.0843251  ⋯
+ 11 │ 2.37919e5  3.34143  0.00910533   0.0340325  0.109248   -0.087165   ⋯
+ 12 │ 2.37707e5  3.24528  0.0830967    0.110315   0.193995   -0.0996083  ⋯
+ 13 │ 2.37413e5  3.28979  0.053302     0.0813591  0.134691   -0.0804611  ⋯
+ 14 │ 2.37776e5  3.2454   0.0078669    0.0846662  0.11677    -0.0655534  ⋯
+ 15 │ 2.37429e5  3.2731   0.0656087    0.0609474  0.12065    -0.0701581  ⋯
+ 16 │ 2.37344e5  3.26359  0.0708762    0.0925205  0.148036   -0.0778408  ⋯
+ 17 │ 237108.0   3.28631  0.0531506    0.0802238  0.136806   -0.0839233  ⋯
+ ⋮  │     ⋮         ⋮          ⋮           ⋮          ⋮          ⋮       ⋱</code></pre>
+</div>
+</div>
+<section id="speeding-up-the-bootstrap" class="level1">
+<h1>Speeding up the bootstrap</h1>
+<p>We can speed up the bootstrap even further by loosening the convergence criteria for the individual fits. <code>parametricbootstrap</code> allows passing in a NamedTuple of modifiers to the optimisation process, called <code>optsum_overrides</code> (the internal structure for the optimization configuration and results in called <code>OptSummary</code> and is stored in the <code>optsum</code> field). The parameter <code>ftol_rel</code> controls the tolerance for the relative change in the objective between optimizer iterations before the model is considered converged. If we set <code>ftol_rel=0.8</code>, then this is approximately equivalent to doing the comparison in single precision. More directly, lowering the fit quality for each replicate will reduce the quality of each replicate, but this may be more than compensated for by the ability to fit a much larger number of replicates in the same time.</p>
+<div id="18" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># would generally recommend something like 1e-8, which is approximately single precision, this is set here to speed up things for the course</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>optsum_overrides <span class="op">=</span> (; ftol_rel<span class="op">=</span><span class="fl">1e-4</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> pb1a <span class="op">=</span> <span class="fu">parametricbootstrap</span>(<span class="fu">MersenneTwister</span>(<span class="fl">42</span>), <span class="fl">500</span>, ie1; optsum_overrides, progress)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>157.409975 seconds (927.34 k allocations: 82.112 MiB, 0.00% gc time, 0.06% compilation time)</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>MixedModelBootstrap with 500 samples
+      parameter  min         q25         median     mean        q75         ⋯
+    ┌────────────────────────────────────────────────────────────────────────
+ 1  │ β01        3.20299     3.26494     3.2899     3.29008     3.31293     ⋯
+ 2  │ β02        -0.0283391  0.0378083   0.0532707  0.0524077   0.0683259   ⋯
+ 3  │ β03        0.00720724  0.056569    0.0732217  0.073101    0.0885576   ⋯
+ 4  │ β04        0.0638129   0.121894    0.139395   0.138754    0.156193    ⋯
+ 5  │ β05        -0.122304   -0.0912163  -0.080359  -0.0807677  -0.0708919  ⋯
+ 6  │ β06        -0.169496   -0.122819   -0.110649  -0.110771   -0.0987061  ⋯
+ 7  │ β07        -0.250192   -0.204949   -0.189633  -0.190552   -0.176709   ⋯
+ 8  │ β08        -0.225879   -0.180139   -0.165734  -0.165591   -0.150571   ⋯
+ 9  │ β09        -0.306457   -0.262256   -0.246656  -0.246079   -0.228992   ⋯
+ 10 │ β10        -0.111311   -0.0811711  -0.072522  -0.0725597  -0.0623461  ⋯
+ 11 │ σ          1.15547     1.16376     1.16765    1.1689      1.17438     ⋯
+ 12 │ σ1         0.220708    0.325071    0.383176   0.367272    0.421881    ⋯
+ 13 │ σ2         0.364374    0.573198    0.846797   0.789478    0.912774    ⋯
+ 14 │ σ3         0.842894    1.18135     1.26918    1.26347     1.30106     ⋯
+ 15 │ θ1         0.186657    0.27578     0.328035   0.314441    0.362649    ⋯
+ 16 │ θ2         0.307885    0.490095    0.727427   0.675862    0.78239     ⋯
+ 17 │ θ3         0.721848    1.01366     1.08494    1.08087     1.11703     ⋯</code></pre>
+</div>
+</div>
+</section>
 <section id="plotting-bootstrap-results" class="level1">
 <h1>Plotting bootstrap results</h1>
+<div id="20" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CairoMakie</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <section id="general-plotting" class="level2">
 <h2 class="anchored" data-anchor-id="general-plotting">General plotting</h2>
+<p>We can create a custom display of the bootstrap densities for the fixed effects and variance components. We’ll build this plot piecewise using <a href="https://aog.makie.org/v0.6/">AlgebraOfGraphics</a>.</p>
+<p>We start by grabbing all the parameter estimates and placing them in a dataframe for easier manipulation.</p>
+<div id="22" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">AlgebraOfGraphics</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">AlgebraOfGraphics</span>: density <span class="co"># override Makie.density</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span>  <span class="fu">DataFrame</span>(pb1a.allpars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>7000×5 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">6975 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">iter</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">type</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">group</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">names</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">value</th>
+</tr>
+<tr class="odd subheader headerLastRow">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, String}">String?</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, String}">String?</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">β</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">3.28408</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">β</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: left;">studage: 4</td>
+<td style="text-align: right;">0.0638134</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">β</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: left;">studage: 6</td>
+<td style="text-align: right;">0.0697497</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">β</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: left;">studage: 8</td>
+<td style="text-align: right;">0.130544</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">β</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: left;">lectage: 2</td>
+<td style="text-align: right;">-0.0869565</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">β</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: left;">lectage: 3</td>
+<td style="text-align: right;">-0.110721</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">7</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">β</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: left;">lectage: 4</td>
+<td style="text-align: right;">-0.187548</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">8</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">β</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: left;">lectage: 5</td>
+<td style="text-align: right;">-0.159629</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">9</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">β</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: left;">lectage: 6</td>
+<td style="text-align: right;">-0.241548</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">10</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">β</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: left;">service: Y</td>
+<td style="text-align: right;">-0.0578331</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">11</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">s</td>
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.350074</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">12</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">d</td>
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">1.01893</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">13</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">dept</td>
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">1.24209</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6989</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: left;">β</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: left;">studage: 6</td>
+<td style="text-align: right;">0.0732301</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6990</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: left;">β</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: left;">studage: 8</td>
+<td style="text-align: right;">0.128215</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6991</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: left;">β</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: left;">lectage: 2</td>
+<td style="text-align: right;">-0.0675102</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6992</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: left;">β</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: left;">lectage: 3</td>
+<td style="text-align: right;">-0.10197</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6993</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: left;">β</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: left;">lectage: 4</td>
+<td style="text-align: right;">-0.175881</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6994</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: left;">β</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: left;">lectage: 5</td>
+<td style="text-align: right;">-0.158475</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6995</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: left;">β</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: left;">lectage: 6</td>
+<td style="text-align: right;">-0.255234</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6996</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: left;">β</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: left;">service: Y</td>
+<td style="text-align: right;">-0.0724982</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6997</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">s</td>
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.378387</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6998</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">d</td>
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.447546</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6999</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">dept</td>
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">1.06067</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">7000</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.17374</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>We then split the parameters up into the fixed effects, random effects and the residual standard deviation.</p>
+<div id="24" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>fe <span class="op">=</span> <span class="fu">subset</span>(df, <span class="op">:</span>group <span class="op">=&gt;</span> <span class="fu">ByRow</span>(ismissing))</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>re <span class="op">=</span> <span class="fu">subset</span>(df, <span class="op">:</span>group <span class="op">=&gt;</span> <span class="fu">ByRow</span>(g <span class="op">-&gt;</span> !<span class="fu">ismissing</span>(g) <span class="op">&amp;&amp;</span> g <span class="op">!=</span> <span class="st">"residual"</span>))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>resid <span class="op">=</span> <span class="fu">subset</span>(df, <span class="op">:</span>group <span class="op">=&gt;</span> <span class="fu">ByRow</span>(g <span class="op">-&gt;</span> !<span class="fu">ismissing</span>(g) <span class="op">&amp;&amp;</span> g <span class="op">==</span> <span class="st">"residual"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>500×5 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">475 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">iter</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">type</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">group</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">names</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">value</th>
+</tr>
+<tr class="odd subheader headerLastRow">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, String}">String?</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, String}">String?</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.17659</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.16269</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.16128</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.16787</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.16338</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.16883</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">7</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.17022</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">8</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.16208</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">9</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.17053</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">10</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.16385</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">11</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.17993</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">12</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.17563</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">13</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.16173</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">489</td>
+<td style="text-align: right;">489</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.16205</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">490</td>
+<td style="text-align: right;">490</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.16089</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">491</td>
+<td style="text-align: right;">491</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.1758</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">492</td>
+<td style="text-align: right;">492</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.17573</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">493</td>
+<td style="text-align: right;">493</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.17036</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">494</td>
+<td style="text-align: right;">494</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.17232</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">495</td>
+<td style="text-align: right;">495</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.16437</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">496</td>
+<td style="text-align: right;">496</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.16701</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">497</td>
+<td style="text-align: right;">497</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.16876</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">498</td>
+<td style="text-align: right;">498</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.16375</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">499</td>
+<td style="text-align: right;">499</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.16358</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">500</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: left;">σ</td>
+<td style="text-align: left;">residual</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+<td style="text-align: right;">1.17374</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>We plot the fixed effects:</p>
+<div id="26" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>plt_fe <span class="op">=</span> <span class="fu">data</span>(fe) <span class="op">*</span> <span class="fu">mapping</span>(<span class="op">:</span>value; layout<span class="op">=:</span>names) <span class="op">*</span> <span class="fu">density</span>()</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt_fe; </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    facet<span class="op">=</span>(;linkxaxes<span class="op">=:</span>none, linkyaxes<span class="op">=:</span>none))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div>
+<figure class="figure">
+<p><img src="04-bootstrap_files/figure-html/cell-14-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>and then tweak the layout a little:</p>
+<div id="28" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>plt_fe <span class="op">=</span> <span class="fu">data</span>(fe) <span class="op">*</span> <span class="fu">mapping</span>(<span class="op">:</span>value; layout<span class="op">=:</span>names) <span class="op">*</span> <span class="fu">density</span>()</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>layout <span class="op">=</span> [(<span class="fl">1</span>, <span class="fl">1</span>), </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>          (<span class="fl">2</span>, <span class="fl">1</span>), (<span class="fl">2</span>, <span class="fl">2</span>), (<span class="fl">2</span>, <span class="fl">3</span>),</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>          (<span class="fl">3</span>, <span class="fl">1</span>), (<span class="fl">3</span>, <span class="fl">2</span>), (<span class="fl">3</span>, <span class="fl">3</span>),</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>          (<span class="fl">4</span>, <span class="fl">1</span>), (<span class="fl">4</span>, <span class="fl">2</span>), (<span class="fl">4</span>, <span class="fl">3</span>)]</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt_fe; </span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    facet<span class="op">=</span>(;linkxaxes<span class="op">=:</span>none, linkyaxes<span class="op">=:</span>none), </span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    palettes<span class="op">=</span>(;layout))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div>
+<figure class="figure">
+<p><img src="04-bootstrap_files/figure-html/cell-15-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Next, we plot the random effects:</p>
+<div id="30" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>plt_re <span class="op">=</span> <span class="fu">data</span>(re) <span class="op">*</span> <span class="fu">mapping</span>(<span class="op">:</span>value; row<span class="op">=:</span>group, col<span class="op">=:</span>names) <span class="op">*</span> <span class="fu">density</span>()</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt_re; facet<span class="op">=</span>(;linkxaxes<span class="op">=:</span>none, linkyaxes<span class="op">=:</span>none))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div>
+<figure class="figure">
+<p><img src="04-bootstrap_files/figure-html/cell-16-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>and the residual SD:</p>
+<div id="32" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>plt_resid <span class="op">=</span> <span class="fu">data</span>(resid) <span class="op">*</span> <span class="fu">mapping</span>(<span class="op">:</span>value) <span class="op">*</span> <span class="fu">density</span>()</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt_resid; axis<span class="op">=</span>(;title<span class="op">=</span><span class="st">"Residual SD"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div>
+<figure class="figure">
+<p><img src="04-bootstrap_files/figure-html/cell-17-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Finally, we put all the plots together into a single figure.</p>
+<div id="34" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> f, facet, layout, axis</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    f <span class="op">=</span> <span class="fu">Figure</span>(; size<span class="op">=</span>(<span class="fl">800</span>, <span class="fl">600</span>))</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    facet <span class="op">=</span> (;linkxaxes<span class="op">=:</span>none, linkyaxes<span class="op">=:</span>none)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    axis<span class="op">=</span>(; xlabel<span class="op">=</span><span class="st">"estimate"</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    layout <span class="op">=</span> [(<span class="fl">1</span>, <span class="fl">1</span>), </span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>              (<span class="fl">2</span>, <span class="fl">1</span>), (<span class="fl">2</span>, <span class="fl">2</span>), (<span class="fl">2</span>, <span class="fl">3</span>),</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>              (<span class="fl">3</span>, <span class="fl">1</span>), (<span class="fl">3</span>, <span class="fl">2</span>), (<span class="fl">3</span>, <span class="fl">3</span>),</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>              (<span class="fl">4</span>, <span class="fl">1</span>), (<span class="fl">4</span>, <span class="fl">2</span>), (<span class="fl">4</span>, <span class="fl">3</span>)]</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Label</span>(f[<span class="fl">0</span>, <span class="fl">1</span>], <span class="st">"Fixed effects"</span>; tellwidth<span class="op">=</span><span class="cn">false</span>, fontsize<span class="op">=</span><span class="fl">20</span>)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">draw!</span>(f[<span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span>], plt_fe; facet, axis, palettes<span class="op">=</span>(;layout))</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Label</span>(f[<span class="fl">0</span>, <span class="fl">2</span>], <span class="st">"Variance components"</span>; tellwidth<span class="op">=</span><span class="cn">false</span>, fontsize<span class="op">=</span><span class="fl">20</span>)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">draw!</span>(f[<span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="fl">2</span>], plt_re; facet, axis)</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">draw!</span>(f[<span class="fl">5</span>, <span class="fl">2</span>], plt_resid; facet, axis)</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Label</span>(f[<span class="kw">end</span><span class="op">+</span><span class="fl">1</span>, <span class="op">:</span>], <span class="st">"Density of bootstrapped estimates"</span>, fontsize<span class="op">=</span><span class="fl">30</span>)</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    f</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div>
+<figure class="figure">
+<p><img src="04-bootstrap_files/figure-html/cell-18-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="mixedmodelsmakie.ridgeplot" class="level2">
 <h2 class="anchored" data-anchor-id="mixedmodelsmakie.ridgeplot"><code>MixedModelsMakie.ridgeplot</code></h2>
+<p>MixedModelsMakie defines <code>coefplot</code> for bootstrap objects:</p>
+<div id="36" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">MixedModelsMakie</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(pb1a; show_intercept<span class="op">=</span><span class="cn">false</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div>
+<figure class="figure">
+<p><img src="04-bootstrap_files/figure-html/cell-19-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The bootstrap hower provides a much richer estimate of uncertainty, which we can see with <code>ridgeplot</code>:</p>
+<div id="38" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ridgeplot</span>(pb1a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div>
+<figure class="figure">
+<p><img src="04-bootstrap_files/figure-html/cell-20-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>ridgeplot</code> supports most of the same options as <code>coefplot</code> (and also has a mutating variant <code>ridgeplot!</code>):</p>
+<div id="40" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ridgeplot</span>(pb1a; show_intercept<span class="op">=</span><span class="cn">false</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div>
+<figure class="figure">
+<p><img src="04-bootstrap_files/figure-html/cell-21-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Ridge plots are sometimes also called <em>joy plots</em> in other languages because they look like a certain Joy Division album cover.</p>
 </section>
-</section>
-<section id="point-masses-at-at-the-edge-of-the-parameter-space" class="level1">
-<h1>Point-masses at at the edge of the parameter space</h1>
 </section>
 <section id="confidence-intervals" class="level1">
 <h1>Confidence intervals</h1>
+<p>MixedModels.jl uses a Wald confidence interval by default:</p>
+<div id="42" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(ie1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>DictTable with 2 columns and 10 rows:
+ coef          lower       upper
+ ────────────┬───────────────────────
+ (Intercept) │ 3.22721     3.35435
+ studage: 4  │ 0.00654108  0.0973544
+ studage: 6  │ 0.0251566   0.119089
+ studage: 8  │ 0.0845873   0.187982
+ lectage: 2  │ -0.110898   -0.0506082
+ lectage: 3  │ -0.142964   -0.0774094
+ lectage: 4  │ -0.227587   -0.15075
+ lectage: 5  │ -0.206382   -0.122478
+ lectage: 6  │ -0.286144   -0.205849
+ service: Y  │ -0.0991229  -0.0463103</code></pre>
+</div>
+</div>
+<p>The critical values for a given confidence level are obtained from the standard normal, i.e.&nbsp;treating the <span class="math inline">\(t\)</span>-values as <span class="math inline">\(z\)</span>-values. This is a reasonable approximation for models fit to more than a few dozen observations, because the <span class="math inline">\(t(\nu)\)</span> rapidly converges to <span class="math inline">\(z\)</span> as <span class="math inline">\(\nu\rightarrow\inf\)</span> and is nigh instinguishable for <span class="math inline">\(\nu &gt; 30\)</span>.</p>
+<p>A more precise definition of the residual (i.e.&nbsp;denominator) degrees of freedom for mixed model is <a href="https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#why-doesnt-lme4-display-denominator-degrees-of-freedomp-values-what-other-options-do-i-have">somewhat challenging</a>, but for even moderately sized datasets, the point is largely moot.</p>
+<p>MixedModels.jl also supports computing confidence intervals from the bootstrapped values.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Profile-based confidence intervals">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Profile-based confidence intervals
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>There is a third way to compute confidence intervals in MixedModels.jl: via the likelihoood profile. However, this code is substantially newer and less well tested and may fail for some models (including some of the examples in this course).</p>
+</div>
+</div>
+</div>
 <section id="shortest-coverage-highest-density-interval" class="level2">
 <h2 class="anchored" data-anchor-id="shortest-coverage-highest-density-interval">Shortest coverage / highest density interval</h2>
+<p>The default method for the a bootstrapped confidence interval is the shortest (contiguous) coverage interval. Per definition, the shortest coverage interval is also the highest density interval. Note that the confidence interval is always a single interval and never the union of disjoint intervals, which may or may not be desirable for multimodal distribution. However, multimodal distributions should not generally arise in the <em>parametric</em> bootstrap.</p>
+<div id="44" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(pb1a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>DictTable with 2 columns and 14 rows:
+ par   lower      upper
+ ────┬──────────────────────
+ β01 │ 3.2257     3.35708
+ β02 │ 0.0086203  0.0960707
+ β03 │ 0.0257096  0.117076
+ β04 │ 0.0913164  0.197404
+ β05 │ -0.111489  -0.0507315
+ β06 │ -0.142169  -0.0771448
+ β07 │ -0.235839  -0.156592
+ β08 │ -0.217021  -0.12986
+ β09 │ -0.286667  -0.204071
+ β10 │ -0.101496  -0.0489058
+ σ   │ 1.15818    1.18167
+ σ1  │ 0.252925   0.439
+ σ2  │ 0.471268   1.01893
+ σ3  │ 1.01487    1.63069</code></pre>
+</div>
+</div>
+<div id="46" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(pb1a; method<span class="op">=:</span>shortest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>DictTable with 2 columns and 14 rows:
+ par   lower      upper
+ ────┬──────────────────────
+ β01 │ 3.2257     3.35708
+ β02 │ 0.0086203  0.0960707
+ β03 │ 0.0257096  0.117076
+ β04 │ 0.0913164  0.197404
+ β05 │ -0.111489  -0.0507315
+ β06 │ -0.142169  -0.0771448
+ β07 │ -0.235839  -0.156592
+ ��08 │ -0.217021  -0.12986
+ β09 │ -0.286667  -0.204071
+ β10 │ -0.101496  -0.0489058
+ σ   │ 1.15818    1.18167
+ σ1  │ 0.252925   0.439
+ σ2  │ 0.471268   1.01893
+ σ3  │ 1.01487    1.63069</code></pre>
+</div>
+</div>
 </section>
 <section id="equal-tail-probability-quantile-interval" class="level2">
 <h2 class="anchored" data-anchor-id="equal-tail-probability-quantile-interval">Equal-tail probability / quantile interval</h2>
-</section>
-</section>
-<section id="speeding-up-the-bootstrap" class="level1">
-<h1>Speeding up the bootstrap</h1>
-<section id="distributed-computing" class="level2">
-<h2 class="anchored" data-anchor-id="distributed-computing">Distributed computing</h2>
-</section>
-<section id="lower-tolerances" class="level2">
-<h2 class="anchored" data-anchor-id="lower-tolerances">Lower tolerances</h2>
-</section>
-</section>
-<section id="the-non-parametric-bootstrap" class="level1">
-<h1>The non-parametric bootstrap</h1>
+<p>The <code>:equaltail</code> method constructs the confidence that has equal tail probability, which is equivalent to the quantile-based interval. This interval is most comparable to the Wald and profile-based intervals.</p>
+<div id="48" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(pb1a; method<span class="op">=:</span>equaltail)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>DictTable with 2 columns and 14 rows:
+ par   lower       upper
+ ────┬───────────────────────
+ β01 │ 3.22657     3.35983
+ β02 │ 0.00330878  0.0949412
+ β03 │ 0.0279016   0.119836
+ β04 │ 0.0785097   0.192055
+ β05 │ -0.110169   -0.0490092
+ β06 │ -0.144158   -0.0787608
+ β07 │ -0.232093   -0.149827
+ β08 │ -0.212548   -0.125297
+ β09 │ -0.288305   -0.205441
+ β10 │ -0.0997842  -0.0457336
+ σ   │ 1.15829     1.18212
+ σ1  │ 0.251931    0.438784
+ σ2  │ 0.460721    1.01502
+ σ3  │ 1.01832     1.6439</code></pre>
+</div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
