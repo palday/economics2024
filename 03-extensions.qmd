@@ -233,6 +233,34 @@ empairs(gm1; dof=Inf)
 Effects.jl will work with any package that supports the StatsAPI.jl-based `RegressionModel` interface.
 :::
 
+<!-- 
+# Vcov.jl
+
+```{julia}
+using Vcov
+```
+
+```{julia}
+stderror(ss2)
+```
+
+
+```{julia}
+using LinearAlgebra
+stderror(ss2) ≈ sqrt.(diag(vcov(ss2)))
+```
+
+```{julia}
+sqrt.(diag(vcov(ss2, Vcov.robust())))
+```
+
+```{julia}
+robust_vcov = Base.Fix2(vcov, Vcov.robust())
+
+ssdesign = Dict(:days => 1:10)
+``` -->
+
+
 # StandardizedPredictors.jl
 
 https://beacon-biosignals.github.io/StandardizedPredictors.jl/v1/
@@ -260,6 +288,8 @@ https://juliainterop.github.io/RCall.jl/stable/
 https://github.com/palday/JellyMe4.jl/
 
 RCall.jl provides a convenient interface for interoperability with R from Julia. JellyMe4.jl extends the functionality of RCall so that MixedModels.jl-fitted models and lme4-fitted models can be translated to each other. In practical terms, this means that you can enjoy the speed of Julia for model fitting, but use all the extra packages you love from R's larger ecosystem.
+
+<!-- MixedModelsSerializtion.jl -->
 
 # References
 

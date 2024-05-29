@@ -3,24 +3,208 @@ title: The Parametric Bootstrap
 engine: julia
 ---
 
-# Plotting bootstrap results
+```{julia}
+#| code-fold: true
+#| output: false
+progress = false
+```
 
-## General plotting
+```{julia}
+using MixedModels
+using Random
+```
 
-## `MixedModelsMakie.ridgeplot`
+For the examples here, we'll be once again using a model of the `insteval` dataset.
 
-# Point-masses at at the edge of the parameter space
+```{julia}
+insteval = MixedModels.dataset("insteval")
+ie1 = fit(MixedModel,
+          @formula(y ~ 1 + studage + lectage + service + (1|s) + (1|d) + (1|dept)),
+          insteval; progress)
 
-# Confidence intervals
+```
 
-## Shortest coverage / highest density interval
 
-## Equal-tail probability / quantile interval
+
+One of the advantages of MixedModels.jl compared to its predecessors is its speed, which means that techniques that require fitting many different models are more viable. One such technique is the [parametric bootstrap](https://juliastats.org/MixedModels.jl/v4/bootstrap/), which is implemented in the function `parametricbootstrap`:
+
+```{julia}
+@time pb1 = parametricbootstrap(MersenneTwister(42), 100, ie1; progress)
+```
+
+The bootstrap object has several properties defined, perhaps the most relevant are:
+
+```{julia}
+# row table of fixed effect coefficient estimates, errors and p values
+pb1.coefpvalues
+```
+
+```{julia}
+# row table of all parameter estimates
+pb1.allpars 
+```
+
+```{julia}
+# row table of fixed effect estimates
+pb1.β
+```
+
+```{julia}
+# summary table in wide format
+pb1.tbl 
+```
 
 # Speeding up the bootstrap
 
-## Distributed computing
+We can speed up the bootstrap even further by loosening the convergence criteria for the individual fits. `parametricbootstrap` allows passing in a NamedTuple of modifiers to the optimisation process, called `optsum_overrides` (the internal structure for the optimization configuration and results in called `OptSummary` and is stored in the `optsum` field). The parameter `ftol_rel` controls the tolerance for the relative change in the objective between optimizer iterations before the model is considered converged. If we set `ftol_rel=0.8`, then this is approximately equivalent to doing the comparison in single precision. More directly, lowering the fit quality for each replicate will reduce the quality of each replicate, but this may be more than compensated for by the ability to fit a much larger number of replicates in the same time.
 
-## Lower tolerances
+```{julia}
+# would generally recommend something like 1e-8, which is approximately single precision, this is set here to speed up things for the course
+optsum_overrides = (; ftol_rel=1e-4)
+@time pb1a = parametricbootstrap(MersenneTwister(42), 500, ie1; optsum_overrides, progress)
+```
 
-# The non-parametric bootstrap
+# Plotting bootstrap results
+
+```{julia}
+using CairoMakie
+```
+
+## General plotting
+
+
+We can create a custom display of the bootstrap densities for the fixed effects and variance components. We'll build this plot piecewise using [AlgebraOfGraphics](https://aog.makie.org/v0.6/). 
+
+We start by grabbing all the parameter estimates and placing them in a dataframe for easier manipulation.
+
+```{julia}
+using AlgebraOfGraphics
+using AlgebraOfGraphics: density # override Makie.density
+using DataFrames
+df =  DataFrame(pb1a.allpars)
+```
+
+We then split the parameters up into the fixed effects, random effects and the residual standard deviation.
+
+```{julia}
+fe = subset(df, :group => ByRow(ismissing))
+re = subset(df, :group => ByRow(g -> !ismissing(g) && g != "residual"))
+resid = subset(df, :group => ByRow(g -> !ismissing(g) && g == "residual"))
+```
+
+We plot the fixed effects:
+
+```{julia}
+plt_fe = data(fe) * mapping(:value; layout=:names) * density()
+draw(plt_fe; 
+    facet=(;linkxaxes=:none, linkyaxes=:none))
+```
+
+and then tweak the layout a little:
+
+```{julia}
+plt_fe = data(fe) * mapping(:value; layout=:names) * density()
+layout = [(1, 1), 
+          (2, 1), (2, 2), (2, 3),
+          (3, 1), (3, 2), (3, 3),
+          (4, 1), (4, 2), (4, 3)]
+draw(plt_fe; 
+    facet=(;linkxaxes=:none, linkyaxes=:none), 
+    palettes=(;layout))
+```
+
+Next, we plot the random effects:
+
+```{julia}
+plt_re = data(re) * mapping(:value; row=:group, col=:names) * density()
+draw(plt_re; facet=(;linkxaxes=:none, linkyaxes=:none))
+```
+
+and the residual SD:
+
+```{julia}
+plt_resid = data(resid) * mapping(:value) * density()
+draw(plt_resid; axis=(;title="Residual SD"))
+```
+
+Finally, we put all the plots together into a single figure.
+
+```{julia}
+let f, facet, layout, axis
+    f = Figure(; size=(800, 600))
+    facet = (;linkxaxes=:none, linkyaxes=:none)
+    axis=(; xlabel="estimate")
+    layout = [(1, 1), 
+              (2, 1), (2, 2), (2, 3),
+              (3, 1), (3, 2), (3, 3),
+              (4, 1), (4, 2), (4, 3)]
+    Label(f[0, 1], "Fixed effects"; tellwidth=false, fontsize=20)
+    draw!(f[1:5, 1], plt_fe; facet, axis, palettes=(;layout))
+    Label(f[0, 2], "Variance components"; tellwidth=false, fontsize=20)
+    draw!(f[1:4, 2], plt_re; facet, axis)
+    draw!(f[5, 2], plt_resid; facet, axis)
+    Label(f[end+1, :], "Density of bootstrapped estimates", fontsize=30)
+    f
+end
+```
+
+## `MixedModelsMakie.ridgeplot`
+
+MixedModelsMakie defines `coefplot` for bootstrap objects:
+
+```{julia}
+using MixedModelsMakie
+coefplot(pb1a; show_intercept=false)
+```
+
+The bootstrap hower provides a much richer estimate of uncertainty, which we can see with `ridgeplot`:
+
+```{julia}
+ridgeplot(pb1a)
+```
+
+`ridgeplot` supports most of the same options as `coefplot` (and also has a mutating variant `ridgeplot!`):
+
+```{julia}
+ridgeplot(pb1a; show_intercept=false)
+```
+
+Ridge plots are sometimes also called _joy plots_ in other languages because they look like a certain Joy Division album cover.
+
+# Confidence intervals
+
+MixedModels.jl uses a Wald confidence interval by default:
+
+```{julia}
+confint(ie1)
+```
+
+The critical values for a given confidence level are obtained from the standard normal, i.e. treating the $t$-values as $z$-values. This is a reasonable approximation for models fit to more than a few dozen observations, because the $t(\nu)$ rapidly converges to $z$ as $\nu\rightarrow\inf$ and is nigh instinguishable for $\nu > 30$.
+
+A more precise definition of the residual (i.e. denominator) degrees of freedom for mixed model is [somewhat challenging](https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#why-doesnt-lme4-display-denominator-degrees-of-freedomp-values-what-other-options-do-i-have), but for even moderately sized datasets, the point is largely moot.
+
+MixedModels.jl also supports computing confidence intervals from the bootstrapped values.
+
+::: {.callout-note collapse="true" title="Profile-based confidence intervals"}
+There is a third way to compute confidence intervals in MixedModels.jl: via the likelihoood profile. However, this code is substantially newer and less well tested and may fail for some models (including some of the examples in this course). 
+:::
+
+## Shortest coverage / highest density interval
+
+The default method for the a bootstrapped confidence interval is the shortest (contiguous) coverage interval. Per definition, the shortest coverage interval is also the highest density interval. Note that the confidence interval is always a single interval and never the union of disjoint intervals, which may or may not be desirable for multimodal distribution. However, multimodal distributions should not generally arise in the *parametric* bootstrap.
+
+```{julia}
+confint(pb1a)
+```
+
+```{julia}
+confint(pb1a; method=:shortest)
+```
+
+## Equal-tail probability / quantile interval
+
+The `:equaltail` method constructs the confidence that has equal tail probability, which is equivalent to the quantile-based interval. This interval is most comparable to the Wald and profile-based intervals.
+
+```{julia}
+confint(pb1a; method=:equaltail)
+```
