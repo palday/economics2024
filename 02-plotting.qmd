@@ -1,6 +1,8 @@
 ---
 title: Plotting
 engine: julia
+julia:
+  exeflags: ["--project"]
 ---
 
 ```{julia}
@@ -11,13 +13,11 @@ progress = false
 In the following, we'll be using the [Makie](https://docs.makie.org/v0.21/) ecosystem for plottig. There are multiple major plotting ecosystems in Julia and it's largely a matter of personal preference which to use. However, some plotting tools and packages only exist in one ecosystem, such as [MixedModelsMakie.jl](https://palday.github.io/MixedModelsMakie.jl/v0.4/) for several convenient plotting functions related to MixedModels.jl.
 
 ```{julia}
-using AlgebraOfGraphics # like ggplot2, but an algebra instead of a grammar
 using CairoMakie # in Makie, you load a particular backend
 using MixedModelsMakie
-
 ```
 
-Most plotting functions come in two variants: 
+Most plotting functions come in two variants:
 1. "full-service" that generates a new plot for scratch
 2. mutating, that modifies an existing plot or plots into a user-provided `Figure` or `Axis` (a component of a figure).
 
@@ -55,12 +55,12 @@ Additionally, we'll use a model based on the `sleepstudy` dataset. The data are 
 
 - `subj`: the participant
 - `reaction`: reaction time in milliseconds (mean across tasks)
-- `days`: days of sleep restriction 
+- `days`: days of sleep restriction
 
 ```{julia}
-sleep = fit(MixedModel, 
-            @formula(reaction ~ 1 + days + (1 + days|subj)), 
-            MixedModels.dataset("sleepstudy"))            
+sleep = fit(MixedModel,
+            @formula(reaction ~ 1 + days + (1 + days|subj)),
+            MixedModels.dataset("sleepstudy"))
 ```
 
 # Coefficient plots
@@ -150,8 +150,8 @@ qqplot(Normal(0, fm1.σ), fm1)
 ## Multiple diagnostics
 
 ```{julia}
-function diagnostic_plot!(f::Figure, model::MixedModel)
-    ax = Axis(f[1, 1]; xlabel="fitted", ylabel="observed", 
+function diagnostic_plot!(f, model)
+    ax = Axis(f[1, 1]; xlabel="fitted", ylabel="observed",
               title="Observed vs fitted", aspect=AxisAspect(1))
     scatter!(ax, fitted(model), response(model); alpha=0.5)
     ablines!(ax, 0, 1; linestyle=:dash)
@@ -160,7 +160,7 @@ function diagnostic_plot!(f::Figure, model::MixedModel)
              title="Residuals vs fitted")
     scatter!(ax, fitted(model), residuals(model); alpha=0.5)
     hlines!(ax, 0; linestyle=:dash)
-    
+
     ax = Axis(f[2, 1]; xlabel="theoretical quantiles", ylabel="residuals",
              title="Normal QQ", aspect=AxisAspect(1))
     qqnorm!(ax, model)
@@ -169,7 +169,7 @@ function diagnostic_plot!(f::Figure, model::MixedModel)
              title="Residuals")
     density!(ax, residuals(model))
 
-    Label(f[0, :], "Regression diagnostics"; 
+    Label(f[0, :], "Regression diagnostics";
           tellwidth=false, fontsize=24)
 
     colsize!(f.layout, 1, Auto(0.5))
@@ -182,16 +182,44 @@ diagnostic_plot!(Figure(), sleep)
 
 # Shrinkage
 
+One of the most powerful aspects of mixed effects models is *shrinkage*, i.e. the regularization entailed in the random effects. `shrinkageplot` displays a comparison of the values obtained for each level of the grouping variable based on a mixed models fit and a fit comparable to traditional ordinary least squares.
+
 ```{julia}
 shrinkageplot(fm2, :dept)
 ```
+
+While it may look like some values go further away from the grand mean, plotting the associated correlation ellipses (computed from the correlation estimates in the mixed models) shows that these values are on a level-curve closer to the grand mean than where they started.
 
 ```{julia}
 shrinkageplot(fm2, :dept, ellipse=true, ellipse_scale=10, n_ellipse=10)
 ```
 
+When there are multiple predictors associated with a given grouping variable, then `shrinkageplot` displays all pairwise combinations.
+
 ```{julia}
 shrinkageplot(fm3, :d, ellipse=true)
 ```
 
+In the case of overparameterized random effects, one or more dimensions will be degenerate and the corresponding panel will show a line or a point mass instead of a cloud of points.
+
 Similar to `caterpillar`, `shrinkageplot` uses multiple axes internal and so must be plotted directly into a `Figure`.
+
+```{julia}
+let f = Figure()
+    Label(f[0, 1], "d(ozent)"; tellwidth=false)
+    shrinkageplot!(f[1, 1], fm2, :d)
+    Label(f[0, 2], "dept"; tellwidth=false)
+    shrinkageplot!(f[1, 2], fm2, :dept)
+    f
+end
+```
+
+```{julia}
+let f = Figure()
+    Label(f[0, 1], "d(ozent)"; tellwidth=false)
+    shrinkageplot!(f[1, 1], fm3, :d)
+    Label(f[0, 2], "dept"; tellwidth=false)
+    shrinkageplot!(f[1, 2], fm3, :dept)
+    f
+end
+```
