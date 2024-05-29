@@ -139,6 +139,7 @@ bc = fit(BoxCoxTransformation, ss2)
 ```
 
 ```{julia}
+using CairoMakie
 boxcoxplot(bc; conf_level=0.95)
 ```
 
