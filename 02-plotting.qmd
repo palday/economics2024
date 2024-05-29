@@ -6,7 +6,7 @@ julia:
 ---
 
 ```{julia}
-#| collapse: true
+#| fold: true
 progress = false
 ```
 
