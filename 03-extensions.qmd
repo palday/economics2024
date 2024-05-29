@@ -4,7 +4,8 @@ engine: julia
 ---
 
 ```{julia}
-#| fold: true
+#| code-fold: true
+#| output: false
 progress = false
 ```
 
