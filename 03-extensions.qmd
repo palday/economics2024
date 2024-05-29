@@ -233,6 +233,34 @@ empairs(gm1; dof=Inf)
 Effects.jl will work with any package that supports the StatsAPI.jl-based `RegressionModel` interface.
 :::
 
+<!-- 
+# Vcov.jl
+
+```{julia}
+using Vcov
+```
+
+```{julia}
+stderror(ss2)
+```
+
+
+```{julia}
+using LinearAlgebra
+stderror(ss2) ≈ sqrt.(diag(vcov(ss2)))
+```
+
+```{julia}
+sqrt.(diag(vcov(ss2, Vcov.robust())))
+```
+
+```{julia}
+robust_vcov = Base.Fix2(vcov, Vcov.robust())
+
+ssdesign = Dict(:days => 1:10)
+``` -->
+
+
 # StandardizedPredictors.jl
 
 https://beacon-biosignals.github.io/StandardizedPredictors.jl/v1/
