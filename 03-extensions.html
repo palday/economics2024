@@ -2300,24 +2300,24 @@ Tip
 # Vcov.jl
 
 
-```ipcxcvk
+```kzytzxn
 using Vcov
 ```
 
-```ipcxcvk
+```kzytzxn
 stderror(ss2)
 ```
 
-```ipcxcvk
+```kzytzxn
 using LinearAlgebra
 stderror(ss2) ≈ sqrt.(diag(vcov(ss2)))
 ```
 
-```ipcxcvk
+```kzytzxn
 sqrt.(diag(vcov(ss2, Vcov.robust())))
 ```
 
-```ipcxcvk
+```kzytzxn
 robust_vcov = Base.Fix2(vcov, Vcov.robust())
 
 ssdesign = Dict(:days => 1:10)
