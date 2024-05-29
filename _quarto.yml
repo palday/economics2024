@@ -2,12 +2,13 @@ project:
   type: website
 engine: julia
 julia:
-  exeflags: ["--project"]
+  exeflags: ["--project", "--threads=auto"]
 execute:
   cache: false    # inline results conflict with cache use
   freeze: auto
 execute-dir: project
-
+bibliography: references.bib
+csl: apa-annotated-bibliography.csl
 github:
   owner: palday
   repo: economics2024
