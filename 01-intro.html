@@ -192,7 +192,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#a-first-model" id="toc-a-first-model" class="nav-link active" data-scroll-target="#a-first-model">A first model</a></li>
-  <li><a href="#examing-model-output" id="toc-examing-model-output" class="nav-link" data-scroll-target="#examing-model-output">Examing model output</a>
+  <li><a href="#examining-model-output" id="toc-examining-model-output" class="nav-link" data-scroll-target="#examining-model-output">Examining model output</a>
   <ul class="collapse">
   <li><a href="#optimization-results" id="toc-optimization-results" class="nav-link" data-scroll-target="#optimization-results">Optimization results</a></li>
   <li><a href="#best-linear-unbiased-predictions" id="toc-best-linear-unbiased-predictions" class="nav-link" data-scroll-target="#best-linear-unbiased-predictions">Best linear unbiased predictions</a></li>
@@ -200,6 +200,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#predicting-new-data" id="toc-predicting-new-data" class="nav-link" data-scroll-target="#predicting-new-data">Predicting new data</a></li>
   <li><a href="#constructing-more-complex-models" id="toc-constructing-more-complex-models" class="nav-link" data-scroll-target="#constructing-more-complex-models">Constructing more complex models</a></li>
+  <li><a href="#how-big-can-we-go" id="toc-how-big-can-we-go" class="nav-link" data-scroll-target="#how-big-can-we-go">How big can we go?</a>
+  <ul class="collapse">
+  <li><a href="#memory-allocation-vs.-fitting" id="toc-memory-allocation-vs.-fitting" class="nav-link" data-scroll-target="#memory-allocation-vs.-fitting">Memory allocation vs.&nbsp;fitting</a></li>
+  <li><a href="#to-try-on-your-own-after-the-course" id="toc-to-try-on-your-own-after-the-course" class="nav-link" data-scroll-target="#to-try-on-your-own-after-the-course">To try on your own after the course</a></li>
+  </ul></li>
   <li><a href="#limitations-of-mixedmodels.jl" id="toc-limitations-of-mixedmodels.jl" class="nav-link" data-scroll-target="#limitations-of-mixedmodels.jl">Limitations of MixedModels.jl</a>
   <ul class="collapse">
   <li><a href="#very-few-options-for-covariance-structure" id="toc-very-few-options-for-covariance-structure" class="nav-link" data-scroll-target="#very-few-options-for-covariance-structure">Very few options for covariance structure</a></li>
@@ -424,8 +429,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Note that we don’t need to convert the sample dataset into a DataFrame: there is a standard for tabular data in Julia and MixedModels.jl can consume any table meeting that standard. This can be very useful for large datasets, when having an additional copy of the data in memory can be costly, and also allows for using memory mapped tabular structures.</p>
 <p>For display in the Quarto notebook, we set <code>progress=false</code>, but the progress meter defaults to enabled. For a given model, you may nonetheless not see the progress meter if the model is finished fitting before the first progress update would be delivered.</p>
 </section>
-<section id="examing-model-output" class="level1">
-<h1>Examing model output</h1>
+<section id="examining-model-output" class="level1">
+<h1>Examining model output</h1>
 <p>We note that MixedModels.jl has a different display in the REPL than it does in an Markdown/HTML/LaTeX document. Packages are free to define <code>show</code> methods for displaying their output different for different output venues (i.e.&nbsp;for different MIME types). We can force the plaintext output with <code>println</code>:</p>
 <div id="8" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(fm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -446,7 +451,7 @@ Residual              1.383337 1.176153
   Fixed-effects parameters:
 ─────────────────────────────────────────────────────
                   Coef.  Std. Error       z  Pr(&gt;|z|)
-─────────────────────────────────────────────────────
+─────────────────────────────────────────────���───────
 (Intercept)   3.29078     0.032436   101.45    &lt;1e-99
 studage: 4    0.0519477   0.0231671    2.24    0.0249
 studage: 6    0.0721226   0.0239626    3.01    0.0026
@@ -466,7 +471,7 @@ service: Y   -0.0727166   0.0134729   -5.40    &lt;1e-07
 <div class="cell-output cell-output-stdout">
 <pre><code>─────────────────────────────────────────────────────
                   Coef.  Std. Error       z  Pr(&gt;|z|)
-─────���───────────────────────────────────────────────
+──────────────────────────────────��──────────────────
 (Intercept)   3.29078     0.032436   101.45    &lt;1e-99
 studage: 4    0.0519477   0.0231671    2.24    0.0249
 studage: 6    0.0721226   0.0239626    3.01    0.0026
@@ -1099,13 +1104,13 @@ Residual              1.383337 1.176153
 <pre>ArgumentError: New level encountered in s
 Stacktrace:
  [1] <span class="ansi-bold">_predict</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">m</span>::LinearMixedModel<span class="ansi-bright-black-fg">{Float64}</span>, <span class="ansi-bright-black-fg">newdata</span>::@NamedTuple<span class="ansi-bright-black-fg">{s::Vector{String}, d::Vector{String}, dept::Vector{String}, studage::Vector{String}, lectage::Vector{String}, service::Vector{String}, y::Vector{Int8}}</span>, <span class="ansi-bright-black-fg">β</span>::Vector<span class="ansi-bright-black-fg">{Float64}</span>; <span class="ansi-bright-black-fg">new_re_levels</span>::Symbol<span class="ansi-bold">)</span>
-<span class="ansi-bright-black-fg">   @</span> <span class="ansi-yellow-fg">MixedModels</span> <span class="ansi-bright-black-fg">~/.julia/packages/MixedModels/s7yZN/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">predict.jl:148</span>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-magenta-fg">MixedModels</span> <span class="ansi-bright-black-fg">~/.julia/packages/MixedModels/s7yZN/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">predict.jl:148</span>
  [2] <span class="ansi-bold">_predict</span>
 <span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/.julia/packages/MixedModels/s7yZN/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">predict.jl:91</span><span class="ansi-bright-black-fg"> [inlined]</span>
  [3] <span class="ansi-bold">predict</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">m</span>::LinearMixedModel<span class="ansi-bright-black-fg">{Float64}</span>, <span class="ansi-bright-black-fg">newdata</span>::@NamedTuple<span class="ansi-bright-black-fg">{s::Vector{String}, d::Vector{String}, dept::Vector{String}, studage::Vector{String}, lectage::Vector{String}, service::Vector{String}, y::Vector{Int8}}</span>; <span class="ansi-bright-black-fg">new_re_levels</span>::Symbol<span class="ansi-bold">)</span>
-<span class="ansi-bright-black-fg">   @</span> <span class="ansi-yellow-fg">MixedModels</span> <span class="ansi-bright-black-fg">~/.julia/packages/MixedModels/s7yZN/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">predict.jl:73</span>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-magenta-fg">MixedModels</span> <span class="ansi-bright-black-fg">~/.julia/packages/MixedModels/s7yZN/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">predict.jl:73</span>
  [4] <span class="ansi-bold">predict</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">m</span>::LinearMixedModel<span class="ansi-bright-black-fg">{Float64}</span>, <span class="ansi-bright-black-fg">newdata</span>::DataFrame; <span class="ansi-bright-black-fg">kwargs</span>::@Kwargs<span class="ansi-bright-black-fg">{new_re_levels::Symbol}</span><span class="ansi-bold">)</span>
-<span class="ansi-bright-black-fg">   @</span> <span class="ansi-yellow-fg">MixedModels</span> <span class="ansi-bright-black-fg">~/.julia/packages/MixedModels/s7yZN/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">predict.jl:220</span>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-magenta-fg">MixedModels</span> <span class="ansi-bright-black-fg">~/.julia/packages/MixedModels/s7yZN/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">predict.jl:220</span>
  [5] top-level scope
 <span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/Work/economics2024/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">01-intro.qmd:161</span></pre>
 </div>
@@ -1302,7 +1307,7 @@ service: Y   -0.0280727   0.0498258   -0.56    0.5732
 <pre><code>Likelihood-ratio test: 2 models fitted on 73421 observations
 ──────────────────────────────────────────────────────────────
      DOF  ΔDOF        LogLik     Deviance     Chisq  p(&gt;Chisq)
-───────���──────────────────────────────────────────────────────
+──────��───────────────────────────────────────────────────────
 [1]   14        -118776.9929  237553.9858                     
 [2]   18     4  -118578.6372  237157.2744  396.7114     &lt;1e-83
 ──────────────────────────────────────────────────────────────</code></pre>
@@ -1503,7 +1508,7 @@ Residual              1.341243 1.158121
  Number of obs: 73421; levels of grouping factors: 1128, 2972, 14
 
   Fixed-effects parameters:
-─────────────────────────────────────────────────────
+──────────────────────────────���──────────────────────
                   Coef.  Std. Error       z  Pr(&gt;|z|)
 ─────────────────────────────────────────────────────
 (Intercept)   3.3081      0.0261931  126.30    &lt;1e-99
@@ -1650,6 +1655,65 @@ service: Y   -0.0499552   0.0224018   -2.23    0.0257
 <pre><code>(d = [0.278607454040941, 0.47860745404094096, 0.678607454040941, 0.8786074540409409, 1.0], s = [1.0], dept = [1.0])</code></pre>
 </div>
 </div>
+</section>
+<section id="how-big-can-we-go" class="level1">
+<h1>How big can we go?</h1>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The following models consume a large amount of memory because of the sheer size of the underlying dataset. Do <strong>not</strong> attempt to fit these models on a machine with less than 32GiB of memory.</p>
+</div>
+</div>
+<p>See also the chapter <a href="https://embraceuncertaintybook.com/largescaleobserved.html">“A large-scale observational study” in our online book <em>Embrace Uncertainty</em></a>.</p>
+<section id="memory-allocation-vs.-fitting" class="level2">
+<h2 class="anchored" data-anchor-id="memory-allocation-vs.-fitting">Memory allocation vs.&nbsp;fitting</h2>
+<div id="68" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Econ2024</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>ratings <span class="op">=</span> Econ2024.<span class="fu">dataset</span>(<span class="st">"ratings"</span>)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> fm_ratings <span class="op">=</span> <span class="fu">LinearMixedModel</span>(<span class="pp">@formula</span>(rating <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> (<span class="fl">1</span><span class="op">|</span>userId) <span class="op">+</span> (<span class="fl">1</span><span class="op">|</span>movieId)), ratings)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="70" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">fit!</span>(fm_ratings)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="to-try-on-your-own-after-the-course" class="level2">
+<h2 class="anchored" data-anchor-id="to-try-on-your-own-after-the-course">To try on your own after the course</h2>
+<div id="72" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Econ2024</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>ratings <span class="op">=</span> <span class="fu">DataFrame</span>(Econ2024.<span class="fu">dataset</span>(<span class="st">"ratings_genre"</span>))</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(ratings)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="74" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">StatsBase</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>mcount <span class="op">=</span> <span class="fu">countmap</span>(ratings.movieId)</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>ucount <span class="op">=</span> <span class="fu">countmap</span>(ratings.userId)</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>mexclude <span class="op">=</span> <span class="fu">Set</span>(k <span class="cf">for</span> (k, v) <span class="kw">in</span> <span class="fu">pairs</span>(mcount) <span class="cf">if</span> v <span class="op">&lt;</span> <span class="fl">50</span>)</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>uexclude <span class="op">=</span> <span class="fu">Set</span>(k <span class="cf">for</span> (k, v) <span class="kw">in</span> <span class="fu">pairs</span>(ucount) <span class="cf">if</span> v <span class="op">&lt;</span> <span class="fl">50</span>)</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>ratings <span class="op">=</span> <span class="fu">subset</span>(ratings,</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>                 <span class="op">:</span>movieId <span class="op">=&gt;</span> <span class="fu">ByRow</span>(!<span class="fu">in</span>(mexclude)),</span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>                 <span class="op">:</span>userId <span class="op">=&gt;</span> <span class="fu">ByRow</span>(!<span class="fu">in</span>(uexclude)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="76" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This takes about an hour on my home computer when using the full dataset</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>form1 <span class="op">=</span> <span class="pp">@formula</span>(rating <span class="op">~</span> <span class="fl">0</span> <span class="op">+</span> Action <span class="op">+</span> Adventure <span class="op">+</span> Animation <span class="op">+</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>                             Children <span class="op">+</span> Comedy <span class="op">+</span> Crime <span class="op">+</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>                             Documentary <span class="op">+</span> Drama <span class="op">+</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>                             Fantasy <span class="op">+</span> Film_Noir <span class="op">+</span></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>                             Horror <span class="op">+</span> IMAX <span class="op">+</span></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>                             Musical <span class="op">+</span> Mystery <span class="op">+</span> Romance <span class="op">+</span></span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>                             Sci_Fi <span class="op">+</span> Thriller <span class="op">+</span> War <span class="op">+</span> Western <span class="op">+</span></span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>                             (<span class="fl">1</span> <span class="op">|</span> movieId) <span class="op">+</span></span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>                             (<span class="fl">1</span> <span class="op">|</span> userId))</span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a><span class="fu">fit</span>(MixedModel, form1, ratings)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
 </section>
 <section id="limitations-of-mixedmodels.jl" class="level1">
 <h1>Limitations of MixedModels.jl</h1>

@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -194,23 +228,446 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<div id="2" class="cell" data-collapse="true" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>progress <span class="op">=</span> <span class="cn">false</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>false</code></pre>
+</div>
+</div>
+<div id="4" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">MixedModels</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="6" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>insteval <span class="op">=</span> MixedModels.<span class="fu">dataset</span>(<span class="st">"insteval"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>ie1 <span class="op">=</span> <span class="fu">fit</span>(MixedModel,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>          <span class="pp">@formula</span>(y <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> studage <span class="op">+</span> lectage <span class="op">+</span> service <span class="op">+</span> (<span class="fl">1</span><span class="op">|</span>s) <span class="op">+</span> (<span class="fl">1</span><span class="op">|</span>d) <span class="op">+</span> (<span class="fl">1</span><span class="op">|</span>dept)),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>          insteval; progress)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">Est.</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">SE</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">z</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">p</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">σ_s</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">σ_d</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">σ_dept</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">3.2908</td>
+<td style="text-align: right;">0.0324</td>
+<td style="text-align: right;">101.45</td>
+<td style="text-align: right;">&lt;1e-99</td>
+<td style="text-align: right;">0.3264</td>
+<td style="text-align: right;">0.5106</td>
+<td style="text-align: right;">0.0787</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">studage: 4</td>
+<td style="text-align: right;">0.0519</td>
+<td style="text-align: right;">0.0232</td>
+<td style="text-align: right;">2.24</td>
+<td style="text-align: right;">0.0249</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">studage: 6</td>
+<td style="text-align: right;">0.0721</td>
+<td style="text-align: right;">0.0240</td>
+<td style="text-align: right;">3.01</td>
+<td style="text-align: right;">0.0026</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">studage: 8</td>
+<td style="text-align: right;">0.1363</td>
+<td style="text-align: right;">0.0264</td>
+<td style="text-align: right;">5.17</td>
+<td style="text-align: right;">&lt;1e-06</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lectage: 2</td>
+<td style="text-align: right;">-0.0808</td>
+<td style="text-align: right;">0.0154</td>
+<td style="text-align: right;">-5.25</td>
+<td style="text-align: right;">&lt;1e-06</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">lectage: 3</td>
+<td style="text-align: right;">-0.1102</td>
+<td style="text-align: right;">0.0167</td>
+<td style="text-align: right;">-6.59</td>
+<td style="text-align: right;">&lt;1e-10</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lectage: 4</td>
+<td style="text-align: right;">-0.1892</td>
+<td style="text-align: right;">0.0196</td>
+<td style="text-align: right;">-9.65</td>
+<td style="text-align: right;">&lt;1e-21</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">lectage: 5</td>
+<td style="text-align: right;">-0.1644</td>
+<td style="text-align: right;">0.0214</td>
+<td style="text-align: right;">-7.68</td>
+<td style="text-align: right;">&lt;1e-13</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lectage: 6</td>
+<td style="text-align: right;">-0.2460</td>
+<td style="text-align: right;">0.0205</td>
+<td style="text-align: right;">-12.01</td>
+<td style="text-align: right;">&lt;1e-32</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">service: Y</td>
+<td style="text-align: right;">-0.0727</td>
+<td style="text-align: right;">0.0135</td>
+<td style="text-align: right;">-5.40</td>
+<td style="text-align: right;">&lt;1e-07</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Residual</td>
+<td style="text-align: right;">1.1762</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="8" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ie2 <span class="op">=</span> <span class="fu">fit</span>(MixedModel,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>          <span class="pp">@formula</span>(y <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> studage <span class="op">+</span> lectage <span class="op">+</span> service <span class="op">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                      (<span class="fl">1</span> <span class="op">|</span> s) <span class="op">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                      (<span class="fl">1</span> <span class="op">+</span> service <span class="op">|</span> d) <span class="op">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                      (<span class="fl">1</span> <span class="op">+</span> service <span class="op">|</span> dept)),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>          insteval; progress)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">Est.</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">SE</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">z</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">p</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">σ_s</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">σ_d</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">σ_dept</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">3.2985</td>
+<td style="text-align: right;">0.0307</td>
+<td style="text-align: right;">107.27</td>
+<td style="text-align: right;">&lt;1e-99</td>
+<td style="text-align: right;">0.3242</td>
+<td style="text-align: right;">0.5160</td>
+<td style="text-align: right;">0.0642</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">studage: 4</td>
+<td style="text-align: right;">0.0502</td>
+<td style="text-align: right;">0.0232</td>
+<td style="text-align: right;">2.16</td>
+<td style="text-align: right;">0.0306</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">studage: 6</td>
+<td style="text-align: right;">0.0573</td>
+<td style="text-align: right;">0.0242</td>
+<td style="text-align: right;">2.37</td>
+<td style="text-align: right;">0.0180</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">studage: 8</td>
+<td style="text-align: right;">0.1128</td>
+<td style="text-align: right;">0.0268</td>
+<td style="text-align: right;">4.21</td>
+<td style="text-align: right;">&lt;1e-04</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lectage: 2</td>
+<td style="text-align: right;">-0.0787</td>
+<td style="text-align: right;">0.0156</td>
+<td style="text-align: right;">-5.03</td>
+<td style="text-align: right;">&lt;1e-06</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">lectage: 3</td>
+<td style="text-align: right;">-0.1036</td>
+<td style="text-align: right;">0.0169</td>
+<td style="text-align: right;">-6.14</td>
+<td style="text-align: right;">&lt;1e-09</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lectage: 4</td>
+<td style="text-align: right;">-0.1837</td>
+<td style="text-align: right;">0.0199</td>
+<td style="text-align: right;">-9.21</td>
+<td style="text-align: right;">&lt;1e-19</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">lectage: 5</td>
+<td style="text-align: right;">-0.1503</td>
+<td style="text-align: right;">0.0217</td>
+<td style="text-align: right;">-6.94</td>
+<td style="text-align: right;">&lt;1e-11</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lectage: 6</td>
+<td style="text-align: right;">-0.2232</td>
+<td style="text-align: right;">0.0209</td>
+<td style="text-align: right;">-10.66</td>
+<td style="text-align: right;">&lt;1e-25</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">service: Y</td>
+<td style="text-align: right;">-0.0281</td>
+<td style="text-align: right;">0.0498</td>
+<td style="text-align: right;">-0.56</td>
+<td style="text-align: right;">0.5732</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.3906</td>
+<td style="text-align: right;">0.1640</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Residual</td>
+<td style="text-align: right;">1.1698</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="10" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>sleepstudy <span class="op">=</span> MixedModels.<span class="fu">dataset</span>(<span class="st">"sleepstudy"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>Arrow.Table with 180 rows, 3 columns, and schema:
+ :subj      String
+ :days      Int8
+ :reaction  Float64</code></pre>
+</div>
+</div>
+<div id="12" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ss1 <span class="op">=</span> <span class="fu">fit</span>(MixedModel, <span class="pp">@formula</span>(reaction <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> days <span class="op">+</span> (<span class="fl">1</span><span class="op">|</span>subj)), sleepstudy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Minimizing 2    Time: 0:00:00 (55.48 ms/it)
+  objective:  1798.0391401915217
+Minimizing 14    Time: 0:00:00 (53.15 ms/it)</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">Est.</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">SE</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">z</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">p</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">σ_subj</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">251.4051</td>
+<td style="text-align: right;">9.5062</td>
+<td style="text-align: right;">26.45</td>
+<td style="text-align: right;">&lt;1e-99</td>
+<td style="text-align: right;">36.0121</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">days</td>
+<td style="text-align: right;">10.4673</td>
+<td style="text-align: right;">0.8017</td>
+<td style="text-align: right;">13.06</td>
+<td style="text-align: right;">&lt;1e-38</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Residual</td>
+<td style="text-align: right;">30.8954</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="14" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ss2 <span class="op">=</span> <span class="fu">fit</span>(MixedModel, <span class="pp">@formula</span>(reaction <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> days <span class="op">+</span> (<span class="fl">1</span> <span class="op">+</span> days<span class="op">|</span>subj)), sleepstudy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">Est.</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">SE</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">z</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">p</td>
+<td style="text-align: right;" data-quarto-table-cell-role="th">σ_subj</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">251.4051</td>
+<td style="text-align: right;">6.6323</td>
+<td style="text-align: right;">37.91</td>
+<td style="text-align: right;">&lt;1e-99</td>
+<td style="text-align: right;">23.7805</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">days</td>
+<td style="text-align: right;">10.4673</td>
+<td style="text-align: right;">1.5022</td>
+<td style="text-align: right;">6.97</td>
+<td style="text-align: right;">&lt;1e-11</td>
+<td style="text-align: right;">5.7168</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Residual</td>
+<td style="text-align: right;">25.5918</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <section id="mixedmodelsextras.jl" class="level1">
 <h1>MixedModelsExtras.jl</h1>
+<p>https://palday.github.io/MixedModelsExtras.jl/v2</p>
+<div id="16" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">MixedModelsExtras</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="18" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">r2</span>(ie2; conditional<span class="op">=</span><span class="cn">true</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>0.26648864879895245</code></pre>
+</div>
+</div>
+<div id="20" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">r2</span>(ie2; conditional<span class="op">=</span><span class="cn">false</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>0.004943503671064272</code></pre>
+</div>
+</div>
+<div id="22" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">icc</span>(ie2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>0.2885287509497678</code></pre>
+</div>
+</div>
+<div id="24" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">icc</span>(ie2, <span class="op">:</span>dept)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>0.01611995223144611</code></pre>
+</div>
+</div>
 </section>
 <section id="regressionformulae.jl" class="level1">
 <h1>RegressionFormulae.jl</h1>
+<p>https://github.com/kleinschmidt/RegressionFormulae.jl</p>
+<div id="26" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">RegressionFormulae</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="boxcox.jl" class="level1">
 <h1>BoxCox.jl</h1>
+<p>https://palday.github.io/BoxCox.jl/v0.3/</p>
+<div id="28" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BoxCox</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="effects.jl" class="level1">
 <h1>Effects.jl</h1>
+<p>https://beacon-biosignals.github.io/Effects.jl/v1.2/</p>
+<div id="30" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Effects</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="standardizedpredictors.jl" class="level1">
 <h1>StandardizedPredictors.jl</h1>
+<p>https://beacon-biosignals.github.io/StandardizedPredictors.jl/v1/</p>
+<div id="32" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">StandardizedPredictors</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># contrasts = Dict()</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ie1 = fit(MixedModel,</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co">#           @formula(y ~ 1 + studage + lectage + service + (1|s) + (1|d) + (1|dept)),</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co">#           insteval; progress, contrasts)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="rcall.jl-and-jellyme4.jl" class="level1">
 <h1>RCall.jl and JellyMe4.jl</h1>
+<p>https://juliainterop.github.io/RCall.jl/stable/</p>
+<p>https://github.com/palday/JellyMe4.jl/</p>
 
 
 </section>

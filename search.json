@@ -24,9 +24,89 @@
     "href": "index.html#installation-of-course-materials",
     "title": "Mixed Effects Models in Julia",
     "section": "Installation of course materials",
-    "text": "Installation of course materials\n\nJulia packages used in the examples\nThe source code for everything can be downloaded from GitHub. After downloading the materials, you should install the necessary Julia packages.\n\n\n\n\n\n\nTip\n\n\n\nWhen copying and pasting into the Julia REPL, you don’t need to remove the julia&gt; prompt from the examples. The Julia REPL will detect the prompt and strip it for you.\n\n\n~/economics2024$ julia\n\njulia&gt; using Pkg\n\njulia&gt; Pkg.activate(\".\")\n  Activating project at `~/economics2024`\n\njulia&gt; Pkg.instantiate()\n&lt; lots of output &gt;\n\njulia&gt; using Econ2024\n\njulia&gt; Econ2024.movielens_download() # note: this is a very large dataset!\n[ Info: Downloading data\n[ Info: Extracting and saving ratings\n[ Info: Extracting movies that are in the ratings table\n[ Info: Extracting and saving README\n2-element Vector{String}:\n \"~/.julia/scratchspa\" ⋯ 28 bytes ⋯ \"3d4d5d689f47/data/ratings.arrow\"\n \"~/.julia/scratchspa\" ⋯ 27 bytes ⋯ \"-3d4d5d689f47/data/movies.arrow\"\n\njulia&gt; exit()\n\n\n\n\n\n\nImportant\n\n\n\nPlease check that you have the most recent version of the materials directly before the course.\n\n\n\n\nRendering the course website\nThis repository uses Quarto with the Julia code execution supplied by QuartoNotebookRunner.jl, which requires Quarto 1.5+.\nAs of early May 2024, Quarto 1.5 is only available as a preview release, which you’ll need to download from GitHub. Under each release’s “Assets”, you can find platform-specific installers.\n\n\n\n\n\n\nTip\n\n\n\nYou don’t need to install or use quarto to view the course materials. Everything, including the example code, is visible on the website, with links to the underlying source code for the entire page.\n\n\n~/economics2024$ quarto preview\n\n&lt; lots of output &gt;\n\nThis page was rendered from git revision a5d2c94\n.",
+    "text": "Installation of course materials\n\nJulia packages used in the examples\nThe source code for everything can be downloaded from GitHub. After downloading the materials, you should install the necessary Julia packages.\n\n\n\n\n\n\nTip\n\n\n\nWhen copying and pasting into the Julia REPL, you don’t need to remove the julia&gt; prompt from the examples. The Julia REPL will detect the prompt and strip it for you.\n\n\nFeel free to skip the movielens_download step – the relevant examples are provided only to show scaling with very large datasets.\n~/economics2024$ julia\n\njulia&gt; using Pkg\n\njulia&gt; Pkg.activate(\".\")\n  Activating project at `~/economics2024`\n\njulia&gt; Pkg.instantiate()\n&lt; lots of output &gt;\n\njulia&gt; using Econ2024\n\njulia&gt; Econ2024.movielens_download() # note: this is a very large dataset!\n[ Info: Downloading data\n[ Info: Extracting and saving ratings\n[ Info: Extracting movies that are in the ratings table\n[ Info: Extracting and saving README\n2-element Vector{String}:\n \"~/.julia/scratchspa\" ⋯ 28 bytes ⋯ \"3d4d5d689f47/data/ratings.arrow\"\n \"~/.julia/scratchspa\" ⋯ 27 bytes ⋯ \"-3d4d5d689f47/data/movies.arrow\"\n\njulia&gt; exit()\n\n\n\n\n\n\nImportant\n\n\n\nPlease check that you have the most recent version of the materials directly before the course.\n\n\n\n\nRendering the course website\nThis repository uses Quarto with the Julia code execution supplied by QuartoNotebookRunner.jl, which requires Quarto 1.5+.\nAs of early May 2024, Quarto 1.5 is only available as a preview release, which you’ll need to download from GitHub. Under each release’s “Assets”, you can find platform-specific installers.\n\n\n\n\n\n\nTip\n\n\n\nYou don’t need to install or use quarto to view the course materials. Everything, including the example code, is visible on the website, with links to the underlying source code for the entire page.\n\n\n~/economics2024$ quarto preview\n\n&lt; lots of output &gt;\n\nThis page was rendered from git revision 6f606d5\n.",
     "crumbs": [
       "Home"
+    ]
+  },
+  {
+    "objectID": "02-plotting.html",
+    "href": "02-plotting.html",
+    "title": "Plotting",
+    "section": "",
+    "text": "progress = false\n\nfalse\nIn the following, we’ll be using the Makie ecosystem for plottig. There are multiple major plotting ecosystems in Julia and it’s largely a matter of personal preference which to use. However, some plotting tools and packages only exist in one ecosystem, such as MixedModelsMakie.jl for several convenient plotting functions related to MixedModels.jl.\nusing CairoMakie # in Makie, you load a particular backend\nusing MixedModelsMakie\nMost plotting functions come in two variants: 1. “full-service” that generates a new plot for scratch 2. mutating, that modifies an existing plot or plots into a user-provided Figure or Axis (a component of a figure).\nFollowing the broader convention within Julia, the mutating variants include a ! in their name. It is quite common for the full service variant to be a minimal wrapper around the mutating variant and for the documentation of the full service variant to refer to the mutating variant, stating that all arguments are forwarded. We’ll see a few examples of this pattern in the following.",
+    "crumbs": [
+      "Visualization"
+    ]
+  },
+  {
+    "objectID": "02-plotting.html#fixed-effects",
+    "href": "02-plotting.html#fixed-effects",
+    "title": "Plotting",
+    "section": "Fixed Effects",
+    "text": "Fixed Effects\nThe function coefplot creates a plot of the coefficient estimates along with associated confidence intervals.\n\ncoefplot(fm1)\n\n\n\n\n\n\n\n\nBecause the intercept is often on a different scale than categorical predictors and is not of particular interest, coefplot also not including it.\n\ncoefplot(fm1; show_intercept=false, color=:red)\n\n\n\n\n\n\n\n\nWe can use the mutating variant coefplot! to put the plots from all models into a single axis for comparison purposes.\n\nlet f = Figure()\n    ax = Axis(f[1, 1]; title=\"Comparison of estimates\")\n    coefplot!(ax, fm1; show_intercept=false, conf_level=0.68, label=\"fm1\")\n    coefplot!(ax, fm2; show_intercept=false, conf_level=0.68, label=\"fm2\")\n    coefplot!(ax, fm3; show_intercept=false, conf_level=0.68, label=\"fm3\")\n    axislegend(ax, \"model\"; merge=true, position=:rb) # _r_ight _b_ottom\n    f\nend",
+    "crumbs": [
+      "Visualization"
+    ]
+  },
+  {
+    "objectID": "02-plotting.html#blups",
+    "href": "02-plotting.html#blups",
+    "title": "Plotting",
+    "section": "BLUPs",
+    "text": "BLUPs\nThe function caterpillar creates a similar plot of the BLUPs and their associated prediction intervals. The name caterpillar comes from the hairy appearance that occurs with large numbers of random effects. In lme4, the comparable plot was called dotplot.\n\n# select the grouping variable we want to plot\ncaterpillar(fm1, :dept)\n\n\n\n\n\n\n\n\nWhen plotting the BLUPs associated with a grouping variable with a very large number of levels, we can use qqcaterpillar, which combines a caterpillar plot a QQ-plot like spacing on the y-axis in order to give a better impression of the distribution of the random effects.\n\nqqcaterpillar(fm1, :dept)\n\n\n\n\n\n\n\n\n\nqqcaterpillar(fm1, :d)\n\n\n\n\n\n\n\n\nWhen a grouping variable is associated with multiple experimental variables, then each receives its own panel in the caterpillar plot.\n\ncaterpillar(fm2, :dept)\n\n\n\n\n\n\n\n\nBy default, the levels of the grouping variable are sorted by their value for the first column. However, we can select which variables are displayed and which column is used for sorting.\n\ncaterpillar(fm2, :dept; cols=[\"(Intercept)\", \"service: Y\"], orderby=2)\n\n\n\n\n\n\n\n\nBecause caterpillar plots can contain multiple axes, they cannot be plotted directly into an axis, but they can be plotted into a GridLayout (i.e. a sublayout) within a Figure.\n\nlet f = Figure(; title=\"Random effects\")\n    caterpillar!(f[1, 1], fm2, :dept)\n    Label(f[0, 1], \"dept\"; tellwidth=false)\n    qqcaterpillar!(f[1, 2], fm2, :d)\n    Label(f[0, 2], \"d(ozent)\"; tellwidth=false)\n    f\nend",
+    "crumbs": [
+      "Visualization"
+    ]
+  },
+  {
+    "objectID": "02-plotting.html#qq-plots",
+    "href": "02-plotting.html#qq-plots",
+    "title": "Plotting",
+    "section": "QQ Plots",
+    "text": "QQ Plots\n\nqqnorm(fm1)\n\n\n\n\n\n\n\n\n\nqqplot(Normal(0, fm1.σ), fm1)",
+    "crumbs": [
+      "Visualization"
+    ]
+  },
+  {
+    "objectID": "02-plotting.html#multiple-diagnostics",
+    "href": "02-plotting.html#multiple-diagnostics",
+    "title": "Plotting",
+    "section": "Multiple diagnostics",
+    "text": "Multiple diagnostics\n\nfunction diagnostic_plot!(f, model)\n    ax = Axis(f[1, 1]; xlabel=\"fitted\", ylabel=\"observed\",\n              title=\"Observed vs fitted\", aspect=AxisAspect(1))\n    scatter!(ax, fitted(model), response(model); alpha=0.5)\n    ablines!(ax, 0, 1; linestyle=:dash)\n\n    ax = Axis(f[1, 2]; xlabel=\"fitted\", ylabel=\"residual\",\n             title=\"Residuals vs fitted\")\n    scatter!(ax, fitted(model), residuals(model); alpha=0.5)\n    hlines!(ax, 0; linestyle=:dash)\n\n    ax = Axis(f[2, 1]; xlabel=\"theoretical quantiles\", ylabel=\"residuals\",\n             title=\"Normal QQ\", aspect=AxisAspect(1))\n    qqnorm!(ax, model)\n\n    ax = Axis(f[2, 2]; xlabel=\"Residual value\", ylabel=\"density\",\n             title=\"Residuals\")\n    density!(ax, residuals(model))\n\n    Label(f[0, :], \"Regression diagnostics\";\n          tellwidth=false, fontsize=24)\n\n    colsize!(f.layout, 1, Auto(0.5))\n\n    return f\nend\n\ndiagnostic_plot!(Figure(), sleep)",
+    "crumbs": [
+      "Visualization"
+    ]
+  },
+  {
+    "objectID": "99-wilkinson-notation.html",
+    "href": "99-wilkinson-notation.html",
+    "title": "Wilkinson-Rogers (1973) notation for models of (co)variance",
+    "section": "",
+    "text": "“Addition” (+) indicates additive, i.e., main effects: a + b indicates main effects of a and b.\n“Multiplication” (*) indicates crossing: main effects and interactions between two terms: a * b indicates main effects of a and b as well as their interaction.\nUsual algebraic rules apply (associativity and distributivity):\n\n(a + b) * c is equivalent to a * c + b * c\na * b * c corresponds to main effects of a, b, and c, as well as all three two-way interactions and the three-way interaction.\n\nCategorical terms are expanded into the associated indicators/contrast variables.\nTilde (~) is used to separate response from predictors.\nThe intercept is indicated by 1.\ny ~ 1 + (a + b) * c is read as:\n\nThe response variable is y.\nThe model contains an intercept.\nThe model contains main effects of a, b, and c.\nThe model contains interactions between a and c and between b and c but not a and b\n\nWe extend this notation for mixed-effects models with the grouping notation (|):\n\n(1 + a | subject) indicates “by-subject random effects for the intercept and main effect a”.\nThis is in line with the usual statistical reading of | as “conditional on”.\n\n\n\n\n\nModels fit with MixedModels.jl are generally linear mixed-effects models with unconstrained random effects covariance matrices and homoskedastic, normally distributed residuals. Under these assumptions, the model specification\nresponse ~ 1 + (age + sex) * education * n_children  + (1 | subject)\ncorresponds to the statistical model\n\\[\\begin{align*}\n\\left(Y |\\mathcal{B}=b\\right) &\\sim N\\left(X\\beta + Zb, \\sigma^2 I \\right) \\\\\n\\mathcal{B} &\\sim N\\left(0, G\\right)\n\\end{align*}\\]\nfor which we wish to obtain the maximum-likelihood estimates for \\(G\\) and thus the fixed-effects \\(\\beta\\).\n\nThe model contains no restrictions on \\(G\\), except that it is positive semidefinite.\nThe response Y is the value of a given response.\nThe fixed-effects design matrix X consists of columns for\n\nthe intercept, age, sex, education, and number of children (contrast coded as appropriate)\nthe interaction of all lower order terms, excluding interactions between age and sex\n\nThe random-effects design matrix Z includes a column for\n\nthe intercept for each subject",
+    "crumbs": [
+      "Formula Syntax"
+    ]
+  },
+  {
+    "objectID": "99-wilkinson-notation.html#general-rules",
+    "href": "99-wilkinson-notation.html#general-rules",
+    "title": "Wilkinson-Rogers (1973) notation for models of (co)variance",
+    "section": "",
+    "text": "“Addition” (+) indicates additive, i.e., main effects: a + b indicates main effects of a and b.\n“Multiplication” (*) indicates crossing: main effects and interactions between two terms: a * b indicates main effects of a and b as well as their interaction.\nUsual algebraic rules apply (associativity and distributivity):\n\n(a + b) * c is equivalent to a * c + b * c\na * b * c corresponds to main effects of a, b, and c, as well as all three two-way interactions and the three-way interaction.\n\nCategorical terms are expanded into the associated indicators/contrast variables.\nTilde (~) is used to separate response from predictors.\nThe intercept is indicated by 1.\ny ~ 1 + (a + b) * c is read as:\n\nThe response variable is y.\nThe model contains an intercept.\nThe model contains main effects of a, b, and c.\nThe model contains interactions between a and c and between b and c but not a and b\n\nWe extend this notation for mixed-effects models with the grouping notation (|):\n\n(1 + a | subject) indicates “by-subject random effects for the intercept and main effect a”.\nThis is in line with the usual statistical reading of | as “conditional on”.",
+    "crumbs": [
+      "Formula Syntax"
+    ]
+  },
+  {
+    "objectID": "99-wilkinson-notation.html#mixed-models-in-wilkinson-rogers-and-mathematical-notation",
+    "href": "99-wilkinson-notation.html#mixed-models-in-wilkinson-rogers-and-mathematical-notation",
+    "title": "Wilkinson-Rogers (1973) notation for models of (co)variance",
+    "section": "",
+    "text": "Models fit with MixedModels.jl are generally linear mixed-effects models with unconstrained random effects covariance matrices and homoskedastic, normally distributed residuals. Under these assumptions, the model specification\nresponse ~ 1 + (age + sex) * education * n_children  + (1 | subject)\ncorresponds to the statistical model\n\\[\\begin{align*}\n\\left(Y |\\mathcal{B}=b\\right) &\\sim N\\left(X\\beta + Zb, \\sigma^2 I \\right) \\\\\n\\mathcal{B} &\\sim N\\left(0, G\\right)\n\\end{align*}\\]\nfor which we wish to obtain the maximum-likelihood estimates for \\(G\\) and thus the fixed-effects \\(\\beta\\).\n\nThe model contains no restrictions on \\(G\\), except that it is positive semidefinite.\nThe response Y is the value of a given response.\nThe fixed-effects design matrix X consists of columns for\n\nthe intercept, age, sex, education, and number of children (contrast coded as appropriate)\nthe interaction of all lower order terms, excluding interactions between age and sex\n\nThe random-effects design matrix Z includes a column for\n\nthe intercept for each subject",
+    "crumbs": [
+      "Formula Syntax"
     ]
   },
   {
@@ -70,36 +150,6 @@
     ]
   },
   {
-    "objectID": "02-plotting.html",
-    "href": "02-plotting.html",
-    "title": "Plotting",
-    "section": "",
-    "text": "In the following, we’ll be using the Makie ecosystem for plottig. There are multiple major plotting ecosystems in Julia and it’s largely a matter of personal preference which to use. However, some plotting tools and packages only exist in one ecosystem, such as MixedModelsMakie.jl for several convenient plotting functions related to MixedModels.jl.",
-    "crumbs": [
-      "Visualization"
-    ]
-  },
-  {
-    "objectID": "02-plotting.html#fixed-effects",
-    "href": "02-plotting.html#fixed-effects",
-    "title": "Plotting",
-    "section": "Fixed Effects",
-    "text": "Fixed Effects",
-    "crumbs": [
-      "Visualization"
-    ]
-  },
-  {
-    "objectID": "02-plotting.html#blups",
-    "href": "02-plotting.html#blups",
-    "title": "Plotting",
-    "section": "BLUPs",
-    "text": "BLUPs",
-    "crumbs": [
-      "Visualization"
-    ]
-  },
-  {
     "objectID": "01-intro.html",
     "href": "01-intro.html",
     "title": "Introduction",
@@ -135,6 +185,26 @@
     "title": "Introduction",
     "section": "Measures of model fit",
     "text": "Measures of model fit\nMixedModels.jl provides methods for the standard functions aic, aicc, bic, deviance, fitted, logliklihood, nobs, residuals.\nThe deviance is computed as -2 loglikelihood and is thus missing an additive constant for the saturated model. However, defining that constant is challenging for mixed models (what is the saturated model? do you saturate via the fixed or the random effects?) and that constant cancels out in the relevant computations.\nMixedModels.jl intentionally does not provide methods for r2 and adjr2. These quantities are notoriously difficult to define in a completely satisfactory way for mixed models and we, the developers, felt uncomfortable giving our implicit endorsement by defining them as part of the core package. That said, there is an implementation of a naive definition of the coefficient of determination in MixedModelsExtras.jl because it is a commonly requested measure and I felt that it was better to have a well-tested implementation than have users handroll their own buggy implementation of an already problematic measure.",
+    "crumbs": [
+      "MixedModels.jl"
+    ]
+  },
+  {
+    "objectID": "01-intro.html#memory-allocation-vs.-fitting",
+    "href": "01-intro.html#memory-allocation-vs.-fitting",
+    "title": "Introduction",
+    "section": "Memory allocation vs. fitting",
+    "text": "Memory allocation vs. fitting\n\nusing Econ2024\nratings = Econ2024.dataset(\"ratings\")\n@time fm_ratings = LinearMixedModel(@formula(rating ~ 1 + (1|userId) + (1|movieId)), ratings)\n\n\n@time fit!(fm_ratings)",
+    "crumbs": [
+      "MixedModels.jl"
+    ]
+  },
+  {
+    "objectID": "01-intro.html#to-try-on-your-own-after-the-course",
+    "href": "01-intro.html#to-try-on-your-own-after-the-course",
+    "title": "Introduction",
+    "section": "To try on your own after the course",
+    "text": "To try on your own after the course\n\nusing Econ2024\nratings = DataFrame(Econ2024.dataset(\"ratings_genre\"))\ndescribe(ratings)\n\n\nusing StatsBase\nmcount = countmap(ratings.movieId)\nucount = countmap(ratings.userId)\nmexclude = Set(k for (k, v) in pairs(mcount) if v &lt; 50)\nuexclude = Set(k for (k, v) in pairs(ucount) if v &lt; 50)\nratings = subset(ratings,\n                 :movieId =&gt; ByRow(!in(mexclude)),\n                 :userId =&gt; ByRow(!in(uexclude)))\n\n\n# This takes about an hour on my home computer when using the full dataset\nform1 = @formula(rating ~ 0 + Action + Adventure + Animation +\n                             Children + Comedy + Crime +\n                             Documentary + Drama +\n                             Fantasy + Film_Noir +\n                             Horror + IMAX +\n                             Musical + Mystery + Romance +\n                             Sci_Fi + Thriller + War + Western +\n                             (1 | movieId) +\n                             (1 | userId))\nfit(MixedModel, form1, ratings)",
     "crumbs": [
       "MixedModels.jl"
     ]
@@ -204,39 +274,9 @@
     "href": "03-extensions.html",
     "title": "Additional Functionality in Other Packages",
     "section": "",
-    "text": "MixedModelsExtras.jl\n\n\nRegressionFormulae.jl\n\n\nBoxCox.jl\n\n\nEffects.jl\n\n\nStandardizedPredictors.jl\n\n\nRCall.jl and JellyMe4.jl",
+    "text": "progress = false\n\nfalse\n\n\n\nusing MixedModels\n\n\ninsteval = MixedModels.dataset(\"insteval\")\nie1 = fit(MixedModel,\n          @formula(y ~ 1 + studage + lectage + service + (1|s) + (1|d) + (1|dept)),\n          insteval; progress)\n\n\n\n\n\nEst.\nSE\nz\np\nσ_s\nσ_d\nσ_dept\n\n\n(Intercept)\n3.2908\n0.0324\n101.45\n&lt;1e-99\n0.3264\n0.5106\n0.0787\n\n\nstudage: 4\n0.0519\n0.0232\n2.24\n0.0249\n\n\n\n\n\nstudage: 6\n0.0721\n0.0240\n3.01\n0.0026\n\n\n\n\n\nstudage: 8\n0.1363\n0.0264\n5.17\n&lt;1e-06\n\n\n\n\n\nlectage: 2\n-0.0808\n0.0154\n-5.25\n&lt;1e-06\n\n\n\n\n\nlectage: 3\n-0.1102\n0.0167\n-6.59\n&lt;1e-10\n\n\n\n\n\nlectage: 4\n-0.1892\n0.0196\n-9.65\n&lt;1e-21\n\n\n\n\n\nlectage: 5\n-0.1644\n0.0214\n-7.68\n&lt;1e-13\n\n\n\n\n\nlectage: 6\n-0.2460\n0.0205\n-12.01\n&lt;1e-32\n\n\n\n\n\nservice: Y\n-0.0727\n0.0135\n-5.40\n&lt;1e-07\n\n\n\n\n\nResidual\n1.1762\n\n\n\n\n\n\n\n\n\n\n\n\nie2 = fit(MixedModel,\n          @formula(y ~ 1 + studage + lectage + service +\n                      (1 | s) +\n                      (1 + service | d) +\n                      (1 + service | dept)),\n          insteval; progress)\n\n\n\n\n\nEst.\nSE\nz\np\nσ_s\nσ_d\nσ_dept\n\n\n(Intercept)\n3.2985\n0.0307\n107.27\n&lt;1e-99\n0.3242\n0.5160\n0.0642\n\n\nstudage: 4\n0.0502\n0.0232\n2.16\n0.0306\n\n\n\n\n\nstudage: 6\n0.0573\n0.0242\n2.37\n0.0180\n\n\n\n\n\nstudage: 8\n0.1128\n0.0268\n4.21\n&lt;1e-04\n\n\n\n\n\nlectage: 2\n-0.0787\n0.0156\n-5.03\n&lt;1e-06\n\n\n\n\n\nlectage: 3\n-0.1036\n0.0169\n-6.14\n&lt;1e-09\n\n\n\n\n\nlectage: 4\n-0.1837\n0.0199\n-9.21\n&lt;1e-19\n\n\n\n\n\nlectage: 5\n-0.1503\n0.0217\n-6.94\n&lt;1e-11\n\n\n\n\n\nlectage: 6\n-0.2232\n0.0209\n-10.66\n&lt;1e-25\n\n\n\n\n\nservice: Y\n-0.0281\n0.0498\n-0.56\n0.5732\n\n0.3906\n0.1640\n\n\nResidual\n1.1698\n\n\n\n\n\n\n\n\n\n\n\n\nsleepstudy = MixedModels.dataset(\"sleepstudy\")\n\nArrow.Table with 180 rows, 3 columns, and schema:\n :subj      String\n :days      Int8\n :reaction  Float64\n\n\n\nss1 = fit(MixedModel, @formula(reaction ~ 1 + days + (1|subj)), sleepstudy)\n\nMinimizing 2    Time: 0:00:00 (55.48 ms/it)\n  objective:  1798.0391401915217\nMinimizing 14    Time: 0:00:00 (53.15 ms/it)\n\n\n\n\n\n\nEst.\nSE\nz\np\nσ_subj\n\n\n(Intercept)\n251.4051\n9.5062\n26.45\n&lt;1e-99\n36.0121\n\n\ndays\n10.4673\n0.8017\n13.06\n&lt;1e-38\n\n\n\nResidual\n30.8954\n\n\n\n\n\n\n\n\n\n\nss2 = fit(MixedModel, @formula(reaction ~ 1 + days + (1 + days|subj)), sleepstudy)\n\n\n\n\n\nEst.\nSE\nz\np\nσ_subj\n\n\n(Intercept)\n251.4051\n6.6323\n37.91\n&lt;1e-99\n23.7805\n\n\ndays\n10.4673\n1.5022\n6.97\n&lt;1e-11\n5.7168\n\n\nResidual\n25.5918\n\n\n\n\n\n\n\n\n\n\nMixedModelsExtras.jl\nhttps://palday.github.io/MixedModelsExtras.jl/v2\n\nusing MixedModelsExtras\n\n\nr2(ie2; conditional=true)\n\n0.26648864879895245\n\n\n\nr2(ie2; conditional=false)\n\n0.004943503671064272\n\n\n\nicc(ie2)\n\n0.2885287509497678\n\n\n\nicc(ie2, :dept)\n\n0.01611995223144611\n\n\n\n\nRegressionFormulae.jl\nhttps://github.com/kleinschmidt/RegressionFormulae.jl\n\nusing RegressionFormulae\n\n\n\nBoxCox.jl\nhttps://palday.github.io/BoxCox.jl/v0.3/\n\nusing BoxCox\n\n\n\nEffects.jl\nhttps://beacon-biosignals.github.io/Effects.jl/v1.2/\n\nusing Effects\n\n\n\nStandardizedPredictors.jl\nhttps://beacon-biosignals.github.io/StandardizedPredictors.jl/v1/\n\nusing StandardizedPredictors\n\n# contrasts = Dict()\n\n# ie1 = fit(MixedModel,\n#           @formula(y ~ 1 + studage + lectage + service + (1|s) + (1|d) + (1|dept)),\n#           insteval; progress, contrasts)\n\n\n\nRCall.jl and JellyMe4.jl\nhttps://juliainterop.github.io/RCall.jl/stable/\nhttps://github.com/palday/JellyMe4.jl/",
     "crumbs": [
       "Extension Packages"
-    ]
-  },
-  {
-    "objectID": "99-wilkinson-notation.html",
-    "href": "99-wilkinson-notation.html",
-    "title": "Wilkinson-Rogers (1973) notation for models of (co)variance",
-    "section": "",
-    "text": "“Addition” (+) indicates additive, i.e., main effects: a + b indicates main effects of a and b.\n“Multiplication” (*) indicates crossing: main effects and interactions between two terms: a * b indicates main effects of a and b as well as their interaction.\nUsual algebraic rules apply (associativity and distributivity):\n\n(a + b) * c is equivalent to a * c + b * c\na * b * c corresponds to main effects of a, b, and c, as well as all three two-way interactions and the three-way interaction.\n\nCategorical terms are expanded into the associated indicators/contrast variables.\nTilde (~) is used to separate response from predictors.\nThe intercept is indicated by 1.\ny ~ 1 + (a + b) * c is read as:\n\nThe response variable is y.\nThe model contains an intercept.\nThe model contains main effects of a, b, and c.\nThe model contains interactions between a and c and between b and c but not a and b\n\nWe extend this notation for mixed-effects models with the grouping notation (|):\n\n(1 + a | subject) indicates “by-subject random effects for the intercept and main effect a”.\nThis is in line with the usual statistical reading of | as “conditional on”.\n\n\n\n\n\nModels fit with MixedModels.jl are generally linear mixed-effects models with unconstrained random effects covariance matrices and homoskedastic, normally distributed residuals. Under these assumptions, the model specification\nresponse ~ 1 + (age + sex) * education * n_children  + (1 | subject)\ncorresponds to the statistical model\n\\[\\begin{align*}\n\\left(Y |\\mathcal{B}=b\\right) &\\sim N\\left(X\\beta + Zb, \\sigma^2 I \\right) \\\\\n\\mathcal{B} &\\sim N\\left(0, G\\right)\n\\end{align*}\\]\nfor which we wish to obtain the maximum-likelihood estimates for \\(G\\) and thus the fixed-effects \\(\\beta\\).\n\nThe model contains no restrictions on \\(G\\), except that it is positive semidefinite.\nThe response Y is the value of a given response.\nThe fixed-effects design matrix X consists of columns for\n\nthe intercept, age, sex, education, and number of children (contrast coded as appropriate)\nthe interaction of all lower order terms, excluding interactions between age and sex\n\nThe random-effects design matrix Z includes a column for\n\nthe intercept for each subject",
-    "crumbs": [
-      "Formula Syntax"
-    ]
-  },
-  {
-    "objectID": "99-wilkinson-notation.html#general-rules",
-    "href": "99-wilkinson-notation.html#general-rules",
-    "title": "Wilkinson-Rogers (1973) notation for models of (co)variance",
-    "section": "",
-    "text": "“Addition” (+) indicates additive, i.e., main effects: a + b indicates main effects of a and b.\n“Multiplication” (*) indicates crossing: main effects and interactions between two terms: a * b indicates main effects of a and b as well as their interaction.\nUsual algebraic rules apply (associativity and distributivity):\n\n(a + b) * c is equivalent to a * c + b * c\na * b * c corresponds to main effects of a, b, and c, as well as all three two-way interactions and the three-way interaction.\n\nCategorical terms are expanded into the associated indicators/contrast variables.\nTilde (~) is used to separate response from predictors.\nThe intercept is indicated by 1.\ny ~ 1 + (a + b) * c is read as:\n\nThe response variable is y.\nThe model contains an intercept.\nThe model contains main effects of a, b, and c.\nThe model contains interactions between a and c and between b and c but not a and b\n\nWe extend this notation for mixed-effects models with the grouping notation (|):\n\n(1 + a | subject) indicates “by-subject random effects for the intercept and main effect a”.\nThis is in line with the usual statistical reading of | as “conditional on”.",
-    "crumbs": [
-      "Formula Syntax"
-    ]
-  },
-  {
-    "objectID": "99-wilkinson-notation.html#mixed-models-in-wilkinson-rogers-and-mathematical-notation",
-    "href": "99-wilkinson-notation.html#mixed-models-in-wilkinson-rogers-and-mathematical-notation",
-    "title": "Wilkinson-Rogers (1973) notation for models of (co)variance",
-    "section": "",
-    "text": "Models fit with MixedModels.jl are generally linear mixed-effects models with unconstrained random effects covariance matrices and homoskedastic, normally distributed residuals. Under these assumptions, the model specification\nresponse ~ 1 + (age + sex) * education * n_children  + (1 | subject)\ncorresponds to the statistical model\n\\[\\begin{align*}\n\\left(Y |\\mathcal{B}=b\\right) &\\sim N\\left(X\\beta + Zb, \\sigma^2 I \\right) \\\\\n\\mathcal{B} &\\sim N\\left(0, G\\right)\n\\end{align*}\\]\nfor which we wish to obtain the maximum-likelihood estimates for \\(G\\) and thus the fixed-effects \\(\\beta\\).\n\nThe model contains no restrictions on \\(G\\), except that it is positive semidefinite.\nThe response Y is the value of a given response.\nThe fixed-effects design matrix X consists of columns for\n\nthe intercept, age, sex, education, and number of children (contrast coded as appropriate)\nthe interaction of all lower order terms, excluding interactions between age and sex\n\nThe random-effects design matrix Z includes a column for\n\nthe intercept for each subject",
-    "crumbs": [
-      "Formula Syntax"
     ]
   }
 ]
