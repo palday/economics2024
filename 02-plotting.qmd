@@ -51,6 +51,18 @@ fm3 = fit(MixedModel,
           insteval; progress)
 ```
 
+Additionally, we'll use a model based on the `sleepstudy` dataset. The data are from a study looking at the impact of sleep deprivation on reaction time and has three variables:
+
+- `subj`: the participant
+- `reaction`: reaction time in milliseconds (mean across tasks)
+- `days`: days of sleep restriction 
+
+```{julia}
+sleep = fit(MixedModel, 
+            @formula(reaction ~ 1 + days + (1 + days|subj)), 
+            MixedModels.dataset("sleepstudy"))            
+```
+
 # Coefficient plots
 
 ## Fixed Effects
@@ -108,7 +120,19 @@ caterpillar(fm2, :dept)
 By default, the levels of the grouping variable are sorted by their value for the first column. However, we can select which variables are displayed and which column is used for sorting.
 
 ```{julia}
-caterpillar(fm2, :dept; orderby=2)
+caterpillar(fm2, :dept; cols=["(Intercept)", "service: Y"], orderby=2)
+```
+
+Because caterpillar plots can contain multiple axes, they cannot be plotted directly into an axis, but they can be plotted into a `GridLayout` (i.e. a sublayout) within a `Figure`.
+
+```{julia}
+let f = Figure(; title="Random effects")
+    caterpillar!(f[1, 1], fm2, :dept)
+    Label(f[0, 1], "dept"; tellwidth=false)
+    qqcaterpillar!(f[1, 2], fm2, :d)
+    Label(f[0, 2], "d(ozent)"; tellwidth=false)
+    f
+end
 ```
 
 # General regression diagnostics
@@ -125,18 +149,49 @@ qqplot(Normal(0, fm1.σ), fm1)
 
 ## Multiple diagnostics
 
+```{julia}
+function diagnostic_plot!(f::Figure, model::MixedModel)
+    ax = Axis(f[1, 1]; xlabel="fitted", ylabel="observed", 
+              title="Observed vs fitted", aspect=AxisAspect(1))
+    scatter!(ax, fitted(model), response(model); alpha=0.5)
+    ablines!(ax, 0, 1; linestyle=:dash)
+
+    ax = Axis(f[1, 2]; xlabel="fitted", ylabel="residual",
+             title="Residuals vs fitted")
+    scatter!(ax, fitted(model), residuals(model); alpha=0.5)
+    hlines!(ax, 0; linestyle=:dash)
+    
+    ax = Axis(f[2, 1]; xlabel="theoretical quantiles", ylabel="residuals",
+             title="Normal QQ", aspect=AxisAspect(1))
+    qqnorm!(ax, model)
+
+    ax = Axis(f[2, 2]; xlabel="Residual value", ylabel="density",
+             title="Residuals")
+    density!(ax, residuals(model))
+
+    Label(f[0, :], "Regression diagnostics"; 
+          tellwidth=false, fontsize=24)
+
+    colsize!(f.layout, 1, Auto(0.5))
+
+    return f
+end
+
+diagnostic_plot!(Figure(), sleep)
+```
+
 # Shrinkage
 
 ```{julia}
 shrinkageplot(fm2, :dept)
-
 ```
 
 ```{julia}
 shrinkageplot(fm2, :dept, ellipse=true, ellipse_scale=10, n_ellipse=10)
 ```
 
-
 ```{julia}
 shrinkageplot(fm3, :d, ellipse=true)
 ```
+
+Similar to `caterpillar`, `shrinkageplot` uses multiple axes internal and so must be plotted directly into a `Figure`.
