@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.39">
+<meta name="generator" content="quarto-1.5.33">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -234,16 +234,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="2" class="cell" data-execution_count="1">
-<details class="code-fold">
-<summary>Code</summary>
+<div id="2" class="cell" data-collapse="true" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>progress <span class="op">=</span> <span class="cn">false</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>false</code></pre>
+</div>
 </div>
 <p>In the following, we’ll be using the <a href="https://docs.makie.org/v0.21/">Makie</a> ecosystem for plottig. There are multiple major plotting ecosystems in Julia and it’s largely a matter of personal preference which to use. However, some plotting tools and packages only exist in one ecosystem, such as <a href="https://palday.github.io/MixedModelsMakie.jl/v0.4/">MixedModelsMakie.jl</a> for several convenient plotting functions related to MixedModels.jl.</p>
 <div id="4" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CairoMakie</span> <span class="co"># in Makie, you load a particular backend</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">MixedModelsMakie</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CairoMakie</span> <span class="co"># in Makie, you load a particular backend</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">MixedModelsMakie</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Most plotting functions come in two variants: 1. “full-service” that generates a new plot for scratch 2. mutating, that modifies an existing plot or plots into a user-provided <code>Figure</code> or <code>Axis</code> (a component of a figure).</p>
 <p>Following the broader convention within Julia, the mutating variants include a <code>!</code> in their name. It is quite common for the full service variant to be a minimal wrapper around the mutating variant and for the documentation of the full service variant to refer to the mutating variant, stating that all arguments are forwarded. We’ll see a few examples of this pattern in the following.</p>
@@ -251,28 +251,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>A few models</h1>
 <p>We’ll use the same models from the introduction. They are repeated here for convenience.</p>
 <div id="6" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">MixedModels</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>insteval <span class="op">=</span> MixedModels.<span class="fu">dataset</span>(<span class="st">"insteval"</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>fm1 <span class="op">=</span> <span class="fu">fit</span>(MixedModel,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>          <span class="pp">@formula</span>(y <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> studage <span class="op">+</span> lectage <span class="op">+</span> service <span class="op">+</span> (<span class="fl">1</span><span class="op">|</span>s) <span class="op">+</span> (<span class="fl">1</span><span class="op">|</span>d) <span class="op">+</span> (<span class="fl">1</span><span class="op">|</span>dept)),</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>          insteval; progress)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>fm2 <span class="op">=</span> <span class="fu">fit</span>(MixedModel,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>          <span class="pp">@formula</span>(y <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> studage <span class="op">+</span> lectage <span class="op">+</span> service <span class="op">+</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                      (<span class="fl">1</span> <span class="op">|</span> s) <span class="op">+</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                      (<span class="fl">1</span> <span class="op">+</span> service <span class="op">|</span> d) <span class="op">+</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                      (<span class="fl">1</span> <span class="op">+</span> service <span class="op">|</span> dept)),</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>          insteval; progress)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>fm3 <span class="op">=</span> <span class="fu">fit</span>(MixedModel,</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>          <span class="pp">@formula</span>(y <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> studage <span class="op">+</span> lectage <span class="op">+</span> service <span class="op">+</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>                      (<span class="fl">1</span> <span class="op">|</span> s) <span class="op">+</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>                      (<span class="fl">1</span> <span class="op">+</span> service <span class="op">|</span> d) <span class="op">+</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">zerocorr</span>(<span class="fl">0</span> <span class="op">+</span> studage <span class="op">|</span> d) <span class="op">+</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>                      (<span class="fl">1</span> <span class="op">+</span> service <span class="op">|</span> dept)),</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>          insteval; progress)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">MixedModels</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>insteval <span class="op">=</span> MixedModels.<span class="fu">dataset</span>(<span class="st">"insteval"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>fm1 <span class="op">=</span> <span class="fu">fit</span>(MixedModel,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>          <span class="pp">@formula</span>(y <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> studage <span class="op">+</span> lectage <span class="op">+</span> service <span class="op">+</span> (<span class="fl">1</span><span class="op">|</span>s) <span class="op">+</span> (<span class="fl">1</span><span class="op">|</span>d) <span class="op">+</span> (<span class="fl">1</span><span class="op">|</span>dept)),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>          insteval; progress)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>fm2 <span class="op">=</span> <span class="fu">fit</span>(MixedModel,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>          <span class="pp">@formula</span>(y <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> studage <span class="op">+</span> lectage <span class="op">+</span> service <span class="op">+</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                      (<span class="fl">1</span> <span class="op">|</span> s) <span class="op">+</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                      (<span class="fl">1</span> <span class="op">+</span> service <span class="op">|</span> d) <span class="op">+</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                      (<span class="fl">1</span> <span class="op">+</span> service <span class="op">|</span> dept)),</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>          insteval; progress)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>fm3 <span class="op">=</span> <span class="fu">fit</span>(MixedModel,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>          <span class="pp">@formula</span>(y <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> studage <span class="op">+</span> lectage <span class="op">+</span> service <span class="op">+</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                      (<span class="fl">1</span> <span class="op">|</span> s) <span class="op">+</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>                      (<span class="fl">1</span> <span class="op">+</span> service <span class="op">|</span> d) <span class="op">+</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">zerocorr</span>(<span class="fl">0</span> <span class="op">+</span> studage <span class="op">|</span> d) <span class="op">+</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>                      (<span class="fl">1</span> <span class="op">+</span> service <span class="op">|</span> dept)),</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>          insteval; progress)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<div>
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
 <tbody>
 <tr class="odd">
 <td style="text-align: left;" data-quarto-table-cell-role="th"></td>
@@ -286,49 +287,49 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even">
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">3.3081</td>
-<td style="text-align: right;">0.0262</td>
-<td style="text-align: right;">126.30</td>
+<td style="text-align: right;">3.3084</td>
+<td style="text-align: right;">0.0290</td>
+<td style="text-align: right;">114.23</td>
 <td style="text-align: right;">&lt;1e-99</td>
-<td style="text-align: right;">0.5038</td>
-<td style="text-align: right;">0.3234</td>
-<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">0.5022</td>
+<td style="text-align: right;">0.3235</td>
+<td style="text-align: right;">0.0453</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">studage: 4</td>
-<td style="text-align: right;">0.0537</td>
+<td style="text-align: right;">0.0550</td>
 <td style="text-align: right;">0.0277</td>
-<td style="text-align: right;">1.94</td>
-<td style="text-align: right;">0.0524</td>
-<td style="text-align: right;">0.2700</td>
+<td style="text-align: right;">1.98</td>
+<td style="text-align: right;">0.0473</td>
+<td style="text-align: right;">0.2699</td>
 <td style="text-align: right;"></td>
 <td style="text-align: right;"></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">studage: 6</td>
-<td style="text-align: right;">0.0533</td>
+<td style="text-align: right;">0.0544</td>
 <td style="text-align: right;">0.0265</td>
-<td style="text-align: right;">2.01</td>
-<td style="text-align: right;">0.0440</td>
-<td style="text-align: right;">0.2077</td>
+<td style="text-align: right;">2.06</td>
+<td style="text-align: right;">0.0398</td>
+<td style="text-align: right;">0.2074</td>
 <td style="text-align: right;"></td>
 <td style="text-align: right;"></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">studage: 8</td>
-<td style="text-align: right;">0.1080</td>
+<td style="text-align: right;">0.1097</td>
 <td style="text-align: right;">0.0293</td>
-<td style="text-align: right;">3.68</td>
+<td style="text-align: right;">3.74</td>
 <td style="text-align: right;">0.0002</td>
-<td style="text-align: right;">0.2544</td>
+<td style="text-align: right;">0.2538</td>
 <td style="text-align: right;"></td>
 <td style="text-align: right;"></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">lectage: 2</td>
-<td style="text-align: right;">-0.0861</td>
+<td style="text-align: right;">-0.0856</td>
 <td style="text-align: right;">0.0172</td>
-<td style="text-align: right;">-5.01</td>
+<td style="text-align: right;">-4.98</td>
 <td style="text-align: right;">&lt;1e-06</td>
 <td style="text-align: right;"></td>
 <td style="text-align: right;"></td>
@@ -336,9 +337,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="odd">
 <td style="text-align: left;">lectage: 3</td>
-<td style="text-align: right;">-0.0979</td>
+<td style="text-align: right;">-0.0983</td>
 <td style="text-align: right;">0.0188</td>
-<td style="text-align: right;">-5.22</td>
+<td style="text-align: right;">-5.24</td>
 <td style="text-align: right;">&lt;1e-06</td>
 <td style="text-align: right;"></td>
 <td style="text-align: right;"></td>
@@ -346,9 +347,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even">
 <td style="text-align: left;">lectage: 4</td>
-<td style="text-align: right;">-0.1999</td>
+<td style="text-align: right;">-0.1996</td>
 <td style="text-align: right;">0.0218</td>
-<td style="text-align: right;">-9.16</td>
+<td style="text-align: right;">-9.15</td>
 <td style="text-align: right;">&lt;1e-19</td>
 <td style="text-align: right;"></td>
 <td style="text-align: right;"></td>
@@ -356,19 +357,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="odd">
 <td style="text-align: left;">lectage: 5</td>
-<td style="text-align: right;">-0.1646</td>
+<td style="text-align: right;">-0.1651</td>
 <td style="text-align: right;">0.0231</td>
-<td style="text-align: right;">-7.12</td>
-<td style="text-align: right;">&lt;1e-11</td>
+<td style="text-align: right;">-7.14</td>
+<td style="text-align: right;">&lt;1e-12</td>
 <td style="text-align: right;"></td>
 <td style="text-align: right;"></td>
 <td style="text-align: right;"></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">lectage: 6</td>
-<td style="text-align: right;">-0.2477</td>
+<td style="text-align: right;">-0.2478</td>
 <td style="text-align: right;">0.0221</td>
-<td style="text-align: right;">-11.20</td>
+<td style="text-align: right;">-11.21</td>
 <td style="text-align: right;">&lt;1e-28</td>
 <td style="text-align: right;"></td>
 <td style="text-align: right;"></td>
@@ -376,13 +377,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="odd">
 <td style="text-align: left;">service: Y</td>
-<td style="text-align: right;">-0.0239</td>
-<td style="text-align: right;">0.0436</td>
-<td style="text-align: right;">-0.55</td>
-<td style="text-align: right;">0.5836</td>
-<td style="text-align: right;">0.3703</td>
+<td style="text-align: right;">-0.0199</td>
+<td style="text-align: right;">0.0504</td>
+<td style="text-align: right;">-0.39</td>
+<td style="text-align: right;">0.6930</td>
+<td style="text-align: right;">0.3704</td>
 <td style="text-align: right;"></td>
-<td style="text-align: right;">0.1383</td>
+<td style="text-align: right;">0.1671</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Residual</td>
@@ -398,6 +399,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 </div>
 </div>
+</div>
 <p>Additionally, we’ll use a model based on the <code>sleepstudy</code> dataset. The data are from a study looking at the impact of sleep deprivation on reaction time and has three variables:</p>
 <ul>
 <li><code>subj</code>: the participant</li>
@@ -405,11 +407,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>days</code>: days of sleep restriction</li>
 </ul>
 <div id="8" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sleep <span class="op">=</span> <span class="fu">fit</span>(MixedModel,</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>            <span class="pp">@formula</span>(reaction <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> days <span class="op">+</span> (<span class="fl">1</span> <span class="op">+</span> days<span class="op">|</span>subj)),</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>            MixedModels.<span class="fu">dataset</span>(<span class="st">"sleepstudy"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sleep <span class="op">=</span> <span class="fu">fit</span>(MixedModel,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>            <span class="pp">@formula</span>(reaction <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> days <span class="op">+</span> (<span class="fl">1</span> <span class="op">+</span> days<span class="op">|</span>subj)),</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>            MixedModels.<span class="fu">dataset</span>(<span class="st">"sleepstudy"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Minimizing 3    Time: 0:00:00 (34.15 ms/it)
+  objective:  1798.9996244965923
+Minimizing 57    Time: 0:00:00 (13.96 ms/it)</code></pre>
+</div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<div>
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
 <tbody>
 <tr class="odd">
 <td style="text-align: left;" data-quarto-table-cell-role="th"></td>
@@ -447,6 +455,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 </div>
 </div>
+</div>
 </section>
 <section id="coefficient-plots" class="level1">
 <h1>Coefficient plots</h1>
@@ -454,7 +463,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="fixed-effects">Fixed Effects</h2>
 <p>The function <code>coefplot</code> creates a plot of the coefficient estimates along with associated confidence intervals.</p>
 <div id="10" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(fm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(fm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 <figure class="figure">
@@ -465,7 +474,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Because the intercept is often on a different scale than categorical predictors and is not of particular interest, <code>coefplot</code> also not including it.</p>
 <div id="12" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(fm1; show_intercept<span class="op">=</span><span class="cn">false</span>, color<span class="op">=:</span>red)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(fm1; show_intercept<span class="op">=</span><span class="cn">false</span>, color<span class="op">=:</span>red)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 <figure class="figure">
@@ -476,14 +485,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>We can use the mutating variant <code>coefplot!</code> to put the plots from all models into a single axis for comparison purposes.</p>
 <div id="14" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> f <span class="op">=</span> <span class="fu">Figure</span>()</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> <span class="fu">Axis</span>(f[<span class="fl">1</span>, <span class="fl">1</span>]; title<span class="op">=</span><span class="st">"Comparison of estimates"</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coefplot!</span>(ax, fm1; show_intercept<span class="op">=</span><span class="cn">false</span>, conf_level<span class="op">=</span><span class="fl">0.68</span>, label<span class="op">=</span><span class="st">"fm1"</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coefplot!</span>(ax, fm2; show_intercept<span class="op">=</span><span class="cn">false</span>, conf_level<span class="op">=</span><span class="fl">0.68</span>, label<span class="op">=</span><span class="st">"fm2"</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coefplot!</span>(ax, fm3; show_intercept<span class="op">=</span><span class="cn">false</span>, conf_level<span class="op">=</span><span class="fl">0.68</span>, label<span class="op">=</span><span class="st">"fm3"</span>)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">axislegend</span>(ax, <span class="st">"model"</span>; merge<span class="op">=</span><span class="cn">true</span>, position<span class="op">=:</span>rb) <span class="co"># _r_ight _b_ottom</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    f</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> f <span class="op">=</span> <span class="fu">Figure</span>()</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> <span class="fu">Axis</span>(f[<span class="fl">1</span>, <span class="fl">1</span>]; title<span class="op">=</span><span class="st">"Comparison of estimates"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coefplot!</span>(ax, fm1; show_intercept<span class="op">=</span><span class="cn">false</span>, conf_level<span class="op">=</span><span class="fl">0.68</span>, label<span class="op">=</span><span class="st">"fm1"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coefplot!</span>(ax, fm2; show_intercept<span class="op">=</span><span class="cn">false</span>, conf_level<span class="op">=</span><span class="fl">0.68</span>, label<span class="op">=</span><span class="st">"fm2"</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coefplot!</span>(ax, fm3; show_intercept<span class="op">=</span><span class="cn">false</span>, conf_level<span class="op">=</span><span class="fl">0.68</span>, label<span class="op">=</span><span class="st">"fm3"</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">axislegend</span>(ax, <span class="st">"model"</span>; merge<span class="op">=</span><span class="cn">true</span>, position<span class="op">=:</span>rb) <span class="co"># _r_ight _b_ottom</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    f</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 <figure class="figure">
@@ -497,8 +506,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="blups">BLUPs</h2>
 <p>The function <code>caterpillar</code> creates a similar plot of the BLUPs and their associated prediction intervals. The name caterpillar comes from the hairy appearance that occurs with large numbers of random effects. In lme4, the comparable plot was called <code>dotplot</code>.</p>
 <div id="16" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># select the grouping variable we want to plot</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">caterpillar</span>(fm1, <span class="op">:</span>dept)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># select the grouping variable we want to plot</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">caterpillar</span>(fm1, <span class="op">:</span>dept)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 <figure class="figure">
@@ -509,7 +518,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>When plotting the BLUPs associated with a grouping variable with a very large number of levels, we can use <code>qqcaterpillar</code>, which combines a caterpillar plot a QQ-plot like spacing on the y-axis in order to give a better impression of the distribution of the random effects.</p>
 <div id="18" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqcaterpillar</span>(fm1, <span class="op">:</span>dept)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqcaterpillar</span>(fm1, <span class="op">:</span>dept)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 <figure class="figure">
@@ -519,7 +528,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div id="20" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqcaterpillar</span>(fm1, <span class="op">:</span>d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqcaterpillar</span>(fm1, <span class="op">:</span>d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 <figure class="figure">
@@ -530,7 +539,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>When a grouping variable is associated with multiple experimental variables, then each receives its own panel in the caterpillar plot.</p>
 <div id="22" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">caterpillar</span>(fm2, <span class="op">:</span>dept)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">caterpillar</span>(fm2, <span class="op">:</span>dept)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 <figure class="figure">
@@ -541,7 +550,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>By default, the levels of the grouping variable are sorted by their value for the first column. However, we can select which variables are displayed and which column is used for sorting.</p>
 <div id="24" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">caterpillar</span>(fm2, <span class="op">:</span>dept; cols<span class="op">=</span>[<span class="st">"(Intercept)"</span>, <span class="st">"service: Y"</span>], orderby<span class="op">=</span><span class="fl">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">caterpillar</span>(fm2, <span class="op">:</span>dept; cols<span class="op">=</span>[<span class="st">"(Intercept)"</span>, <span class="st">"service: Y"</span>], orderby<span class="op">=</span><span class="fl">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 <figure class="figure">
@@ -552,13 +561,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Because caterpillar plots can contain multiple axes, they cannot be plotted directly into an axis, but they can be plotted into a <code>GridLayout</code> (i.e.&nbsp;a sublayout) within a <code>Figure</code>.</p>
 <div id="26" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> f <span class="op">=</span> <span class="fu">Figure</span>(; title<span class="op">=</span><span class="st">"Random effects"</span>)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">caterpillar!</span>(f[<span class="fl">1</span>, <span class="fl">1</span>], fm2, <span class="op">:</span>dept)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Label</span>(f[<span class="fl">0</span>, <span class="fl">1</span>], <span class="st">"dept"</span>; tellwidth<span class="op">=</span><span class="cn">false</span>)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">qqcaterpillar!</span>(f[<span class="fl">1</span>, <span class="fl">2</span>], fm2, <span class="op">:</span>d)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Label</span>(f[<span class="fl">0</span>, <span class="fl">2</span>], <span class="st">"d(ozent)"</span>; tellwidth<span class="op">=</span><span class="cn">false</span>)</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    f</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> f <span class="op">=</span> <span class="fu">Figure</span>(; title<span class="op">=</span><span class="st">"Random effects"</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">caterpillar!</span>(f[<span class="fl">1</span>, <span class="fl">1</span>], fm2, <span class="op">:</span>dept)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Label</span>(f[<span class="fl">0</span>, <span class="fl">1</span>], <span class="st">"dept"</span>; tellwidth<span class="op">=</span><span class="cn">false</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">qqcaterpillar!</span>(f[<span class="fl">1</span>, <span class="fl">2</span>], fm2, <span class="op">:</span>d)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Label</span>(f[<span class="fl">0</span>, <span class="fl">2</span>], <span class="st">"d(ozent)"</span>; tellwidth<span class="op">=</span><span class="cn">false</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    f</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 <figure class="figure">
@@ -574,7 +583,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="qq-plots" class="level2">
 <h2 class="anchored" data-anchor-id="qq-plots">QQ Plots</h2>
 <div id="28" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(fm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(fm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 <figure class="figure">
@@ -584,7 +593,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div id="30" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqplot</span>(<span class="fu">Normal</span>(<span class="fl">0</span>, fm1.σ), fm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqplot</span>(<span class="fu">Normal</span>(<span class="fl">0</span>, fm1.σ), fm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 <figure class="figure">
@@ -597,34 +606,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="multiple-diagnostics" class="level2">
 <h2 class="anchored" data-anchor-id="multiple-diagnostics">Multiple diagnostics</h2>
 <div id="32" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">diagnostic_plot!</span>(f, model)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> <span class="fu">Axis</span>(f[<span class="fl">1</span>, <span class="fl">1</span>]; xlabel<span class="op">=</span><span class="st">"fitted"</span>, ylabel<span class="op">=</span><span class="st">"observed"</span>,</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>              title<span class="op">=</span><span class="st">"Observed vs fitted"</span>, aspect<span class="op">=</span><span class="fu">AxisAspect</span>(<span class="fl">1</span>))</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scatter!</span>(ax, <span class="fu">fitted</span>(model), <span class="fu">response</span>(model); alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ablines!</span>(ax, <span class="fl">0</span>, <span class="fl">1</span>; linestyle<span class="op">=:</span>dash)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> <span class="fu">Axis</span>(f[<span class="fl">1</span>, <span class="fl">2</span>]; xlabel<span class="op">=</span><span class="st">"fitted"</span>, ylabel<span class="op">=</span><span class="st">"residual"</span>,</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>             title<span class="op">=</span><span class="st">"Residuals vs fitted"</span>)</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scatter!</span>(ax, <span class="fu">fitted</span>(model), <span class="fu">residuals</span>(model); alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hlines!</span>(ax, <span class="fl">0</span>; linestyle<span class="op">=:</span>dash)</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> <span class="fu">Axis</span>(f[<span class="fl">2</span>, <span class="fl">1</span>]; xlabel<span class="op">=</span><span class="st">"theoretical quantiles"</span>, ylabel<span class="op">=</span><span class="st">"residuals"</span>,</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>             title<span class="op">=</span><span class="st">"Normal QQ"</span>, aspect<span class="op">=</span><span class="fu">AxisAspect</span>(<span class="fl">1</span>))</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">qqnorm!</span>(ax, model)</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> <span class="fu">Axis</span>(f[<span class="fl">2</span>, <span class="fl">2</span>]; xlabel<span class="op">=</span><span class="st">"Residual value"</span>, ylabel<span class="op">=</span><span class="st">"density"</span>,</span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>             title<span class="op">=</span><span class="st">"Residuals"</span>)</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">density!</span>(ax, <span class="fu">residuals</span>(model))</span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Label</span>(f[<span class="fl">0</span>, <span class="op">:</span>], <span class="st">"Regression diagnostics"</span>;</span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>          tellwidth<span class="op">=</span><span class="cn">false</span>, fontsize<span class="op">=</span><span class="fl">24</span>)</span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">colsize!</span>(f.layout, <span class="fl">1</span>, <span class="fu">Auto</span>(<span class="fl">0.5</span>))</span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> f</span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a><span class="fu">diagnostic_plot!</span>(<span class="fu">Figure</span>(), sleep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">diagnostic_plot!</span>(f, model)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> <span class="fu">Axis</span>(f[<span class="fl">1</span>, <span class="fl">1</span>]; xlabel<span class="op">=</span><span class="st">"fitted"</span>, ylabel<span class="op">=</span><span class="st">"observed"</span>,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>              title<span class="op">=</span><span class="st">"Observed vs fitted"</span>, aspect<span class="op">=</span><span class="fu">AxisAspect</span>(<span class="fl">1</span>))</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scatter!</span>(ax, <span class="fu">fitted</span>(model), <span class="fu">response</span>(model); alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ablines!</span>(ax, <span class="fl">0</span>, <span class="fl">1</span>; linestyle<span class="op">=:</span>dash)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> <span class="fu">Axis</span>(f[<span class="fl">1</span>, <span class="fl">2</span>]; xlabel<span class="op">=</span><span class="st">"fitted"</span>, ylabel<span class="op">=</span><span class="st">"residual"</span>,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>             title<span class="op">=</span><span class="st">"Residuals vs fitted"</span>)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scatter!</span>(ax, <span class="fu">fitted</span>(model), <span class="fu">residuals</span>(model); alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hlines!</span>(ax, <span class="fl">0</span>; linestyle<span class="op">=:</span>dash)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> <span class="fu">Axis</span>(f[<span class="fl">2</span>, <span class="fl">1</span>]; xlabel<span class="op">=</span><span class="st">"theoretical quantiles"</span>, ylabel<span class="op">=</span><span class="st">"residuals"</span>,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>             title<span class="op">=</span><span class="st">"Normal QQ"</span>, aspect<span class="op">=</span><span class="fu">AxisAspect</span>(<span class="fl">1</span>))</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">qqnorm!</span>(ax, model)</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> <span class="fu">Axis</span>(f[<span class="fl">2</span>, <span class="fl">2</span>]; xlabel<span class="op">=</span><span class="st">"Residual value"</span>, ylabel<span class="op">=</span><span class="st">"density"</span>,</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>             title<span class="op">=</span><span class="st">"Residuals"</span>)</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">density!</span>(ax, <span class="fu">residuals</span>(model))</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Label</span>(f[<span class="fl">0</span>, <span class="op">:</span>], <span class="st">"Regression diagnostics"</span>;</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>          tellwidth<span class="op">=</span><span class="cn">false</span>, fontsize<span class="op">=</span><span class="fl">24</span>)</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">colsize!</span>(f.layout, <span class="fl">1</span>, <span class="fu">Auto</span>(<span class="fl">0.5</span>))</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> f</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="fu">diagnostic_plot!</span>(<span class="fu">Figure</span>(), sleep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 <figure class="figure">
@@ -639,7 +648,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Shrinkage</h1>
 <p>One of the most powerful aspects of mixed effects models is <em>shrinkage</em>, i.e.&nbsp;the regularization entailed in the random effects. <code>shrinkageplot</code> displays a comparison of the values obtained for each level of the grouping variable based on a mixed models fit and a fit comparable to traditional ordinary least squares.</p>
 <div id="34" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shrinkageplot</span>(fm2, <span class="op">:</span>dept)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shrinkageplot</span>(fm2, <span class="op">:</span>dept)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 <figure class="figure">
@@ -650,7 +659,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>While it may look like some values go further away from the grand mean, plotting the associated correlation ellipses (computed from the correlation estimates in the mixed models) shows that these values are on a level-curve closer to the grand mean than where they started.</p>
 <div id="36" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shrinkageplot</span>(fm2, <span class="op">:</span>dept, ellipse<span class="op">=</span><span class="cn">true</span>, ellipse_scale<span class="op">=</span><span class="fl">10</span>, n_ellipse<span class="op">=</span><span class="fl">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shrinkageplot</span>(fm2, <span class="op">:</span>dept, ellipse<span class="op">=</span><span class="cn">true</span>, ellipse_scale<span class="op">=</span><span class="fl">10</span>, n_ellipse<span class="op">=</span><span class="fl">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 <figure class="figure">
@@ -661,7 +670,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>When there are multiple predictors associated with a given grouping variable, then <code>shrinkageplot</code> displays all pairwise combinations.</p>
 <div id="38" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shrinkageplot</span>(fm3, <span class="op">:</span>d, ellipse<span class="op">=</span><span class="cn">true</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shrinkageplot</span>(fm3, <span class="op">:</span>d, ellipse<span class="op">=</span><span class="cn">true</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 <figure class="figure">
@@ -673,13 +682,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In the case of overparameterized random effects, one or more dimensions will be degenerate and the corresponding panel will show a line or a point mass instead of a cloud of points.</p>
 <p>Similar to <code>caterpillar</code>, <code>shrinkageplot</code> uses multiple axes internal and so must be plotted directly into a <code>Figure</code>.</p>
 <div id="40" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> f <span class="op">=</span> <span class="fu">Figure</span>()</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Label</span>(f[<span class="fl">0</span>, <span class="fl">1</span>], <span class="st">"d(ozent)"</span>; tellwidth<span class="op">=</span><span class="cn">false</span>)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">shrinkageplot!</span>(f[<span class="fl">1</span>, <span class="fl">1</span>], fm2, <span class="op">:</span>d)</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Label</span>(f[<span class="fl">0</span>, <span class="fl">2</span>], <span class="st">"dept"</span>; tellwidth<span class="op">=</span><span class="cn">false</span>)</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">shrinkageplot!</span>(f[<span class="fl">1</span>, <span class="fl">2</span>], fm2, <span class="op">:</span>dept)</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    f</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> f <span class="op">=</span> <span class="fu">Figure</span>()</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Label</span>(f[<span class="fl">0</span>, <span class="fl">1</span>], <span class="st">"d(ozent)"</span>; tellwidth<span class="op">=</span><span class="cn">false</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">shrinkageplot!</span>(f[<span class="fl">1</span>, <span class="fl">1</span>], fm2, <span class="op">:</span>d)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Label</span>(f[<span class="fl">0</span>, <span class="fl">2</span>], <span class="st">"dept"</span>; tellwidth<span class="op">=</span><span class="cn">false</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">shrinkageplot!</span>(f[<span class="fl">1</span>, <span class="fl">2</span>], fm2, <span class="op">:</span>dept)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    f</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 <figure class="figure">
@@ -689,13 +698,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div id="42" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> f <span class="op">=</span> <span class="fu">Figure</span>()</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Label</span>(f[<span class="fl">0</span>, <span class="fl">1</span>], <span class="st">"d(ozent)"</span>; tellwidth<span class="op">=</span><span class="cn">false</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">shrinkageplot!</span>(f[<span class="fl">1</span>, <span class="fl">1</span>], fm3, <span class="op">:</span>d)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Label</span>(f[<span class="fl">0</span>, <span class="fl">2</span>], <span class="st">"dept"</span>; tellwidth<span class="op">=</span><span class="cn">false</span>)</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">shrinkageplot!</span>(f[<span class="fl">1</span>, <span class="fl">2</span>], fm3, <span class="op">:</span>dept)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    f</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> f <span class="op">=</span> <span class="fu">Figure</span>()</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Label</span>(f[<span class="fl">0</span>, <span class="fl">1</span>], <span class="st">"d(ozent)"</span>; tellwidth<span class="op">=</span><span class="cn">false</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">shrinkageplot!</span>(f[<span class="fl">1</span>, <span class="fl">1</span>], fm3, <span class="op">:</span>d)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Label</span>(f[<span class="fl">0</span>, <span class="fl">2</span>], <span class="st">"dept"</span>; tellwidth<span class="op">=</span><span class="cn">false</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">shrinkageplot!</span>(f[<span class="fl">1</span>, <span class="fl">2</span>], fm3, <span class="op">:</span>dept)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    f</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 <figure class="figure">
