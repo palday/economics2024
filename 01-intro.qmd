@@ -314,6 +314,7 @@ form1 = @formula(rating ~ 0 + Action + Adventure + Animation +
 fit(MixedModel, form1, ratings)
 ```
 
+<!-- # Saving and restoring fits -->
 
 # Generalized Linear Mixed Effects Models
 
