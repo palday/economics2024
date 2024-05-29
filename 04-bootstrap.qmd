@@ -25,7 +25,6 @@ ie1 = fit(MixedModel,
 ```
 
 
-
 One of the advantages of MixedModels.jl compared to its predecessors is its speed, which means that techniques that require fitting many different models are more viable. One such technique is the [parametric bootstrap](https://juliastats.org/MixedModels.jl/v4/bootstrap/), which is implemented in the function `parametricbootstrap`:
 
 ```{julia}
