@@ -178,7 +178,7 @@ MixedModels.jl uses a Wald confidence interval by default:
 confint(ie1)
 ```
 
-The critical values for a given confidence level are obtained from the standard normal, i.e. treating the $t$-values as $z$-values. This is a reasonable approximation for models fit to more than a few dozen observations, because the $t(\nu)$ rapidly converges to $z$ as $\nu\rightarrow\inf$ and is nigh instinguishable for $\nu > 30$.
+The critical values for a given confidence level are obtained from the standard normal, i.e. treating the $t$-values as $z$-values. This is a reasonable approximation for models fit to more than a few dozen observations, because the $t(\nu)$ rapidly converges to $z$ as $\nu\rightarrow\infty$ and is nigh instinguishable for $\nu > 30$.
 
 A more precise definition of the residual (i.e. denominator) degrees of freedom for mixed model is [somewhat challenging](https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#why-doesnt-lme4-display-denominator-degrees-of-freedomp-values-what-other-options-do-i-have), but for even moderately sized datasets, the point is largely moot.
 

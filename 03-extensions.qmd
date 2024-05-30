@@ -36,11 +36,11 @@ ie2 = fit(MixedModel,
 
 ```{julia}
 sleepstudy = MixedModels.dataset("sleepstudy")
-ss1 = fit(MixedModel, @formula(reaction ~ 1 + days + (1|subj)), sleepstudy)
+ss1 = fit(MixedModel, @formula(reaction ~ 1 + days + (1|subj)), sleepstudy; progress)
 ```
 
 ```{julia}
-ss2 = fit(MixedModel, @formula(reaction ~ 1 + days + (1 + days|subj)), sleepstudy)
+ss2 = fit(MixedModel, @formula(reaction ~ 1 + days + (1 + days|subj)), sleepstudy; progress)
 ```
 
 ```{julia}
@@ -96,7 +96,7 @@ DataFrame(; coef=fixefnames(ie1)[2:end], VIF=vif(ie1))
 gvif(ie1)
 ```
 
-```{julia}from: markdown+autolink_bare_uris
+```{julia}
 DataFrame(; term=termnames(ie1)[2][2:end], GVIF=gvif(ie1))
 ```
 
@@ -182,7 +182,7 @@ eff_logit = effects(design, gm1; eff_col="use", level=0.95)
 eff_prob = effects(design, gm1; eff_col="use", level=0.95, invlink=AutoInvLink())
 ```
 
-Effects are particularly
+Effects are particularly nice for visualizing the model fit and its predictions.
 
 ```{julia}
 using AlgebraOfGraphics # like ggplot2, but an algebra instead of a grammar

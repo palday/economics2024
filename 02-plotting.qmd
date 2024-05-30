@@ -19,6 +19,7 @@ using MixedModelsMakie
 ```
 
 Most plotting functions come in two variants:
+
 1. "full-service" that generates a new plot for scratch
 2. mutating, that modifies an existing plot or plots into a user-provided `Figure` or `Axis` (a component of a figure).
 
@@ -35,14 +36,18 @@ insteval = MixedModels.dataset("insteval")
 fm1 = fit(MixedModel,
           @formula(y ~ 1 + studage + lectage + service + (1|s) + (1|d) + (1|dept)),
           insteval; progress)
+```
 
+```{julia}
 fm2 = fit(MixedModel,
           @formula(y ~ 1 + studage + lectage + service +
                       (1 | s) +
                       (1 + service | d) +
                       (1 + service | dept)),
           insteval; progress)
+```
 
+```{julia}
 fm3 = fit(MixedModel,
           @formula(y ~ 1 + studage + lectage + service +
                       (1 | s) +
@@ -74,7 +79,7 @@ The function `coefplot` creates a plot of the coefficient estimates along with a
 coefplot(fm1)
 ```
 
-Because the intercept is often on a different scale than categorical predictors and is not of particular interest, `coefplot` also not including it.
+Because the intercept is often on a different scale than categorical predictors and is not of particular interest, `coefplot` also has an option for not including it.
 
 ```{julia}
 coefplot(fm1; show_intercept=false, color=:red)
@@ -189,7 +194,7 @@ One of the most powerful aspects of mixed effects models is *shrinkage*, i.e. th
 shrinkageplot(fm2, :dept)
 ```
 
-While it may look like some values go further away from the grand mean, plotting the associated correlation ellipses (computed from the correlation estimates in the mixed models) shows that these values are on a level-curve closer to the grand mean than where they started.
+While it may look like some values go further away from the grand mean, plotting the associated correlation ellipses (computed from the correlation estimates in the mixed model) shows that these values are on a level-curve closer to the grand mean than where they started.
 
 ```{julia}
 shrinkageplot(fm2, :dept, ellipse=true, ellipse_scale=10, n_ellipse=10)
