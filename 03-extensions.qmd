@@ -36,11 +36,11 @@ ie2 = fit(MixedModel,
 
 ```{julia}
 sleepstudy = MixedModels.dataset("sleepstudy")
-ss1 = fit(MixedModel, @formula(reaction ~ 1 + days + (1|subj)), sleepstudy)
+ss1 = fit(MixedModel, @formula(reaction ~ 1 + days + (1|subj)), sleepstudy; progress)
 ```
 
 ```{julia}
-ss2 = fit(MixedModel, @formula(reaction ~ 1 + days + (1 + days|subj)), sleepstudy)
+ss2 = fit(MixedModel, @formula(reaction ~ 1 + days + (1 + days|subj)), sleepstudy; progress)
 ```
 
 ```{julia}

@@ -71,12 +71,14 @@ fm1.optsum
 We can also examine the best linear unbiased predictions (BLUPS, i.e. conditional modes) of the fitted model:
 
 ```{julia}
-ranef(fm1) # gives a compact mathematical representation
+# gives a compact mathematical representation
+ranef(fm1)
 ```
 
 
 ```{julia}
-re = raneftables(fm1) # gives a NamedTuple of tables for each grouping variable
+# gives a NamedTuple of tables for each grouping variable
+re = raneftables(fm1)
 ```
 
 ```{julia}
@@ -132,6 +134,7 @@ predict(fm1, insteval)  ≈ fitted(fm1)
 ```
 
 The `predict` function supports three different options for handling new levels of the grouping variable:
+
 - `:population`: return population values for the relevant grouping variable.
    In other words, treat the associated random effect as 0.
    If all grouping variables have new levels, then this is equivalent to
@@ -258,6 +261,8 @@ fm4.rePCA
 
 # How big can we go?
 
+The MovieLens data [@harper:2016] contain millions of observations and provide a good stress test for model size and complexity.
+
 :::{.callout-note}
 The following models consume a large amount of memory because of the sheer size of the underlying dataset. Do **not** attempt to fit these models on a machine with less than 32GiB of memory.
 :::
@@ -318,7 +323,7 @@ fit(MixedModel, form1, ratings)
 
 # Generalized Linear Mixed Effects Models
 
-One of the test data sets from the Center for Multilevel Modelling, University of Bristol is derived from the 1989 Bangladesh Fertility Survey, [@huq:cleland:1990].
+One of the test data sets from the Center for Multilevel Modelling, University of Bristol is derived from the 1989 Bangladesh Fertility Survey [@huq:cleland:1990].
 The data are a subsample of 1934 women selected from 60 of the 64 political districts or *zila*, available as the `contra` data set in the `MixedModels` package.
 
 Variable in the dataset:
@@ -348,9 +353,9 @@ For a more principled examination of model building with this dataset, please re
 We set some appropriate contrasts
 
 ```{julia}
-contrasts = Dict(:livch => EffectsCoding(; base="0"),
-                 :urban => HelmertCoding(),
-                 :anych => HelmertCoding())
+contrasts = Dict(:livch => HelmertCoding(; base="0"),
+                 :urban => EffectsCoding(),
+                 :anych => EffectsCoding())
 ```
 
 and fit a model
