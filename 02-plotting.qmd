@@ -74,7 +74,7 @@ The function `coefplot` creates a plot of the coefficient estimates along with a
 coefplot(fm1)
 ```
 
-Because the intercept is often on a different scale than categorical predictors and is not of particular interest, `coefplot` also not including it.
+Because the intercept is often on a different scale than categorical predictors and is not of particular interest, `coefplot` also has an option for not including it.
 
 ```{julia}
 coefplot(fm1; show_intercept=false, color=:red)
