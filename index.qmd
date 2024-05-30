@@ -47,6 +47,8 @@ julia> Econ2024.movielens_download() # note: this is a very large dataset!
 julia> exit()
 ```
 
+If your receive a precompilation error for RCall or JellyMe4, you won't be able to use those packages, but should be able complete all other exmaples. The most likely cause of the precompilation error is a problem with RCall's configuration for using R from within Julia.
+
 ::: {.callout-important}
 Please check that you have the most recent version of the materials directly before the course.
 :::
