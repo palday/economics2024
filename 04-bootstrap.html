@@ -409,7 +409,7 @@ window.Quarto = {
 <div id="8" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> pb1 <span class="op">=</span> <span class="fu">parametricbootstrap</span>(<span class="fu">MersenneTwister</span>(<span class="fl">42</span>), <span class="fl">100</span>, ie1; progress)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>143.974439 seconds (4.35 M allocations: 309.726 MiB, 0.06% gc time, 0.91% compilation time)</code></pre>
+<pre><code>147.359054 seconds (4.35 M allocations: 309.726 MiB, 0.06% gc time, 0.91% compilation time)</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>MixedModelBootstrap with 100 samples
@@ -531,7 +531,7 @@ window.Quarto = {
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>optsum_overrides <span class="op">=</span> (; ftol_rel<span class="op">=</span><span class="fl">1e-4</span>)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> pb1a <span class="op">=</span> <span class="fu">parametricbootstrap</span>(<span class="fu">MersenneTwister</span>(<span class="fl">42</span>), <span class="fl">500</span>, ie1; optsum_overrides, progress)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>155.092690 seconds (927.34 k allocations: 82.112 MiB, 0.01% gc time, 0.06% compilation time)</code></pre>
+<pre><code>157.057413 seconds (927.34 k allocations: 82.112 MiB, 0.01% gc time, 0.06% compilation time)</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>MixedModelBootstrap with 500 samples
@@ -1188,7 +1188,7 @@ window.Quarto = {
  service: Y  │ -0.0991229  -0.0463103</code></pre>
 </div>
 </div>
-<p>The critical values for a given confidence level are obtained from the standard normal, i.e.&nbsp;treating the <span class="math inline">\(t\)</span>-values as <span class="math inline">\(z\)</span>-values. This is a reasonable approximation for models fit to more than a few dozen observations, because the <span class="math inline">\(t(\nu)\)</span> rapidly converges to <span class="math inline">\(z\)</span> as <span class="math inline">\(\nu\rightarrow\inf\)</span> and is nigh instinguishable for <span class="math inline">\(\nu &gt; 30\)</span>.</p>
+<p>The critical values for a given confidence level are obtained from the standard normal, i.e.&nbsp;treating the <span class="math inline">\(t\)</span>-values as <span class="math inline">\(z\)</span>-values. This is a reasonable approximation for models fit to more than a few dozen observations, because the <span class="math inline">\(t(\nu)\)</span> rapidly converges to <span class="math inline">\(z\)</span> as <span class="math inline">\(\nu\rightarrow\infty\)</span> and is nigh instinguishable for <span class="math inline">\(\nu &gt; 30\)</span>.</p>
 <p>A more precise definition of the residual (i.e.&nbsp;denominator) degrees of freedom for mixed model is <a href="https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#why-doesnt-lme4-display-denominator-degrees-of-freedomp-values-what-other-options-do-i-have">somewhat challenging</a>, but for even moderately sized datasets, the point is largely moot.</p>
 <p>MixedModels.jl also supports computing confidence intervals from the bootstrapped values.</p>
 <div class="callout callout-style-default callout-note callout-titled" title="Profile-based confidence intervals">
@@ -1245,7 +1245,7 @@ Profile-based confidence intervals
  β05 │ -0.111489  -0.0507315
  β06 │ -0.142169  -0.0771448
  β07 │ -0.235839  -0.156592
- β08 ��� -0.217021  -0.12986
+ β08 │ -0.217021  -0.12986
  β09 │ -0.286667  -0.204071
  β10 │ -0.101496  -0.0489058
  σ   │ 1.15818    1.18167

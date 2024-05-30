@@ -614,7 +614,8 @@ Residual              1.383337 1.176153
 <h2 class="anchored" data-anchor-id="best-linear-unbiased-predictions">Best linear unbiased predictions</h2>
 <p>We can also examine the best linear unbiased predictions (BLUPS, i.e.&nbsp;conditional modes) of the fitted model:</p>
 <div id="16" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ranef</span>(fm1) <span class="co"># gives a compact mathematical representation</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gives a compact mathematical representation</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ranef</span>(fm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>3-element Vector{Matrix{Float64}}:
  [0.16774123178334052 -0.04482694183068773 … 0.13824421252672484 0.26507732678861823]
@@ -623,7 +624,8 @@ Residual              1.383337 1.176153
 </div>
 </div>
 <div id="18" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>re <span class="op">=</span> <span class="fu">raneftables</span>(fm1) <span class="co"># gives a NamedTuple of tables for each grouping variable</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gives a NamedTuple of tables for each grouping variable</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>re <span class="op">=</span> <span class="fu">raneftables</span>(fm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>(s = @NamedTuple{s::String, (Intercept)::Float64}[(s = "S0001", var"(Intercept)" = 0.16774123178334052), (s = "S0002", var"(Intercept)" = -0.04482694183068773), (s = "S0003", var"(Intercept)" = 0.31575885609970306), (s = "S0004", var"(Intercept)" = 0.24940695145339822), (s = "S0005", var"(Intercept)" = 0.05086330189212764), (s = "S0006", var"(Intercept)" = 0.10070570655847189), (s = "S0007", var"(Intercept)" = 0.49346335551085657), (s = "S0008", var"(Intercept)" = 0.21230052405523037), (s = "S0009", var"(Intercept)" = 0.43329760696045716), (s = "S0010", var"(Intercept)" = 0.3474382457376265)  …  (s = "S2963", var"(Intercept)" = -0.07493268898885441), (s = "S2964", var"(Intercept)" = -0.07639875902063552), (s = "S2965", var"(Intercept)" = -0.01269753658773821), (s = "S2966", var"(Intercept)" = -0.05968365555624512), (s = "S2967", var"(Intercept)" = -0.47762073203601624), (s = "S2968", var"(Intercept)" = -0.03808065216440611), (s = "S2969", var"(Intercept)" = 0.013164293735230988), (s = "S2970", var"(Intercept)" = 0.15284750426572696), (s = "S2971", var"(Intercept)" = 0.13824421252672484), (s = "S2972", var"(Intercept)" = 0.26507732678861823)], d = @NamedTuple{d::String, (Intercept)::Float64}[(d = "I0001", var"(Intercept)" = 0.38719882629204333), (d = "I0006", var"(Intercept)" = -0.45435181953200804), (d = "I0007", var"(Intercept)" = 0.6941269521055441), (d = "I0008", var"(Intercept)" = -0.6556986845555067), (d = "I0012", var"(Intercept)" = 0.2232265515513102), (d = "I0013", var"(Intercept)" = 0.35851586978902583), (d = "I0014", var"(Intercept)" = 0.3672805427901967), (d = "I0015", var"(Intercept)" = -0.37841197668279464), (d = "I0017", var"(Intercept)" = 0.4490422906985483), (d = "I0018", var"(Intercept)" = -0.21303124506473872)  …  (d = "I2143", var"(Intercept)" = 0.46453745653954004), (d = "I2145", var"(Intercept)" = -0.5103188066752637), (d = "I2146", var"(Intercept)" = 0.24093975571844684), (d = "I2147", var"(Intercept)" = -0.60947032761476), (d = "I2149", var"(Intercept)" = -0.2569371800839588), (d = "I2152", var"(Intercept)" = -0.1486343267392193), (d = "I2153", var"(Intercept)" = -0.4582448890911759), (d = "I2156", var"(Intercept)" = -0.598164389730049), (d = "I2157", var"(Intercept)" = 0.5663054833894617), (d = "I2160", var"(Intercept)" = -0.2322561040271726)], dept = @NamedTuple{dept::String, (Intercept)::Float64}[(dept = "D01", var"(Intercept)" = 0.01925158595457121), (dept = "D02", var"(Intercept)" = -0.0314237380877306), (dept = "D03", var"(Intercept)" = 0.026989756564498747), (dept = "D04", var"(Intercept)" = 0.08634883593136969), (dept = "D05", var"(Intercept)" = 0.0425384283501927), (dept = "D06", var"(Intercept)" = -0.0612386105577639), (dept = "D07", var"(Intercept)" = 0.037994105160680386), (dept = "D08", var"(Intercept)" = 0.10706977660601054), (dept = "D09", var"(Intercept)" = -0.03130386231393186), (dept = "D10", var"(Intercept)" = -0.13074749481062195), (dept = "D11", var"(Intercept)" = -0.05345274044982538), (dept = "D12", var"(Intercept)" = 0.016537582598079168), (dept = "D14", var"(Intercept)" = -0.0394324632568055), (dept = "D15", var"(Intercept)" = 0.010868838311276535)])</code></pre>
 </div>
@@ -1047,7 +1049,12 @@ Residual              1.383337 1.176153
 <pre><code>true</code></pre>
 </div>
 </div>
-<p>The <code>predict</code> function supports three different options for handling new levels of the grouping variable: - <code>:population</code>: return population values for the relevant grouping variable. In other words, treat the associated random effect as 0. If all grouping variables have new levels, then this is equivalent to just the fixed effects. - <code>:missing</code>: return <code>missing</code>. - <code>:error</code>: error on this condition.</p>
+<p>The <code>predict</code> function supports three different options for handling new levels of the grouping variable:</p>
+<ul>
+<li><code>:population</code>: return population values for the relevant grouping variable. In other words, treat the associated random effect as 0. If all grouping variables have new levels, then this is equivalent to just the fixed effects.</li>
+<li><code>:missing</code>: return <code>missing</code>.</li>
+<li><code>:error</code>: error on this condition.</li>
+</ul>
 <p>For example, we can construct a novel dataset based on the first row of the insteval data.</p>
 <div id="34" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="fu">first</span>(<span class="fu">DataFrame</span>(insteval), <span class="fl">2</span>)</span>
@@ -1135,7 +1142,7 @@ Stacktrace:
  [4] <span class="ansi-bold">predict</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">m</span>::LinearMixedModel<span class="ansi-bright-black-fg">{Float64}</span>, <span class="ansi-bright-black-fg">newdata</span>::DataFrame; <span class="ansi-bright-black-fg">kwargs</span>::@Kwargs<span class="ansi-bright-black-fg">{new_re_levels::Symbol}</span><span class="ansi-bold">)</span>
 <span class="ansi-bright-black-fg">   @</span> <span class="ansi-magenta-fg">MixedModels</span> <span class="ansi-bright-black-fg">~/.julia/packages/MixedModels/s7yZN/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">predict.jl:220</span>
  [5] top-level scope
-<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/Work/economics2024/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">01-intro.qmd:161</span></pre>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/Work/economics2024/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">01-intro.qmd:164</span></pre>
 </div>
 </div>
 </div>
@@ -1330,7 +1337,7 @@ service: Y   -0.0280727   0.0498258   -0.56    0.5732
 <pre><code>Likelihood-ratio test: 2 models fitted on 73421 observations
 ──────────────────────────────────────────────────────────────
      DOF  ΔDOF        LogLik     Deviance     Chisq  p(&gt;Chisq)
-──────��───────────────────────────────────────────────────────
+──���───────────────────────────────────────────────────────────
 [1]   14        -118776.9929  237553.9858                     
 [2]   18     4  -118578.6372  237157.2744  396.7114     &lt;1e-83
 ──────────────────────────────────────────────────────────────</code></pre>
@@ -1531,7 +1538,7 @@ Residual              1.341243 1.158121
  Number of obs: 73421; levels of grouping factors: 1128, 2972, 14
 
   Fixed-effects parameters:
-──────────────────────────────���──────────────────────
+─────────────────────────────────────────────────────
                   Coef.  Std. Error       z  Pr(&gt;|z|)
 ─────────────────────────────────────────────────────
 (Intercept)   3.3081      0.0261931  126.30    &lt;1e-99
@@ -1681,6 +1688,7 @@ service: Y   -0.0499552   0.0224018   -2.23    0.0257
 </section>
 <section id="how-big-can-we-go" class="level1">
 <h1>How big can we go?</h1>
+<p>The MovieLens data <span class="citation" data-cites="harper:2016">(<a href="#ref-harper:2016" role="doc-biblioref">Harper &amp; Konstan, 2016</a>)</span> contain millions of observations and provide a good stress test for model size and complexity.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1741,7 +1749,7 @@ Note
 </section>
 <section id="generalized-linear-mixed-effects-models" class="level1">
 <h1>Generalized Linear Mixed Effects Models</h1>
-<p>One of the test data sets from the Center for Multilevel Modelling, University of Bristol is derived from the 1989 Bangladesh Fertility Survey, <span class="citation" data-cites="huq:cleland:1990">(<a href="#ref-huq:cleland:1990" role="doc-biblioref">Huq &amp; Cleland, 1990</a>)</span>. The data are a subsample of 1934 women selected from 60 of the 64 political districts or <em>zila</em>, available as the <code>contra</code> data set in the <code>MixedModels</code> package.</p>
+<p>One of the test data sets from the Center for Multilevel Modelling, University of Bristol is derived from the 1989 Bangladesh Fertility Survey <span class="citation" data-cites="huq:cleland:1990">(<a href="#ref-huq:cleland:1990" role="doc-biblioref">Huq &amp; Cleland, 1990</a>)</span>. The data are a subsample of 1934 women selected from 60 of the 64 political districts or <em>zila</em>, available as the <code>contra</code> data set in the <code>MixedModels</code> package.</p>
 <p>Variable in the dataset:</p>
 <ul>
 <li><code>use</code>, whether the woman chooses to use artificial contraception, with two possible values, <code>N</code> and <code>Y</code></li>
@@ -1872,14 +1880,14 @@ Note
 </div>
 <p>We set some appropriate contrasts</p>
 <div id="82" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>contrasts <span class="op">=</span> <span class="fu">Dict</span>(<span class="op">:</span>livch <span class="op">=&gt;</span> <span class="fu">EffectsCoding</span>(; base<span class="op">=</span><span class="st">"0"</span>),</span>
-<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>                 <span class="op">:</span>urban <span class="op">=&gt;</span> <span class="fu">HelmertCoding</span>(),</span>
-<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>                 <span class="op">:</span>anych <span class="op">=&gt;</span> <span class="fu">HelmertCoding</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>contrasts <span class="op">=</span> <span class="fu">Dict</span>(<span class="op">:</span>livch <span class="op">=&gt;</span> <span class="fu">HelmertCoding</span>(; base<span class="op">=</span><span class="st">"0"</span>),</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>                 <span class="op">:</span>urban <span class="op">=&gt;</span> <span class="fu">EffectsCoding</span>(),</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>                 <span class="op">:</span>anych <span class="op">=&gt;</span> <span class="fu">EffectsCoding</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>Dict{Symbol, StatsModels.AbstractContrasts} with 3 entries:
-  :urban =&gt; HelmertCoding(nothing, nothing)
-  :livch =&gt; EffectsCoding("0", nothing)
-  :anych =&gt; HelmertCoding(nothing, nothing)</code></pre>
+  :urban =&gt; EffectsCoding(nothing, nothing)
+  :livch =&gt; HelmertCoding("0", nothing)
+  :anych =&gt; EffectsCoding(nothing, nothing)</code></pre>
 </div>
 </div>
 <p>and fit a model</p>
@@ -2001,6 +2009,9 @@ Note
 <section id="references" class="level1">
 <h1>References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-harper:2016" class="csl-entry" role="listitem">
+Harper, F. M., &amp; Konstan, J. A. (2016). The <span>MovieLens</span> datasets. <em><span>ACM</span> Transactions on Interactive Intelligent Systems</em>, <em>5</em>(4), 1–19. <a href="https://doi.org/10.1145/2827872">https://doi.org/10.1145/2827872</a>
+</div>
 <div id="ref-huq:cleland:1990" class="csl-entry" role="listitem">
 Huq, N. M., &amp; Cleland, J. (1990). <em>Bangladesh fertility survey 1989 (main report)</em>. National Institute of Population Research; Training.
 </div>
