@@ -266,7 +266,7 @@ ssdesign = Dict(:days => 1:10)
 
 https://beacon-biosignals.github.io/StandardizedPredictors.jl/v1/
 
-StandardizedPredictors.jl provides a convenient way to express centering, scaling, and z-standardization as a "contrast" via the pseudo-contrasts `Center()`, `Scale`, `ZScore`.
+StandardizedPredictors.jl provides a convenient way to express centering, scaling, and z-standardization as a "contrast" via the pseudo-contrasts `Center`, `Scale`, `ZScore`.
 Because these use the usual contrast machinery, they work well with any packages that use that machinery correctly (e.g. Effects.jl). The default behavior is to empirically compute the center and scale, but these can also be explicitly provided, either as a number or as a function (e.g. `median` to use the median for centering.)
 
 ```{julia}

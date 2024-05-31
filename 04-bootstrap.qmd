@@ -40,7 +40,7 @@ pb1.coefpvalues
 
 ```{julia}
 # row table of all parameter estimates
-pb1.allpars 
+pb1.allpars
 ```
 
 ```{julia}
@@ -50,7 +50,7 @@ pb1.β
 
 ```{julia}
 # summary table in wide format
-pb1.tbl 
+pb1.tbl
 ```
 
 # Speeding up the bootstrap
@@ -72,7 +72,7 @@ using CairoMakie
 ## General plotting
 
 
-We can create a custom display of the bootstrap densities for the fixed effects and variance components. We'll build this plot piecewise using [AlgebraOfGraphics](https://aog.makie.org/v0.6/). 
+We can create a custom display of the bootstrap densities for the fixed effects and variance components. We'll build this plot piecewise using [AlgebraOfGraphics](https://aog.makie.org/v0.6/).
 
 We start by grabbing all the parameter estimates and placing them in a dataframe for easier manipulation.
 
@@ -95,7 +95,7 @@ We plot the fixed effects:
 
 ```{julia}
 plt_fe = data(fe) * mapping(:value; layout=:names) * density()
-draw(plt_fe; 
+draw(plt_fe;
     facet=(;linkxaxes=:none, linkyaxes=:none))
 ```
 
@@ -103,12 +103,12 @@ and then tweak the layout a little:
 
 ```{julia}
 plt_fe = data(fe) * mapping(:value; layout=:names) * density()
-layout = [(1, 1), 
+layout = [(1, 1),
           (2, 1), (2, 2), (2, 3),
           (3, 1), (3, 2), (3, 3),
           (4, 1), (4, 2), (4, 3)]
-draw(plt_fe; 
-    facet=(;linkxaxes=:none, linkyaxes=:none), 
+draw(plt_fe;
+    facet=(;linkxaxes=:none, linkyaxes=:none),
     palettes=(;layout))
 ```
 
@@ -133,7 +133,7 @@ let f, facet, layout, axis
     f = Figure(; size=(800, 600))
     facet = (;linkxaxes=:none, linkyaxes=:none)
     axis=(; xlabel="estimate")
-    layout = [(1, 1), 
+    layout = [(1, 1),
               (2, 1), (2, 2), (2, 3),
               (3, 1), (3, 2), (3, 3),
               (4, 1), (4, 2), (4, 3)]
@@ -185,7 +185,7 @@ A more precise definition of the residual (i.e. denominator) degrees of freedom 
 MixedModels.jl also supports computing confidence intervals from the bootstrapped values.
 
 ::: {.callout-note collapse="true" title="Profile-based confidence intervals"}
-There is a third way to compute confidence intervals in MixedModels.jl: via the likelihoood profile. However, this code is substantially newer and less well tested and may fail for some models (including some of the examples in this course). 
+There is a third way to compute confidence intervals in MixedModels.jl: via the likelihoood profile. However, this code is substantially newer and less well tested and may fail for some models (including some of the examples in this course).
 :::
 
 ## Shortest coverage / highest density interval

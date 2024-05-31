@@ -130,7 +130,7 @@ MixedModels.jl intentionally does not provide methods for `r2` and `adjr2`. Thes
 The `predict` function can be used to generate predictions on new data. As an initial sanity check, we can consider the case of predicting from the original data -- this should yield the fitted values:
 
 ```{julia}
-predict(fm1, insteval)  ≈ fitted(fm1)
+predict(fm1, insteval) ≈ fitted(fm1)
 ```
 
 The `predict` function supports three different options for handling new levels of the grouping variable:
