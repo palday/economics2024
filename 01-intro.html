@@ -1044,7 +1044,7 @@ Residual              1.383337 1.176153
 <h1>Predicting new data</h1>
 <p>The <code>predict</code> function can be used to generate predictions on new data. As an initial sanity check, we can consider the case of predicting from the original data – this should yield the fitted values:</p>
 <div id="32" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(fm1, insteval)  <span class="op">≈</span> <span class="fu">fitted</span>(fm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(fm1, insteval) <span class="op">≈</span> <span class="fu">fitted</span>(fm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>true</code></pre>
 </div>
@@ -1315,7 +1315,7 @@ Residual              1.3684549 1.1698098
   Fixed-effects parameters:
 ─────────────────────────────────────────────────────
                   Coef.  Std. Error       z  Pr(&gt;|z|)
-─────────────────────────────────────────────────────
+────────────────────────────────────────────────────���
 (Intercept)   3.2985      0.0307497  107.27    &lt;1e-99
 studage: 4    0.05022     0.0232292    2.16    0.0306
 studage: 6    0.0572624   0.0242029    2.37    0.0180
@@ -1337,7 +1337,7 @@ service: Y   -0.0280727   0.0498258   -0.56    0.5732
 <pre><code>Likelihood-ratio test: 2 models fitted on 73421 observations
 ──────────────────────────────────────────────────────────────
      DOF  ΔDOF        LogLik     Deviance     Chisq  p(&gt;Chisq)
-──���───────────────────────────────────────────────────────────
+──��───────────────────────────────────────────────────────────
 [1]   14        -118776.9929  237553.9858                     
 [2]   18     4  -118578.6372  237157.2744  396.7114     &lt;1e-83
 ──────────────────────────────────────────────────────────────</code></pre>
@@ -1538,7 +1538,7 @@ Residual              1.341243 1.158121
  Number of obs: 73421; levels of grouping factors: 1128, 2972, 14
 
   Fixed-effects parameters:
-─────────────────────────────────────────────────────
+──────────────────────────���──────────────────────────
                   Coef.  Std. Error       z  Pr(&gt;|z|)
 ─────────────────────────────────────────────────────
 (Intercept)   3.3081      0.0261931  126.30    &lt;1e-99

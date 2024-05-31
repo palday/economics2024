@@ -409,7 +409,7 @@ window.Quarto = {
 <div id="8" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> pb1 <span class="op">=</span> <span class="fu">parametricbootstrap</span>(<span class="fu">MersenneTwister</span>(<span class="fl">42</span>), <span class="fl">100</span>, ie1; progress)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>147.359054 seconds (4.35 M allocations: 309.726 MiB, 0.06% gc time, 0.91% compilation time)</code></pre>
+<pre><code>145.711846 seconds (4.35 M allocations: 309.726 MiB, 0.07% gc time, 0.92% compilation time)</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>MixedModelBootstrap with 100 samples
@@ -531,7 +531,7 @@ window.Quarto = {
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>optsum_overrides <span class="op">=</span> (; ftol_rel<span class="op">=</span><span class="fl">1e-4</span>)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> pb1a <span class="op">=</span> <span class="fu">parametricbootstrap</span>(<span class="fu">MersenneTwister</span>(<span class="fl">42</span>), <span class="fl">500</span>, ie1; optsum_overrides, progress)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>157.057413 seconds (927.34 k allocations: 82.112 MiB, 0.01% gc time, 0.06% compilation time)</code></pre>
+<pre><code>153.572766 seconds (927.41 k allocations: 82.116 MiB, 0.01% gc time, 0.07% compilation time)</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>MixedModelBootstrap with 500 samples
@@ -628,7 +628,7 @@ window.Quarto = {
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: left;">��</td>
+<td style="text-align: left;">β</td>
 <td style="text-align: left; font-style: italic;">missing</td>
 <td style="text-align: left;">lectage: 2</td>
 <td style="text-align: right;">-0.0869565</td>
@@ -1049,7 +1049,7 @@ window.Quarto = {
 <p>We plot the fixed effects:</p>
 <div id="26" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>plt_fe <span class="op">=</span> <span class="fu">data</span>(fe) <span class="op">*</span> <span class="fu">mapping</span>(<span class="op">:</span>value; layout<span class="op">=:</span>names) <span class="op">*</span> <span class="fu">density</span>()</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt_fe; </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt_fe;</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    facet<span class="op">=</span>(;linkxaxes<span class="op">=:</span>none, linkyaxes<span class="op">=:</span>none))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
@@ -1062,12 +1062,12 @@ window.Quarto = {
 <p>and then tweak the layout a little:</p>
 <div id="28" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>plt_fe <span class="op">=</span> <span class="fu">data</span>(fe) <span class="op">*</span> <span class="fu">mapping</span>(<span class="op">:</span>value; layout<span class="op">=:</span>names) <span class="op">*</span> <span class="fu">density</span>()</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>layout <span class="op">=</span> [(<span class="fl">1</span>, <span class="fl">1</span>), </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>layout <span class="op">=</span> [(<span class="fl">1</span>, <span class="fl">1</span>),</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>          (<span class="fl">2</span>, <span class="fl">1</span>), (<span class="fl">2</span>, <span class="fl">2</span>), (<span class="fl">2</span>, <span class="fl">3</span>),</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>          (<span class="fl">3</span>, <span class="fl">1</span>), (<span class="fl">3</span>, <span class="fl">2</span>), (<span class="fl">3</span>, <span class="fl">3</span>),</span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>          (<span class="fl">4</span>, <span class="fl">1</span>), (<span class="fl">4</span>, <span class="fl">2</span>), (<span class="fl">4</span>, <span class="fl">3</span>)]</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt_fe; </span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    facet<span class="op">=</span>(;linkxaxes<span class="op">=:</span>none, linkyaxes<span class="op">=:</span>none), </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt_fe;</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    facet<span class="op">=</span>(;linkxaxes<span class="op">=:</span>none, linkyaxes<span class="op">=:</span>none),</span>
 <span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    palettes<span class="op">=</span>(;layout))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
@@ -1107,7 +1107,7 @@ window.Quarto = {
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    f <span class="op">=</span> <span class="fu">Figure</span>(; size<span class="op">=</span>(<span class="fl">800</span>, <span class="fl">600</span>))</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    facet <span class="op">=</span> (;linkxaxes<span class="op">=:</span>none, linkyaxes<span class="op">=:</span>none)</span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    axis<span class="op">=</span>(; xlabel<span class="op">=</span><span class="st">"estimate"</span>)</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    layout <span class="op">=</span> [(<span class="fl">1</span>, <span class="fl">1</span>), </span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    layout <span class="op">=</span> [(<span class="fl">1</span>, <span class="fl">1</span>),</span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>              (<span class="fl">2</span>, <span class="fl">1</span>), (<span class="fl">2</span>, <span class="fl">2</span>), (<span class="fl">2</span>, <span class="fl">3</span>),</span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>              (<span class="fl">3</span>, <span class="fl">1</span>), (<span class="fl">3</span>, <span class="fl">2</span>), (<span class="fl">3</span>, <span class="fl">3</span>),</span>
 <span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>              (<span class="fl">4</span>, <span class="fl">1</span>), (<span class="fl">4</span>, <span class="fl">2</span>), (<span class="fl">4</span>, <span class="fl">3</span>)]</span>
@@ -1175,7 +1175,7 @@ window.Quarto = {
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>DictTable with 2 columns and 10 rows:
  coef          lower       upper
- ────────────┬───────────��───────────
+ ────────────┬─────────────��─────────
  (Intercept) │ 3.22721     3.35435
  studage: 4  │ 0.00654108  0.0973544
  studage: 6  │ 0.0251566   0.119089

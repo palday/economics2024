@@ -2295,24 +2295,24 @@ Tip
 # Vcov.jl
 
 
-```bxjgyol
+```knrnhym
 using Vcov
 ```
 
-```bxjgyol
+```knrnhym
 stderror(ss2)
 ```
 
-```bxjgyol
+```knrnhym
 using LinearAlgebra
 stderror(ss2) ≈ sqrt.(diag(vcov(ss2)))
 ```
 
-```bxjgyol
+```knrnhym
 sqrt.(diag(vcov(ss2, Vcov.robust())))
 ```
 
-```bxjgyol
+```knrnhym
 robust_vcov = Base.Fix2(vcov, Vcov.robust())
 
 ssdesign = Dict(:days => 1:10)
@@ -2321,7 +2321,7 @@ ssdesign = Dict(:days => 1:10)
 <section id="standardizedpredictors.jl" class="level1">
 <h1>StandardizedPredictors.jl</h1>
 <p><a href="https://beacon-biosignals.github.io/StandardizedPredictors.jl/v1/" class="uri">https://beacon-biosignals.github.io/StandardizedPredictors.jl/v1/</a></p>
-<p>StandardizedPredictors.jl provides a convenient way to express centering, scaling, and z-standardization as a “contrast” via the pseudo-contrasts <code>Center()</code>, <code>Scale</code>, <code>ZScore</code>. Because these use the usual contrast machinery, they work well with any packages that use that machinery correctly (e.g.&nbsp;Effects.jl). The default behavior is to empirically compute the center and scale, but these can also be explicitly provided, either as a number or as a function (e.g.&nbsp;<code>median</code> to use the median for centering.)</p>
+<p>StandardizedPredictors.jl provides a convenient way to express centering, scaling, and z-standardization as a “contrast” via the pseudo-contrasts <code>Center</code>, <code>Scale</code>, <code>ZScore</code>. Because these use the usual contrast machinery, they work well with any packages that use that machinery correctly (e.g.&nbsp;Effects.jl). The default behavior is to empirically compute the center and scale, but these can also be explicitly provided, either as a number or as a function (e.g.&nbsp;<code>median</code> to use the median for centering.)</p>
 <div id="60" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">StandardizedPredictors</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
