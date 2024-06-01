@@ -2295,24 +2295,24 @@ Tip
 # Vcov.jl
 
 
-```cvizucs
+```avagpjd
 using Vcov
 ```
 
-```cvizucs
+```avagpjd
 stderror(ss2)
 ```
 
-```cvizucs
+```avagpjd
 using LinearAlgebra
 stderror(ss2) ≈ sqrt.(diag(vcov(ss2)))
 ```
 
-```cvizucs
+```avagpjd
 sqrt.(diag(vcov(ss2, Vcov.robust())))
 ```
 
-```cvizucs
+```avagpjd
 robust_vcov = Base.Fix2(vcov, Vcov.robust())
 
 ssdesign = Dict(:days => 1:10)

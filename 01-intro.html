@@ -1134,13 +1134,13 @@ Residual              1.383337 1.176153
 <pre>ArgumentError: New level encountered in s
 Stacktrace:
  [1] <span class="ansi-bold">_predict</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">m</span>::LinearMixedModel<span class="ansi-bright-black-fg">{Float64}</span>, <span class="ansi-bright-black-fg">newdata</span>::@NamedTuple<span class="ansi-bright-black-fg">{s::Vector{String}, d::Vector{String}, dept::Vector{String}, studage::Vector{String}, lectage::Vector{String}, service::Vector{String}, y::Vector{Int8}}</span>, <span class="ansi-bright-black-fg">β</span>::Vector<span class="ansi-bright-black-fg">{Float64}</span>; <span class="ansi-bright-black-fg">new_re_levels</span>::Symbol<span class="ansi-bold">)</span>
-<span class="ansi-bright-black-fg">   @</span> <span class="ansi-magenta-fg">MixedModels</span> <span class="ansi-bright-black-fg">~/.julia/packages/MixedModels/s7yZN/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">predict.jl:148</span>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-magenta-fg">MixedModels</span> <span class="ansi-bright-black-fg">~/.julia/packages/MixedModels/NBPpG/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">predict.jl:148</span>
  [2] <span class="ansi-bold">_predict</span>
-<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/.julia/packages/MixedModels/s7yZN/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">predict.jl:91</span><span class="ansi-bright-black-fg"> [inlined]</span>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/.julia/packages/MixedModels/NBPpG/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">predict.jl:91</span><span class="ansi-bright-black-fg"> [inlined]</span>
  [3] <span class="ansi-bold">predict</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">m</span>::LinearMixedModel<span class="ansi-bright-black-fg">{Float64}</span>, <span class="ansi-bright-black-fg">newdata</span>::@NamedTuple<span class="ansi-bright-black-fg">{s::Vector{String}, d::Vector{String}, dept::Vector{String}, studage::Vector{String}, lectage::Vector{String}, service::Vector{String}, y::Vector{Int8}}</span>; <span class="ansi-bright-black-fg">new_re_levels</span>::Symbol<span class="ansi-bold">)</span>
-<span class="ansi-bright-black-fg">   @</span> <span class="ansi-magenta-fg">MixedModels</span> <span class="ansi-bright-black-fg">~/.julia/packages/MixedModels/s7yZN/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">predict.jl:73</span>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-magenta-fg">MixedModels</span> <span class="ansi-bright-black-fg">~/.julia/packages/MixedModels/NBPpG/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">predict.jl:73</span>
  [4] <span class="ansi-bold">predict</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">m</span>::LinearMixedModel<span class="ansi-bright-black-fg">{Float64}</span>, <span class="ansi-bright-black-fg">newdata</span>::DataFrame; <span class="ansi-bright-black-fg">kwargs</span>::@Kwargs<span class="ansi-bright-black-fg">{new_re_levels::Symbol}</span><span class="ansi-bold">)</span>
-<span class="ansi-bright-black-fg">   @</span> <span class="ansi-magenta-fg">MixedModels</span> <span class="ansi-bright-black-fg">~/.julia/packages/MixedModels/s7yZN/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">predict.jl:220</span>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-magenta-fg">MixedModels</span> <span class="ansi-bright-black-fg">~/.julia/packages/MixedModels/NBPpG/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">predict.jl:220</span>
  [5] top-level scope
 <span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/Work/economics2024/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">01-intro.qmd:164</span></pre>
 </div>
@@ -1331,13 +1331,13 @@ service: Y   -0.0280727   0.0498258   -0.56    0.5732
 </div>
 <p>Of course, we want to know whether this more complicated model has a better fit than our original model. To that end, we can use the <code>lrtest</code> function (same as in GLM.jl and originally part of the StatsAPI.jl specification):</p>
 <div id="48" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">GLM</span>: lrtest</span>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">MixedModels</span>: lrtest</span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(fm1, fm2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>Likelihood-ratio test: 2 models fitted on 73421 observations
 ──────────────────────────────────────────────────────────────
      DOF  ΔDOF        LogLik     Deviance     Chisq  p(&gt;Chisq)
-──��───────────────────────────────────────────────────────────
+──────────────────────────────────────────────────────────────
 [1]   14        -118776.9929  237553.9858                     
 [2]   18     4  -118578.6372  237157.2744  396.7114     &lt;1e-83
 ──────────────────────────────────────────────────────────────</code></pre>
@@ -1538,7 +1538,7 @@ Residual              1.341243 1.158121
  Number of obs: 73421; levels of grouping factors: 1128, 2972, 14
 
   Fixed-effects parameters:
-──────────────────────────���──────────────────────────
+───────────────────────��─────────────────────────────
                   Coef.  Std. Error       z  Pr(&gt;|z|)
 ─────────────────────────────────────────────────────
 (Intercept)   3.3081      0.0261931  126.30    &lt;1e-99
@@ -1630,7 +1630,7 @@ Residual              1.3412785 1.1581358
  Number of obs: 73421; levels of grouping factors: 1128, 2972, 14
 
   Fixed-effects parameters:
-─────────────────────────────────────────────────────
+────────────────────────────────────────────────���────
                   Coef.  Std. Error       z  Pr(&gt;|z|)
 ─────────────────────────────────────────────────────
 (Intercept)   3.30686     0.0315141  104.93    &lt;1e-99
