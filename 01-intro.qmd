@@ -191,7 +191,7 @@ println(fm2)
 Of course, we want to know whether this more complicated model has a better fit than our original model. To that end, we can use the `lrtest` function (same as in GLM.jl and originally part of the StatsAPI.jl specification):
 
 ```{julia}
-using GLM: lrtest
+using MixedModels: lrtest
 lrtest(fm1, fm2)
 ```
 
