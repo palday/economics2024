@@ -228,7 +228,7 @@ This additional model complexity is warranted in terms of goodness of fit:
 likelihoodratiotest(fm2, fm3)
 ```
 
-As a final note, we can also examine the effective dimensionality of the random effects with PCA. The property `rePCA` displays the cumulative variance explained for each principle component of each variance component and thus an estimate of excess dimensionality:
+As a final note, we can also examine the effective dimensionality of the random effects with PCA [@bates:parsimonious:2018]. The property `rePCA` displays the cumulative variance explained for each principle component of each variance component and thus an estimate of excess dimensionality:
 
 ```{julia}
 fm2.rePCA
@@ -395,7 +395,7 @@ MixedModels.jl does support constraining the residual variance to known scalar v
 
 If this would be a valuable feature, then please [file an issue](https://github.com/JuliaStats/MixedModels.jl/issues/new). Issues are prioritized by the developers' own needs and potential impact for users, so showing a large need for a feature will tend to increase its priority.
 
-[FixedEffectsModels.jl](https://github.com/FixedEffects/FixedEffectModels.jl) may be a viable alternative (not an endorsement). It provides "fast estimation of linear models with IV and high dimensional categorical variables" and provides similar functionality to Stata's `reghdfe` and R's `lfe` and `fixest`. 
+[FixedEffectsModels.jl](https://github.com/FixedEffects/FixedEffectModels.jl) may be a viable alternative (not an endorsement). It provides "fast estimation of linear models with IV and high dimensional categorical variables" and provides similar functionality to Stata's `reghdfe` and R's `lfe` and `fixest`.
 
 
 
