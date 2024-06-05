@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.39">
+<meta name="generator" content="quarto-1.5.41">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -409,29 +409,29 @@ window.Quarto = {
 <div id="8" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> pb1 <span class="op">=</span> <span class="fu">parametricbootstrap</span>(<span class="fu">MersenneTwister</span>(<span class="fl">42</span>), <span class="fl">100</span>, ie1; progress)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>145.711846 seconds (4.35 M allocations: 309.726 MiB, 0.07% gc time, 0.92% compilation time)</code></pre>
+<pre><code>209.008750 seconds (4.35 M allocations: 309.641 MiB, 0.06% gc time, 0.70% compilation time)</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>MixedModelBootstrap with 100 samples
       parameter  min         q25         median      mean        q75         ⋯
     ┌─────────────────────────────────────────────────────────────────────────
  1  │ β01        3.21783     3.26358     3.28986     3.29053     3.31213     ⋯
- 2  │ β02        -0.0139569  0.038696    0.0548509   0.0543033   0.0691479   ⋯
- 3  │ β03        0.0195404   0.0601318   0.0744778   0.0737247   0.0880094   ⋯
- 4  │ β04        0.0660657   0.123001    0.141956    0.143059    0.161691    ⋯
- 5  │ β05        -0.125172   -0.0900465  -0.0821355  -0.0829556  -0.0736902  ⋯
- 6  │ β06        -0.158731   -0.126321   -0.114572   -0.114729   -0.10407    ⋯
+ 2  │ β02        -0.0139569  0.0386959   0.0548509   0.0543033   0.069148    ⋯
+ 3  │ β03        0.0195404   0.0601319   0.0744778   0.0737247   0.0880096   ⋯
+ 4  │ β04        0.0660658   0.123001    0.141956    0.143059    0.161691    ⋯
+ 5  │ β05        -0.125172   -0.0900465  -0.0821355  -0.0829556  -0.0736901  ⋯
+ 6  │ β06        -0.158731   -0.126321   -0.114572   -0.114729   -0.104069   ⋯
  7  │ β07        -0.248297   -0.203881   -0.189177   -0.192144   -0.177192   ⋯
- 8  │ β08        -0.229774   -0.180099   -0.168365   -0.169053   -0.156476   ⋯
- 9  │ β09        -0.300539   -0.26488    -0.249537   -0.247632   -0.229222   ⋯
- 10 │ β10        -0.105656   -0.0818337  -0.0744016  -0.075008   -0.0670841  ⋯
+ 8  │ β08        -0.229774   -0.180099   -0.168366   -0.169054   -0.156477   ⋯
+ 9  │ β09        -0.300539   -0.26488    -0.249537   -0.247633   -0.229222   ⋯
+ 10 │ β10        -0.105656   -0.0818338  -0.0744016  -0.0750081  -0.0670843  ⋯
  11 │ σ          1.16957     1.17411     1.17636     1.17617     1.17837     ⋯
- 12 │ σ1         0.303494    0.322677    0.326415    0.326131    0.329607    ⋯
- 13 │ σ2         0.474794    0.500079    0.508222    0.508323    0.516091    ⋯
- 14 │ σ3         0.0         0.0541107   0.0704625   0.0702876   0.0876531   ⋯
- 15 │ θ1         0.257713    0.274375    0.277284    0.277288    0.2808      ⋯
- 16 │ θ2         0.404015    0.425369    0.432303    0.432192    0.438206    ⋯
- 17 │ θ3         0.0         0.045864    0.0597909   0.0597646   0.0743971   ⋯</code></pre>
+ 12 │ σ1         0.303495    0.322678    0.326416    0.326132    0.329608    ⋯
+ 13 │ σ2         0.474792    0.50008     0.508224    0.508321    0.51609     ⋯
+ 14 │ σ3         0.0         0.054114    0.0704681   0.0702903   0.0876644   ⋯
+ 15 │ θ1         0.257715    0.274375    0.277286    0.277288    0.2808      ⋯
+ 16 │ θ2         0.404013    0.425368    0.432304    0.43219     0.438201    ⋯
+ 17 │ θ3         0.0         0.0458687   0.0597957   0.0597669   0.0744103   ⋯</code></pre>
 </div>
 </div>
 <p>The bootstrap object has several properties defined, perhaps the most relevant are:</p>
@@ -440,33 +440,33 @@ window.Quarto = {
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pb1.coefpvalues</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>1000-element Vector{@NamedTuple{iter::Int64, coefname::Symbol, β::Float64, se::Float64, z::Float64, p::Float64}}:
- (iter = 1, coefname = Symbol("(Intercept)"), β = 3.2844928279434065, se = 0.032524210677454375, z = 100.98608880984162, p = 0.0)
- (iter = 1, coefname = Symbol("studage: 4"), β = 0.06545758686582491, se = 0.023497284000323155, z = 2.78575119000667, p = 0.005340384547276788)
- (iter = 1, coefname = Symbol("studage: 6"), β = 0.07436675005559862, se = 0.024299662954631682, z = 3.060402532925824, p = 0.0022103969202858778)
- (iter = 1, coefname = Symbol("studage: 8"), β = 0.1344127262525718, se = 0.026741312887550595, z = 5.026407148287308, p = 4.997542824491115e-7)
- (iter = 1, coefname = Symbol("lectage: 2"), β = -0.08689967179369408, se = 0.015507345987220238, z = -5.6037746152893595, p = 2.09733396977708e-8)
- (iter = 1, coefname = Symbol("lectage: 3"), β = -0.11271177326879837, se = 0.016859623249765785, z = -6.685307945440843, p = 2.304395511113411e-11)
- (iter = 1, coefname = Symbol("lectage: 4"), β = -0.19020613648594675, se = 0.01976629678254787, z = -9.622750208520811, p = 6.409411635232184e-22)
- (iter = 1, coefname = Symbol("lectage: 5"), β = -0.16073781065271658, se = 0.021585081491058315, z = -7.446708538918545, p = 9.569771650128114e-14)
- (iter = 1, coefname = Symbol("lectage: 6"), β = -0.2433509853336542, se = 0.020669173607966728, z = -11.77361949487216, p = 5.338388678449715e-32)
- (iter = 1, coefname = Symbol("service: Y"), β = -0.0560241884982609, se = 0.013588893568175118, z = -4.122792500889719, p = 3.743068523497779e-5)
+ (iter = 1, coefname = Symbol("(Intercept)"), β = 3.284493190376238, se = 0.032524356049923465, z = 100.9856485808569, p = 0.0)
+ (iter = 1, coefname = Symbol("studage: 4"), β = 0.06545761800835158, se = 0.023497319783523526, z = 2.7857482730541414, p = 0.005340432600180254)
+ (iter = 1, coefname = Symbol("studage: 6"), β = 0.07436678269492078, se = 0.024299697132984736, z = 3.0603995715639725, p = 0.002210418778698702)
+ (iter = 1, coefname = Symbol("studage: 8"), β = 0.13441279564664554, se = 0.02674134761946562, z = 5.026403214952544, p = 4.99764527884585e-7)
+ (iter = 1, coefname = Symbol("lectage: 2"), β = -0.0868996632908928, se = 0.015507343974755044, z = -5.603774794211042, p = 2.0973318036586454e-8)
+ (iter = 1, coefname = Symbol("lectage: 3"), β = -0.11271181582296878, se = 0.01685962313429071, z = -6.685310515258478, p = 2.3043550719035788e-11)
+ (iter = 1, coefname = Symbol("lectage: 4"), β = -0.19020616801325693, se = 0.019766294929206236, z = -9.622752705779602, p = 6.4092559865334075e-22)
+ (iter = 1, coefname = Symbol("lectage: 5"), β = -0.1607378454925726, se = 0.021585081487335164, z = -7.446710154274098, p = 9.569654528260931e-14)
+ (iter = 1, coefname = Symbol("lectage: 6"), β = -0.24335103811670392, se = 0.020669173197583813, z = -11.773622282344181, p = 5.338212236432387e-32)
+ (iter = 1, coefname = Symbol("service: Y"), β = -0.05602420766813321, se = 0.013588893357126238, z = -4.122793975622246, p = 3.743044551204773e-5)
  ⋮
- (iter = 100, coefname = Symbol("studage: 4"), β = 0.025227349131417828, se = 0.023200807563855428, z = 1.0873478891622528, p = 0.27688309181244464)
- (iter = 100, coefname = Symbol("studage: 6"), β = 0.07088408313765594, se = 0.02400554782671742, z = 2.952820891625901, p = 0.003148846053869982)
- (iter = 100, coefname = Symbol("studage: 8"), β = 0.10704597045770158, se = 0.02643330877571195, z = 4.049662165489474, p = 5.129162474702447e-5)
- (iter = 100, coefname = Symbol("lectage: 2"), β = -0.0731927575822571, se = 0.015423996688310335, z = -4.745382086196182, p = 2.0811311858175712e-6)
- (iter = 100, coefname = Symbol("lectage: 3"), β = -0.08389108088590261, se = 0.016760437632691503, z = -5.005303723231648, p = 5.577401856280357e-7)
- (iter = 100, coefname = Symbol("lectage: 4"), β = -0.18179640493121893, se = 0.019656009990827204, z = -9.248896648712387, p = 2.2682189479956574e-20)
- (iter = 100, coefname = Symbol("lectage: 5"), β = -0.14755537474768485, se = 0.02145735710981732, z = -6.876679825595775, p = 6.1263588182793464e-12)
- (iter = 100, coefname = Symbol("lectage: 6"), β = -0.22400745235549124, se = 0.020548647689622977, z = -10.901323324970651, p = 1.1359305452386851e-27)
- (iter = 100, coefname = Symbol("service: Y"), β = -0.07461312463098355, se = 0.01352818587611706, z = -5.515382869088685, p = 3.4802146900712763e-8)</code></pre>
+ (iter = 100, coefname = Symbol("studage: 4"), β = 0.025227359263288812, se = 0.023200806904968868, z = 1.0873483567455544, p = 0.27688288524577925)
+ (iter = 100, coefname = Symbol("studage: 6"), β = 0.07088411189272113, se = 0.02400554628349315, z = 2.952822279302301, p = 0.0031488318995912448)
+ (iter = 100, coefname = Symbol("studage: 8"), β = 0.10704600246843128, se = 0.026433306479203472, z = 4.049663728321321, p = 5.129128222578269e-5)
+ (iter = 100, coefname = Symbol("lectage: 2"), β = -0.07319274390132172, se = 0.015423994812457901, z = -4.745381776334897, p = 2.08113437180995e-6)
+ (iter = 100, coefname = Symbol("lectage: 3"), β = -0.08389108316851346, se = 0.016760436930178597, z = -5.005304069219126, p = 5.577391837933923e-7)
+ (iter = 100, coefname = Symbol("lectage: 4"), β = -0.1817964173833714, se = 0.019656007595517798, z = -9.248898409299905, p = 2.2681815915554146e-20)
+ (iter = 100, coefname = Symbol("lectage: 5"), β = -0.1475554055735154, se = 0.021457355472192553, z = -6.876681787032814, p = 6.126274505141886e-12)
+ (iter = 100, coefname = Symbol("lectage: 6"), β = -0.22400748754566294, se = 0.02054864437010676, z = -10.9013267985473, p = 1.1358871761517386e-27)
+ (iter = 100, coefname = Symbol("service: Y"), β = -0.07461314138783286, se = 0.013528184936484909, z = -5.515384490834728, p = 3.480182596228577e-8)</code></pre>
 </div>
 </div>
 <div id="12" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># row table of all parameter estimates</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>pb1.allpars</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>(iter = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1  …  100, 100, 100, 100, 100, 100, 100, 100, 100, 100], type = ["β", "β", "β", "β", "β", "β", "β", "β", "β", "β"  …  "β", "β", "β", "β", "β", "β", "σ", "σ", "σ", "σ"], group = Union{Missing, String}[missing, missing, missing, missing, missing, missing, missing, missing, missing, missing  …  missing, missing, missing, missing, missing, missing, "s", "d", "dept", "residual"], names = Union{Missing, String}["(Intercept)", "studage: 4", "studage: 6", "studage: 8", "lectage: 2", "lectage: 3", "lectage: 4", "lectage: 5", "lectage: 6", "service: Y"  …  "lectage: 2", "lectage: 3", "lectage: 4", "lectage: 5", "lectage: 6", "service: Y", "(Intercept)", "(Intercept)", "(Intercept)", missing], value = [3.2844928279434065, 0.06545758686582491, 0.07436675005559862, 0.1344127262525718, -0.08689967179369408, -0.11271177326879837, -0.19020613648594675, -0.16073781065271658, -0.2433509853336542, -0.0560241884982609  …  -0.0731927575822571, -0.08389108088590261, -0.18179640493121893, -0.14755537474768485, -0.22400745235549124, -0.07461312463098355, 0.32664795073240843, 0.5286560253303741, 0.09096234925764528, 1.1778772795686734])</code></pre>
+<pre><code>(iter = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1  …  100, 100, 100, 100, 100, 100, 100, 100, 100, 100], type = ["β", "β", "β", "β", "β", "β", "β", "β", "β", "β"  …  "β", "β", "β", "β", "β", "β", "σ", "σ", "σ", "σ"], group = Union{Missing, String}[missing, missing, missing, missing, missing, missing, missing, missing, missing, missing  …  missing, missing, missing, missing, missing, missing, "s", "d", "dept", "residual"], names = Union{Missing, String}["(Intercept)", "studage: 4", "studage: 6", "studage: 8", "lectage: 2", "lectage: 3", "lectage: 4", "lectage: 5", "lectage: 6", "service: Y"  …  "lectage: 2", "lectage: 3", "lectage: 4", "lectage: 5", "lectage: 6", "service: Y", "(Intercept)", "(Intercept)", "(Intercept)", missing], value = [3.284493190376238, 0.06545761800835158, 0.07436678269492078, 0.13441279564664554, -0.0868996632908928, -0.11271181582296878, -0.19020616801325693, -0.1607378454925726, -0.24335103811670392, -0.05602420766813321  …  -0.07319274390132172, -0.08389108316851346, -0.1817964173833714, -0.1475554055735154, -0.22400748754566294, -0.07461314138783286, 0.32664793547692816, 0.5286534736920326, 0.09096380721039783, 1.1778773576202244])</code></pre>
 </div>
 </div>
 <div id="14" class="cell" data-execution_count="1">
@@ -474,26 +474,26 @@ window.Quarto = {
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>pb1.β</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>1000-element Vector{@NamedTuple{iter::Int64, coefname::Symbol, β::Float64}}:
- (iter = 1, coefname = Symbol("(Intercept)"), β = 3.2844928279434065)
- (iter = 1, coefname = Symbol("studage: 4"), β = 0.06545758686582491)
- (iter = 1, coefname = Symbol("studage: 6"), β = 0.07436675005559862)
- (iter = 1, coefname = Symbol("studage: 8"), β = 0.1344127262525718)
- (iter = 1, coefname = Symbol("lectage: 2"), β = -0.08689967179369408)
- (iter = 1, coefname = Symbol("lectage: 3"), β = -0.11271177326879837)
- (iter = 1, coefname = Symbol("lectage: 4"), β = -0.19020613648594675)
- (iter = 1, coefname = Symbol("lectage: 5"), β = -0.16073781065271658)
- (iter = 1, coefname = Symbol("lectage: 6"), β = -0.2433509853336542)
- (iter = 1, coefname = Symbol("service: Y"), β = -0.0560241884982609)
+ (iter = 1, coefname = Symbol("(Intercept)"), β = 3.284493190376238)
+ (iter = 1, coefname = Symbol("studage: 4"), β = 0.06545761800835158)
+ (iter = 1, coefname = Symbol("studage: 6"), β = 0.07436678269492078)
+ (iter = 1, coefname = Symbol("studage: 8"), β = 0.13441279564664554)
+ (iter = 1, coefname = Symbol("lectage: 2"), β = -0.0868996632908928)
+ (iter = 1, coefname = Symbol("lectage: 3"), β = -0.11271181582296878)
+ (iter = 1, coefname = Symbol("lectage: 4"), β = -0.19020616801325693)
+ (iter = 1, coefname = Symbol("lectage: 5"), β = -0.1607378454925726)
+ (iter = 1, coefname = Symbol("lectage: 6"), β = -0.24335103811670392)
+ (iter = 1, coefname = Symbol("service: Y"), β = -0.05602420766813321)
  ⋮
- (iter = 100, coefname = Symbol("studage: 4"), β = 0.025227349131417828)
- (iter = 100, coefname = Symbol("studage: 6"), β = 0.07088408313765594)
- (iter = 100, coefname = Symbol("studage: 8"), β = 0.10704597045770158)
- (iter = 100, coefname = Symbol("lectage: 2"), β = -0.0731927575822571)
- (iter = 100, coefname = Symbol("lectage: 3"), β = -0.08389108088590261)
- (iter = 100, coefname = Symbol("lectage: 4"), β = -0.18179640493121893)
- (iter = 100, coefname = Symbol("lectage: 5"), β = -0.14755537474768485)
- (iter = 100, coefname = Symbol("lectage: 6"), β = -0.22400745235549124)
- (iter = 100, coefname = Symbol("service: Y"), β = -0.07461312463098355)</code></pre>
+ (iter = 100, coefname = Symbol("studage: 4"), β = 0.025227359263288812)
+ (iter = 100, coefname = Symbol("studage: 6"), β = 0.07088411189272113)
+ (iter = 100, coefname = Symbol("studage: 8"), β = 0.10704600246843128)
+ (iter = 100, coefname = Symbol("lectage: 2"), β = -0.07319274390132172)
+ (iter = 100, coefname = Symbol("lectage: 3"), β = -0.08389108316851346)
+ (iter = 100, coefname = Symbol("lectage: 4"), β = -0.1817964173833714)
+ (iter = 100, coefname = Symbol("lectage: 5"), β = -0.1475554055735154)
+ (iter = 100, coefname = Symbol("lectage: 6"), β = -0.22400748754566294)
+ (iter = 100, coefname = Symbol("service: Y"), β = -0.07461314138783286)</code></pre>
 </div>
 </div>
 <div id="16" class="cell" data-execution_count="1">
@@ -502,22 +502,22 @@ window.Quarto = {
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>Table with 18 columns and 100 rows:
       obj        β01      β02          β03        β04        β05         ⋯
-    ┌────────────────────────────────────────────────────────────��────────
+    ┌─────────────────────────────────────────────────────────────────────
  1  │ 2.38696e5  3.28449  0.0654576    0.0743668  0.134413   -0.0868997  ⋯
- 2  │ 2.37312e5  3.32203  0.0517903    0.0670178  0.140742   -0.0950906  ⋯
+ 2  │ 2.37312e5  3.32203  0.0517903    0.0670179  0.140742   -0.0950906  ⋯
  3  │ 2.37357e5  3.23378  0.116201     0.12476    0.207755   -0.0790354  ⋯
- 4  │ 2.36992e5  3.37017  0.0338393    0.0450009  0.0898785  -0.0679428  ⋯
+ 4  │ 2.36992e5  3.37017  0.0338394    0.045001   0.0898786  -0.0679428  ⋯
  5  │ 2.37374e5  3.29213  0.0747803    0.0736114  0.123649   -0.0853712  ⋯
- 6  │ 2.38354e5  3.23252  0.0557169    0.0965588  0.168224   -0.110282   ⋯
- 7  ��� 2.38595e5  3.32446  0.059913     0.0739455  0.144132   -0.100117   ⋯
- 8  │ 237394.0   3.33964  0.000101602  0.0394911  0.111735   -0.0740082  ⋯
- 9  │ 2.37038e5  3.23416  0.0288773    0.0792363  0.143171   -0.0754491  ⋯
+ 6  │ 2.38354e5  3.23251  0.0557169    0.0965588  0.168224   -0.110282   ⋯
+ 7  │ 2.38595e5  3.32446  0.0599131    0.0739456  0.144132   -0.100117   ⋯
+ 8  │ 237394.0   3.33964  0.000101607  0.0394911  0.111735   -0.0740082  ⋯
+ 9  │ 2.37038e5  3.23416  0.0288773    0.0792364  0.143171   -0.0754491  ⋯
  10 │ 2.37538e5  3.32298  0.0418344    0.0479324  0.117366   -0.0843251  ⋯
- 11 │ 2.37919e5  3.34143  0.00910533   0.0340325  0.109248   -0.087165   ⋯
+ 11 │ 2.37919e5  3.34143  0.00910537   0.0340326  0.109248   -0.087165   ⋯
  12 │ 2.37707e5  3.24528  0.0830967    0.110315   0.193995   -0.0996083  ⋯
- 13 │ 2.37413e5  3.28979  0.053302     0.0813591  0.134691   -0.0804611  ⋯
- 14 │ 2.37776e5  3.2454   0.0078669    0.0846662  0.11677    -0.0655534  ⋯
- 15 │ 2.37429e5  3.2731   0.0656087    0.0609474  0.12065    -0.0701581  ⋯
+ 13 │ 2.37413e5  3.28979  0.0533019    0.0813591  0.134691   -0.0804611  ⋯
+ 14 │ 2.37776e5  3.2454   0.00786687   0.0846663  0.11677    -0.0655534  ⋯
+ 15 │ 2.37429e5  3.2731   0.0656087    0.0609475  0.12065    -0.0701581  ⋯
  16 │ 2.37344e5  3.26359  0.0708762    0.0925205  0.148036   -0.0778408  ⋯
  17 │ 237108.0   3.28631  0.0531506    0.0802238  0.136806   -0.0839233  ⋯
  ⋮  │     ⋮         ⋮          ⋮           ⋮          ⋮          ⋮       ⋱</code></pre>
@@ -531,29 +531,29 @@ window.Quarto = {
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>optsum_overrides <span class="op">=</span> (; ftol_rel<span class="op">=</span><span class="fl">1e-4</span>)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> pb1a <span class="op">=</span> <span class="fu">parametricbootstrap</span>(<span class="fu">MersenneTwister</span>(<span class="fl">42</span>), <span class="fl">500</span>, ie1; optsum_overrides, progress)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>153.572766 seconds (927.41 k allocations: 82.116 MiB, 0.01% gc time, 0.07% compilation time)</code></pre>
+<pre><code>213.172458 seconds (927.39 k allocations: 82.110 MiB, 0.01% gc time, 0.05% compilation time)</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>MixedModelBootstrap with 500 samples
-      parameter  min         q25         median     mean        q75         ⋯
-    ┌────────────────────────────────────────────────────────────────────────
- 1  │ β01        3.20299     3.26494     3.2899     3.29008     3.31293     ⋯
- 2  │ β02        -0.0283391  0.0378083   0.0532707  0.0524077   0.0683259   ⋯
- 3  │ β03        0.00720724  0.056569    0.0732217  0.073101    0.0885576   ⋯
- 4  │ β04        0.0638129   0.121894    0.139395   0.138754    0.156193    ⋯
- 5  │ β05        -0.122304   -0.0912163  -0.080359  -0.0807677  -0.0708919  ⋯
- 6  │ β06        -0.169496   -0.122819   -0.110649  -0.110771   -0.0987061  ⋯
- 7  │ β07        -0.250192   -0.204949   -0.189633  -0.190552   -0.176709   ⋯
- 8  │ β08        -0.225879   -0.180139   -0.165734  -0.165591   -0.150571   ⋯
- 9  │ β09        -0.306457   -0.262256   -0.246656  -0.246079   -0.228992   ⋯
- 10 │ β10        -0.111311   -0.0811711  -0.072522  -0.0725597  -0.0623461  ⋯
- 11 │ σ          1.15547     1.16376     1.16765    1.1689      1.17438     ⋯
- 12 │ σ1         0.220708    0.325071    0.383176   0.367272    0.421881    ⋯
- 13 │ σ2         0.364374    0.573198    0.846797   0.789478    0.912774    ⋯
- 14 │ σ3         0.842894    1.18135     1.26918    1.26347     1.30106     ⋯
- 15 │ θ1         0.186657    0.27578     0.328035   0.314441    0.362649    ⋯
- 16 │ θ2         0.307885    0.490095    0.727427   0.675862    0.78239     ⋯
- 17 │ θ3         0.721848    1.01366     1.08494    1.08087     1.11703     ⋯</code></pre>
+      parameter  min         q25         median      mean        q75         ⋯
+    ┌─────────────────────────────────────────────────────────────────────────
+ 1  │ β01        3.20299     3.26494     3.2899      3.29007     3.31293     ⋯
+ 2  │ β02        -0.0283391  0.0378083   0.0532709   0.052406    0.0682966   ⋯
+ 3  │ β03        0.00720732  0.0565692   0.0732217   0.0730987   0.0885592   ⋯
+ 4  │ β04        0.0638129   0.121894    0.139394    0.138752    0.156194    ⋯
+ 5  │ β05        -0.122304   -0.0912163  -0.0803581  -0.0807668  -0.0708919  ⋯
+ 6  │ β06        -0.169496   -0.12282    -0.110649   -0.11077    -0.0987061  ⋯
+ 7  │ β07        -0.250192   -0.204949   -0.189636   -0.190551   -0.176709   ⋯
+ 8  │ β08        -0.225879   -0.180139   -0.165735   -0.165589   -0.150571   ⋯
+ 9  │ β09        -0.305527   -0.262256   -0.246845   -0.246078   -0.228991   ⋯
+ 10 │ β10        -0.111312   -0.0811709  -0.0725221  -0.0725579  -0.0623461  ⋯
+ 11 │ σ          1.15547     1.16376     1.16765     1.1689      1.17438     ⋯
+ 12 │ σ1         0.220703    0.325048    0.383176    0.367196    0.421881    ⋯
+ 13 │ σ2         0.364385    0.577211    0.846798    0.789761    0.91278     ⋯
+ 14 │ σ3         0.842896    1.18134     1.26922     1.26313     1.30106     ⋯
+ 15 │ θ1         0.186652    0.275806    0.328033    0.314377    0.362649    ⋯
+ 16 │ θ2         0.307893    0.491475    0.727428    0.676103    0.782392    ⋯
+ 17 │ θ3         0.721849    1.01366     1.08493     1.08058     1.11704     ⋯</code></pre>
 </div>
 </div>
 </section>
@@ -607,7 +607,7 @@ window.Quarto = {
 <td style="text-align: left;">β</td>
 <td style="text-align: left; font-style: italic;">missing</td>
 <td style="text-align: left;">studage: 4</td>
-<td style="text-align: right;">0.0638134</td>
+<td style="text-align: right;">0.0638135</td>
 </tr>
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
@@ -615,7 +615,7 @@ window.Quarto = {
 <td style="text-align: left;">β</td>
 <td style="text-align: left; font-style: italic;">missing</td>
 <td style="text-align: left;">studage: 6</td>
-<td style="text-align: right;">0.0697497</td>
+<td style="text-align: right;">0.0697498</td>
 </tr>
 <tr class="even">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
@@ -671,7 +671,7 @@ window.Quarto = {
 <td style="text-align: left;">β</td>
 <td style="text-align: left; font-style: italic;">missing</td>
 <td style="text-align: left;">service: Y</td>
-<td style="text-align: right;">-0.0578331</td>
+<td style="text-align: right;">-0.0578332</td>
 </tr>
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">11</td>
@@ -679,7 +679,7 @@ window.Quarto = {
 <td style="text-align: left;">σ</td>
 <td style="text-align: left;">s</td>
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">0.350074</td>
+<td style="text-align: right;">0.350072</td>
 </tr>
 <tr class="even">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">12</td>
@@ -711,7 +711,7 @@ window.Quarto = {
 <td style="text-align: left;">β</td>
 <td style="text-align: left; font-style: italic;">missing</td>
 <td style="text-align: left;">studage: 6</td>
-<td style="text-align: right;">0.0732301</td>
+<td style="text-align: right;">0.0732302</td>
 </tr>
 <tr class="even">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">6990</td>
@@ -775,7 +775,7 @@ window.Quarto = {
 <td style="text-align: left;">σ</td>
 <td style="text-align: left;">s</td>
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">0.378387</td>
+<td style="text-align: right;">0.378383</td>
 </tr>
 <tr class="even">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">6998</td>
@@ -783,7 +783,7 @@ window.Quarto = {
 <td style="text-align: left;">σ</td>
 <td style="text-align: left;">d</td>
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">0.447546</td>
+<td style="text-align: right;">0.447545</td>
 </tr>
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">6999</td>
@@ -1175,17 +1175,17 @@ window.Quarto = {
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>DictTable with 2 columns and 10 rows:
  coef          lower       upper
- ────────────┬─────────────��─────────
- (Intercept) │ 3.22721     3.35435
- studage: 4  │ 0.00654108  0.0973544
- studage: 6  │ 0.0251566   0.119089
+ ────────────┬───────────────────────
+ (Intercept) │ 3.22721     3.35436
+ studage: 4  │ 0.00654109  0.0973544
+ studage: 6  │ 0.0251567   0.119089
  studage: 8  │ 0.0845873   0.187982
  lectage: 2  │ -0.110898   -0.0506082
  lectage: 3  │ -0.142964   -0.0774094
  lectage: 4  │ -0.227587   -0.15075
  lectage: 5  │ -0.206382   -0.122478
  lectage: 6  │ -0.286144   -0.205849
- service: Y  │ -0.0991229  -0.0463103</code></pre>
+ service: Y  │ -0.099123   -0.0463103</code></pre>
 </div>
 </div>
 <p>The critical values for a given confidence level are obtained from the standard normal, i.e.&nbsp;treating the <span class="math inline">\(t\)</span>-values as <span class="math inline">\(z\)</span>-values. This is a reasonable approximation for models fit to more than a few dozen observations, because the <span class="math inline">\(t(\nu)\)</span> rapidly converges to <span class="math inline">\(z\)</span> as <span class="math inline">\(\nu\rightarrow\infty\)</span> and is nigh instinguishable for <span class="math inline">\(\nu &gt; 30\)</span>.</p>
@@ -1214,44 +1214,44 @@ Profile-based confidence intervals
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(pb1a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>DictTable with 2 columns and 14 rows:
- par   lower      upper
- ────┬──────────────────────
- β01 │ 3.2257     3.35708
- β02 │ 0.0086203  0.0960707
- β03 │ 0.0257096  0.117076
- β04 │ 0.0913164  0.197404
- β05 │ -0.111489  -0.0507315
- β06 │ -0.142169  -0.0771448
- β07 │ -0.235839  -0.156592
- β08 │ -0.217021  -0.12986
- β09 │ -0.286667  -0.204071
- β10 │ -0.101496  -0.0489058
- σ   │ 1.15818    1.18167
- σ1  │ 0.252925   0.439
- σ2  │ 0.471268   1.01893
- σ3  │ 1.01487    1.63069</code></pre>
+ par   lower       upper
+ ────┬───────────────────────
+ β01 │ 3.2257      3.35708
+ β02 │ 0.00862032  0.0960707
+ β03 │ 0.0257096   0.117076
+ β04 │ 0.0913162   0.197407
+ β05 │ -0.111489   -0.0507315
+ β06 │ -0.142169   -0.0771449
+ β07 │ -0.235839   -0.156591
+ β08 │ -0.21702    -0.12986
+ β09 │ -0.286667   -0.204071
+ β10 │ -0.101496   -0.0489063
+ σ   │ 1.15818     1.18166
+ σ1  │ 0.25292     0.438999
+ σ2  │ 0.481224    1.02709
+ σ3  │ 1.01486     1.62506</code></pre>
 </div>
 </div>
 <div id="46" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(pb1a; method<span class="op">=:</span>shortest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>DictTable with 2 columns and 14 rows:
- par   lower      upper
- ────┬──────────────────────
- β01 │ 3.2257     3.35708
- β02 │ 0.0086203  0.0960707
- β03 │ 0.0257096  0.117076
- β04 │ 0.0913164  0.197404
- β05 │ -0.111489  -0.0507315
- β06 │ -0.142169  -0.0771448
- β07 │ -0.235839  -0.156592
- β08 │ -0.217021  -0.12986
- β09 │ -0.286667  -0.204071
- β10 │ -0.101496  -0.0489058
- σ   │ 1.15818    1.18167
- σ1  │ 0.252925   0.439
- σ2  │ 0.471268   1.01893
- σ3  │ 1.01487    1.63069</code></pre>
+ par   lower       upper
+ ────┬───────────────────────
+ β01 │ 3.2257      3.35708
+ β02 │ 0.00862032  0.0960707
+ β03 │ 0.0257096   0.117076
+ β04 │ 0.0913162   0.197407
+ β05 │ -0.111489   -0.0507315
+ β06 │ -0.142169   -0.0771449
+ β07 │ -0.235839   -0.156591
+ β08 │ -0.21702    -0.12986
+ β09 │ -0.286667   -0.204071
+ β10 │ -0.101496   -0.0489063
+ σ   │ 1.15818     1.18166
+ σ1  │ 0.25292     0.438999
+ σ2  │ 0.481224    1.02709
+ σ3  │ 1.01486     1.62506</code></pre>
 </div>
 </div>
 </section>
@@ -1264,20 +1264,20 @@ Profile-based confidence intervals
 <pre><code>DictTable with 2 columns and 14 rows:
  par   lower       upper
  ────┬───────────────────────
- β01 │ 3.22657     3.35983
- β02 │ 0.00330878  0.0949412
+ β01 │ 3.22657     3.35984
+ β02 │ 0.0033087   0.0949412
  β03 │ 0.0279016   0.119836
- β04 │ 0.0785097   0.192055
- β05 │ -0.110169   -0.0490092
- β06 │ -0.144158   -0.0787608
+ β04 │ 0.0785099   0.19206
+ β05 │ -0.110169   -0.049009
+ β06 │ -0.144158   -0.0787607
  β07 │ -0.232093   -0.149827
- β08 │ -0.212548   -0.125297
+ β08 │ -0.212549   -0.125297
  β09 │ -0.288305   -0.205441
  β10 │ -0.0997842  -0.0457336
  σ   │ 1.15829     1.18212
- σ1  │ 0.251931    0.438784
- σ2  │ 0.460721    1.01502
- σ3  │ 1.01832     1.6439</code></pre>
+ σ1  │ 0.251927    0.438777
+ σ2  │ 0.460668    1.01502
+ σ3  │ 1.01837     1.63487</code></pre>
 </div>
 </div>
 
