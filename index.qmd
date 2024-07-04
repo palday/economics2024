@@ -1,5 +1,6 @@
 ---
 title: "Mixed Effects Models in Julia"
+format-links: false
 ---
 
 This website contains the course materials for an introduction to mixed effects models in Julia using [MixedModels.jl](https://juliastats.org/MixedModels.jl/v4/).

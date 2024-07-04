@@ -1,3 +1,7 @@
+---
+format-links: false
+---
+
 # Wilkinson-Rogers (1973) notation for models of (co)variance {#sec:wilkinson}
 
 ## General rules
